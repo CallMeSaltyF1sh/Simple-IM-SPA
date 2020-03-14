@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, '../client');
 
 module.exports = {
 	entry: {
-		app: path.join(root, 'src/index.js')
+		app: path.join(root, 'index.jsx')
 	},
 	output: {
 		path: path.join(root, 'dist'),
@@ -14,8 +14,8 @@ module.exports = {
 	},
 	resolve: {
 		alias: {
-			components: path.join(root, 'src/components'),
-			containers: path.join(root, 'src/containers')
+			components: path.join(root, 'components'),
+			containers: path.join(root, 'containers')
 		},
 		extensions: ['.js', '.jsx']
 	},
