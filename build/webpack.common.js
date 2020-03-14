@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, '../client');
 
 module.exports = {
 	entry: {
-		app: path.join(root, 'index.jsx')
+		app: path.join(root, 'index.js')
 	},
 	output: {
 		path: path.join(root, 'dist'),
