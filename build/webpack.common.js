@@ -37,15 +37,24 @@ module.exports = {
 					{
 						loader: 'url-loader',
 						options: {
-							name: '[name]_[hash:8].[ext]',
+							name: 'assets/[name].[ext]',
 							limit: 8192
 						}
 					}
 				]
 			},
 			{
-				test: /\.(woff|woff2|eot|ttf|otf)$/,
-				use: 'file-loader'
+				test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
+				use: [
+					{
+						loader: 'file-loader',
+						options: {
+							name: '[name]-[hash:8].[ext]',
+							publicPath: 'fonts/',
+							outputPath: 'fonts/'
+						}
+					}
+				]
 			}
 		]
 	},
