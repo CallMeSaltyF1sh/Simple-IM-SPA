@@ -1,6 +1,7 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const root = path.resolve(__dirname, '../client');
 
@@ -13,16 +14,17 @@ module.exports = {
 		filename: '[name].bundle.js'
 	},
 	resolve: {
+		extensions: ['.js', '.jsx', '.json'],
 		alias: {
 			components: path.join(root, 'components'),
-			containers: path.join(root, 'containers')
-		},
-		extensions: ['.js', '.jsx']
+			containers: path.join(root, 'containers'),
+			'@': root
+		}
 	},
 	module: {
 		rules: [
 			{
-				test: /\.css$/,
+				test: /\.css$/, // MiniCssExtractPlugin.loader
 				use: ['style-loader', 'css-loader', 'postcss-loader']
 			},
 			{
@@ -64,5 +66,8 @@ module.exports = {
 			template: path.join(root, 'template/index.html'),
 			inject: true
 		})
+		// new MiniCssExtractPlugin({
+		// filename: '[name]_[contenthash:8].css'
+		// })
 	]
 };

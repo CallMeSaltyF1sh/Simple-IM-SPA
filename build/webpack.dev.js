@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const common = require('./webpack.common');
 
 const root = path.resolve(__dirname, '../client');
@@ -25,5 +26,8 @@ module.exports = merge(common, {
 			}
 		}
 	},
-	plugins: [new webpack.HotModuleReplacementPlugin()]
+	plugins: [
+		new webpack.HotModuleReplacementPlugin(),
+		new BundleAnalyzerPlugin()
+	]
 });
