@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { css } from 'astroturf';
+import { PropTypes } from 'prop-types';
 
 const styles = css`
     .chat-list-item {
@@ -10,10 +11,13 @@ const styles = css`
         height: 67px;
         transition: all .3s;
         &:hover {
-            background-color: rgb(225,225,225,0.45);
+            background-color: rgb(225,225,225,0.55);
             cursor: pointer;
         }
-        .avator {
+        &.focus {
+            background-color: rgb(225,225,225,0.55);
+        }
+        .avatar {
             width: 46px;
             height: 46px;
             margin: 10px 10px 0 10px;
@@ -49,22 +53,74 @@ const styles = css`
                 font-size: 12px;
                 color: #bbb;
             }
+            .unread {
+                position: absolute;
+                display: inline-block;
+                right: 12px;
+                bottom: 13px;
+                width: 18px;
+                height: 18px;
+                line-height: 18px;
+                border-radius: 50%;
+                background-color: rgba(201, 58, 58, .35);
+                text-align: center;
+                color: #fff;
+                font-size: 11px;
+                font-family: "Times New Roman";
+                &.longer {
+                    width: 18px !important;
+                }
+            }
         }
     }
 `
 
-const ListItem = ({ name, time, imgUrl, latestMsg, unreadCnt, type, id }) => {
+const timeFormat = time => {
+    let month = time.getMonth() + 1,
+        day = time.getDate(),
+        year = time.getFullYear(),
+        hour = time.getHours(),
+        minute = time.getMinutes(),
+        second = time.getSeconds(),
+        timeStamp = time.getTime(),
+        currTime = +new Date();
+    if(currTime - timeStamp < 86400000) {
+        hour = hour > 10 ? hour : '0' + hour;
+        minute = minute > 10 ? minute : '0' + minute;
+        return `${hour}:${minute}`;
+    } else {
+        return `${year}/${month}/${day}`;
+    }
+};
+
+const ListItem = ({ name, msgTime, avatarUrl, latestMsg, unreadCnt, focus, onClick }) => {
     return (
-        <div className='chat-list-item'>
-            <div className='avator'></div>
+        <div className={`chat-list-item ${ focus ? 'focus' : ''}`} onClick={onClick}>
+            <div className='avatar'></div>
             <div className='info'>
                 <div className='name'>{name}</div>
                 <div className='msg'>{latestMsg}</div>
-                <div className='time'>{time}</div>
-                <div className='unread'></div>
+                <div className='time'>{timeFormat(msgTime)}</div>
+                {
+                    unreadCnt > 0 ? 
+                        <div className={`unread ${unreadCnt > 99 ? 'longer' : ''}`}>
+                            {unreadCnt > 99 ? '99+' : unreadCnt}
+                        </div> 
+                    : null
+                }
             </div>
         </div>
     )
-}
+};
 
-export default ListItem;
+ListItem.propTypes = {
+    name: PropTypes.string.isRequired,
+    msgTime: PropTypes.object,
+    avatarUrl: PropTypes.string,
+    latestMsg: PropTypes.string,
+    unreadCnt: PropTypes.number,
+    focus: PropTypes.bool,
+    onClick: PropTypes.func
+};
+
+export default memo(ListItem);

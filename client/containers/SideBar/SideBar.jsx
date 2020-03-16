@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { css } from 'astroturf';
 
 const styles = css`
@@ -93,4 +93,4 @@ function SideBar() {
     )
 }
 
-export default SideBar;
+export default memo(SideBar);

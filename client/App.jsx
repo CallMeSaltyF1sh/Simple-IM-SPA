@@ -1,9 +1,10 @@
 import React from 'react';
+//import { Provider } from 'react-redux';
 import { css } from 'astroturf';
 import 'normalize.css';
-import SideBar from './containers/SideBar/SideBar';
-import ListPanel from './containers/ListPanal/ListPanel';
-import ChatPanel from './containers/ChatPanel/ChatPanel';
+import SideBar from '@/containers/SideBar/SideBar';
+import ListPanel from '@/containers/ListPanal/ListPanel';
+import ChatPanel from '@/containers/ChatPanel/ChatPanel';
 
 const styles = css`
 	.app{
@@ -44,13 +45,15 @@ const styles = css`
 
 function App() {
 	return (
-		<div className='app'>
-			<div className='container'>
-				<SideBar />
-				<ListPanel />
-				<ChatPanel />
+		//<Provider>
+			<div className='app'>
+				<div className='container'>
+					<SideBar />
+					<ListPanel />
+					<ChatPanel />
+				</div>
 			</div>
-		</div>
+		//</Provider>
 	);
 }
 

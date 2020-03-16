@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { css } from 'astroturf';
 
 const styles = css`
@@ -47,4 +47,5 @@ function ChatPanel() {
     )
 }
 
-export default ChatPanel;
+
+export default memo(ChatPanel);

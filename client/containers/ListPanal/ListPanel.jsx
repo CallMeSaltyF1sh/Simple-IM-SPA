@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, memo } from 'react';
 import { css } from 'astroturf';
-import SearchBox from '../../components/SearchBox';
-import ListItem from '../../components/ListItem';
+import SearchBox from '@/components/SearchBox';
+import ListItem from '@/components/ListItem';
 
 const styles = css`
     .list-panel {
@@ -20,8 +20,8 @@ const styles = css`
             background-color: rgba(252,210,118,0.7);
             box-shadow: 0 6px 12px -10px #888;
             .add {
-                margin: 13px 0 0 11px;
-                color: #d6bfa9;
+                margin: 14px 0 0 11px;
+                color: #ceb5a3;
                 font-size: 23px;
                 cursor: pointer;
                 transition: all .3s;
@@ -41,20 +41,21 @@ const msgList = [
     {
         id: 0,
         type: 'multi',
-        imgUrl: '/assets/images/avators/1.png',
+        avatarUrl: '/assets/images/avators/1.png',
         name: 'test群',
         latestMsg: '啦啦啦emmmmmmmmmmm',
-        time: '20:15',
-        unreadCnt: 0
+        msgTime: new Date(),
+        unreadCnt: 20,
+        focus: true
     },
     {
         id: 1,
         type: 'single',
-        imgUrl: '/assets/images/avators/2.jpg',
+        avatarUrl: '/assets/images/avators/2.jpg',
         name: '咸大猪',
         latestMsg: '咸猪冲鸭！',
-        time: '20:17',
-        unreadCnt: 0
+        msgTime: new Date(),
+        unreadCnt: 100
     }
 ];
 
@@ -78,4 +79,4 @@ function ListPanel() {
     )
 }
 
-export default ListPanel;
+export default memo(ListPanel);
