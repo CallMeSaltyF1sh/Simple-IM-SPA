@@ -1,48 +1,85 @@
 import React, { memo } from 'react';
 import { css } from 'astroturf';
+import ChatPanelHeader from '@/components/ChatPanelHeader';
+import ScrollArea from '@/components/ScrollArea';
+import EditArea from '@/components/EditArea';
+import MsgItem from '@/components/MsgItem';
 
 const styles = css`
     .chat-panel {
+        display: flex;
+        flex-direction: column;
         flex: 1;
         height: 100%;
         border-top-right-radius: 30px;
         border-bottom-right-radius: 30px;
-        .chat-panel-header {
+        .scroll-area {
             position: relative;
-            height: 50px;
-            background-color: rgba(252,210,118,0.65);
-            border-top-right-radius: 30px;
-            box-shadow: 0 6px 12px -10px #888;
-        }
-        .chatter-name {
-            position: absolute;
-            margin: 16px 0 0 20px;
-            font-size: 17px;
-            color: #aa8f7c;
-            letter-spacing: 2px;
-        }
-        .more {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            color: #b59682;
-            cursor: pointer;
-            font-size: 20px;
-            transition: all .3s;
-            &:hover {
-                color: #8c6851;
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 8px 18px 8px;
+            &::-webkit-scrollbar {
+                width: 8px;
+            }
+            &::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+                background: rgba(153, 115, 91, 0.4);
+            }
+            &::-webkit-scrollbar-track {
+                border-radius: 10px;
+                background: transparent;
             }
         }
     }
 `
 
+const msgList = [
+    {
+        time: '20:00',
+        nickname: 'Nancy',
+        msg: 'hahaha',
+        avatarUrl: ''
+    },
+    {
+        time: '20:00',
+        nickname: 'Nancy',
+        msg: 'hahaha',
+        avatarUrl: ''
+    },
+    {
+        time: '20:00',
+        nickname: 'Nancy',
+        msg: 'hahaha',
+        avatarUrl: ''
+    },
+    {
+        time: '20:00',
+        nickname: 'Nancy',
+        msg: 'hahahahahahahahhahahhahha',
+        avatarUrl: '',
+        isMine: true
+    },
+    {
+        time: '20:00',
+        nickname: 'Nancy',
+        msg: 'hahahahahahahhahahahahahhahahahahhahahahhahahahhahahahahahahh',
+        avatarUrl: ''
+    }
+]
+
 function ChatPanel() {
     return (
         <div className='chat-panel'>
-            <div className='chat-panel-header'>
-                <div className='chatter-name'>咸大猪</div>
-                <i className='iconfont more'>&#xe618;</i>
+            <ChatPanelHeader />
+            <div className='scroll-area'>
+            {
+                msgList.map((item,index) => (
+                    <MsgItem key={index} {...item} />
+                ))
+            }
             </div>
+            <EditArea />
         </div>
     )
 }

@@ -5,12 +5,14 @@ import ListItem from '@/components/ListItem';
 
 const styles = css`
     .list-panel {
+        display: flex;
+        flex-direction: column;
         position: relative;
         width: 270px;
         min-width: 255px;
         max-width: 270px;
         height: 100%;
-        background: rgba(255,255,255,0.3);
+        background: rgba(245,245,245,0.3);
         .list-panel-top {
             display: flex;
             flex-direction: row;
@@ -31,7 +33,11 @@ const styles = css`
             }
         }
         .chat-list-wrapper {
-
+            flex: 1;
+            overflow-y: auto;
+            &::-webkit-scrollbar {
+                width: 0;
+            }
         }
     }
 `;
@@ -56,7 +62,8 @@ const msgList = [
         latestMsg: '咸猪冲鸭！',
         msgTime: new Date(),
         unreadCnt: 100
-    }
+    },
+    
 ];
 
 function ListPanel() {

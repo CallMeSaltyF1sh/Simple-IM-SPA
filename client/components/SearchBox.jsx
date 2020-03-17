@@ -39,13 +39,16 @@ const styles = css `
             &:-ms-input-placeholder {
                 color: #999;
             }
+            &::-ms-clear {
+                display: none;
+            }
         }
         .delete-icon {
             position: absolute;
             top: 9px;
             right: 6px;
             z-index: 999;
-            color: #ccc;
+            color: #bbb;
             font-size: 14px;
             cursor: pointer;
         } 

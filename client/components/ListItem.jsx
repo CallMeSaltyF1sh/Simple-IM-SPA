@@ -8,7 +8,9 @@ const styles = css`
         flex-direction: row;
         position: relative;
         width: 100%;
-        height: 67px;
+        height: 68px;
+        box-sizing: border-box;
+        padding: 0 15px;
         transition: all .3s;
         &:hover {
             background-color: rgb(225,225,225,0.55);
@@ -18,9 +20,9 @@ const styles = css`
             background-color: rgb(225,225,225,0.55);
         }
         .avatar {
-            width: 46px;
-            height: 46px;
-            margin: 10px 10px 0 10px;
+            width: 44px;
+            height: 44px;
+            margin: 12px 10px 0 0;
             border-radius: 50%;
             background-image: url('../assets/images/avators/3.jpg');
             background-size: 100% 100%;
@@ -30,17 +32,17 @@ const styles = css`
             flex: 1;
             .name {
                 position: absolute;
-                top: 13px;
+                top: 15px;
                 left: 0;
                 color: #888;
-                font-size: 15px;
+                font-size: 14px;
             }
             .msg {
                 position: absolute;
                 width: 80%;
                 left: 0;
-                bottom: 15px;
-                font-size: 12px;
+                bottom: 16px;
+                font-size: 11px;
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
@@ -48,24 +50,24 @@ const styles = css`
             }
             .time {
                 position: absolute;
-                right: 12px;
-                top: 12px;
-                font-size: 12px;
+                right: 0;
+                top: 16px;
+                font-size: 11px;
                 color: #bbb;
             }
             .unread {
                 position: absolute;
                 display: inline-block;
-                right: 12px;
-                bottom: 13px;
-                width: 18px;
-                height: 18px;
+                right: 0;
+                bottom: 14px;
+                width: 17px;
+                height: 17px;
                 line-height: 18px;
                 border-radius: 50%;
                 background-color: rgba(201, 58, 58, .35);
                 text-align: center;
                 color: #fff;
-                font-size: 11px;
+                font-size: 10px;
                 font-family: "Times New Roman";
                 &.longer {
                     width: 18px !important;

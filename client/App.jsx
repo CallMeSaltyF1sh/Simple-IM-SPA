@@ -40,6 +40,25 @@ const styles = css`
 		-webkit-font-smoothing: antialiased;
     	-webkit-text-stroke-width: 0.2px;
     	-moz-osx-font-smoothing: grayscale;
+		cursor: pointer;
+	}
+       
+	body::-webkit-scrollbar {
+        width: 1px;
+        height: 1px;
+		background: #FCD276;
+    }
+    body::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+        background: rgba(153, 115, 91, 0.6);
+    }
+    body::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background: transparent;
+    }
+	body::-webkit-scrollbar-corner {
+		background: #FCD276;
 	}
 `;
 
