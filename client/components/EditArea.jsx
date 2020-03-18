@@ -39,6 +39,7 @@ const styles = css`
             resize: none;
             background-color: transparent;
             color: #b59682;
+			font-size: 14px;
             &::-webkit-scrollbar {
                 width: 8px;
                 height: 1px;

@@ -13,7 +13,7 @@ const styles = css `
         .search-icon {
             margin: 8px 0 0 8px;
             color: #ccc;
-            z-index: 999;
+            z-index: 5;
         }
         .search-box-input {
             position: absolute;

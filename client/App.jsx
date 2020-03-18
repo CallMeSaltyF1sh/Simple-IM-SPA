@@ -1,10 +1,13 @@
 import React from 'react';
-//import { Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 import { css } from 'astroturf';
 import 'normalize.css';
-import SideBar from '@/containers/SideBar/SideBar';
-import ListPanel from '@/containers/ListPanal/ListPanel';
-import ChatPanel from '@/containers/ChatPanel/ChatPanel';
+import SideBar from '@/containers/SideBar/index';
+import ListPanel from '@/containers/ListPanal/index';
+import ChatPanel from '@/containers/ChatPanel/index';
+import store from './store/index';
+import LoginModal from '@/containers/LoginModal/index';
+import RegisterModal from '@/containers/RegisterModal/index';
 
 const styles = css`
 	.app{
@@ -64,15 +67,18 @@ const styles = css`
 
 function App() {
 	return (
-		//<Provider>
+		<Provider store={store}>
 			<div className='app'>
 				<div className='container'>
 					<SideBar />
 					<ListPanel />
 					<ChatPanel />
 				</div>
+
+				{false && <RegisterModal />}
+				{false && <LoginModal />}
 			</div>
-		//</Provider>
+		</Provider>
 	);
 }
 

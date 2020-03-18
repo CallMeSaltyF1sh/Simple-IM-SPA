@@ -87,8 +87,8 @@ const timeFormat = time => {
         timeStamp = time.getTime(),
         currTime = +new Date();
     if(currTime - timeStamp < 86400000) {
-        hour = hour > 10 ? hour : '0' + hour;
-        minute = minute > 10 ? minute : '0' + minute;
+        hour = hour >= 10 ? hour : '0' + hour;
+        minute = minute >= 10 ? minute : '0' + minute;
         return `${hour}:${minute}`;
     } else {
         return `${year}/${month}/${day}`;

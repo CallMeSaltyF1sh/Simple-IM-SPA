@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { css } from 'astroturf';
 import ChatPanelHeader from '@/components/ChatPanelHeader';
 import ScrollArea from '@/components/ScrollArea';
@@ -69,15 +69,20 @@ const msgList = [
 ]
 
 function ChatPanel() {
+    useEffect(() => {
+        document.querySelector('#msglist_bottom').scrollIntoView();   
+    });
+
     return (
         <div className='chat-panel'>
             <ChatPanelHeader />
             <div className='scroll-area'>
-            {
-                msgList.map((item,index) => (
-                    <MsgItem key={index} {...item} />
-                ))
-            }
+                {
+                    msgList.map((item,index) => (
+                        <MsgItem key={index} {...item} />
+                    ))
+                }
+                <div id='msglist_bottom'></div>
             </div>
             <EditArea />
         </div>

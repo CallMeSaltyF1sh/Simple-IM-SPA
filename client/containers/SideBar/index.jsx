@@ -3,6 +3,9 @@ import { css } from 'astroturf';
 
 const styles = css`
     .side-bar {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         position: relative;
         width: 96px;
         min-width: 96px;
@@ -13,10 +16,9 @@ const styles = css`
         border-bottom-left-radius: 30px;
         box-shadow: 5px 0px 10px -5px #888;
         .avator {
-            position: absolute;
-            width: 62px;
-            height: 62px;
-            margin: 30px 0 0 17px;
+            width: 64%;
+            padding-top: 64%;
+            margin: 30px 0 0 18%;
             background-image: url('../../assets/images/avators/lei.jpg');
             background-size: 100% 100%;
             box-sizing: border-box;
@@ -27,7 +29,7 @@ const styles = css`
             display: flex;
             flex-direction: column;
             width: 100%;
-            margin-top: 193px;
+            margin-bottom: 42%;
             cursor: pointer;
         }
         .icon-list-item {
@@ -76,17 +78,20 @@ const iconList = [
     }
 ];
 
-function SideBar() {
+const SideBar = ({isLogin = false}) => {
     return (
         <div className='side-bar'>
             <div className='avator'></div>
             <div className='icon-list'>
                 {
+                    isLogin ? 
                     iconList.map(item => (
                         <div className='icon-list-item' key={item.id}>
                             <i className='iconfont icon' dangerouslySetInnerHTML={{ __html: item.unicode}}></i>
                         </div>
-                    ))
+                    )) : <div className='icon-list-item'>
+                        <i className='iconfont icon'>&#xe65a;</i>
+                    </div>
                 }
             </div>
         </div>
