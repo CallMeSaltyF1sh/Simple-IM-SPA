@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef, memo } from 'react';
 import { css } from 'astroturf';
 
 const styles = css`
@@ -58,7 +58,8 @@ const styles = css`
     }
 `
 
-const InputArea = ({ unicode, checkValidity, placeholder, type, style }) => {
+const InputArea = forwardRef((props, ref) => {
+    const { unicode, checkValidity, placeholder, type, style } = props;
     const [isOk, setIsOk] = useState(true);
     const [content, setContent] = useState('');
     const [tips, setTips] = useState('');
@@ -73,6 +74,7 @@ const InputArea = ({ unicode, checkValidity, placeholder, type, style }) => {
                 <input 
                     type={type} 
                     value={content} 
+                    ref={ref}
                     className='input' 
                     onChange={(e) => setContent(e.target.value)}
                     //onInput={handleInput}
@@ -89,6 +91,6 @@ const InputArea = ({ unicode, checkValidity, placeholder, type, style }) => {
             </div>
         </div>
     )
-};
+});
 
-export default InputArea;
+export default memo(InputArea);

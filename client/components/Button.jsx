@@ -17,9 +17,9 @@ const styles = css`
     }
 `
 
-const Button = ({ style, btnTxt }) => {
+const Button = ({ style, btnTxt, handleClick }) => {
     return (
-        <button className='styled-button' style={{...style}}>
+        <button className='styled-button' style={{...style}} onClick={handleClick}>
             {btnTxt}
         </button>
     )

@@ -1,5 +1,7 @@
 import React, { memo } from 'react';
+import { connect } from 'react-redux';
 import { css } from 'astroturf';
+import { changeLoginModalDisplay } from '../LoginModal/store/actions.js';
 
 const styles = css`
     .side-bar {
@@ -78,7 +80,11 @@ const iconList = [
     }
 ];
 
-const SideBar = ({isLogin = false}) => {
+const SideBar = ({ isLogin = false, loginModalDisplay, changeLoginModalDisplayDispatch }) => {
+    const handleLogin = () => {
+        changeLoginModalDisplayDispatch(true);
+    };
+
     return (
         <div className='side-bar'>
             <div className='avator'></div>
@@ -89,7 +95,7 @@ const SideBar = ({isLogin = false}) => {
                         <div className='icon-list-item' key={item.id}>
                             <i className='iconfont icon' dangerouslySetInnerHTML={{ __html: item.unicode}}></i>
                         </div>
-                    )) : <div className='icon-list-item'>
+                    )) : <div className='icon-list-item' onClick={handleLogin}>
                         <i className='iconfont icon'>&#xe65a;</i>
                     </div>
                 }
@@ -98,4 +104,16 @@ const SideBar = ({isLogin = false}) => {
     )
 }
 
-export default memo(SideBar);
+const mapStateToProps = state => ({
+	loginModalDisplay: state.getIn(['loginModal', 'loginModalDisplay'])
+});
+
+const mapDispatchToProps = dispatch => {
+	return {
+		changeLoginModalDisplayDispatch(bool) {
+			dispatch(changeLoginModalDisplay(bool));
+		}
+	}
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(memo(SideBar));

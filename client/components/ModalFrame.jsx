@@ -57,17 +57,35 @@ const styles = css`
     }
 `
 
-const ModalFrame = ({children, title, switchTxt, btnTxt }) => {
+const ModalFrame = (props) => {
+    const { children, title, switchTxt, btnTxt } = props;
+    const { onClose, onSwitch, onSubmit } = props;
+
+    const handleClose = () => {
+        onClose(false);
+    };
+    const handleSwitch = () => {
+        onClose(false);
+        onSwitch(true);
+    };
+    const handleSubmit = () => {
+        onSubmit();
+    };
+    
     return (
         <ModalMask>
             <div className='login-modal'>
                 <div className='modal-top'>{title}</div>
                 {children}
                 <div className='bottom-wrapper'>
-                    <div className='switch'>> 去{switchTxt}~!</div>
-                    <Button btnTxt={btnTxt} style={{ width: '40%', fontSize: 14, background: '#c4a79f' }}/>
+                    <div className='switch' onClick={handleSwitch}>> 去{switchTxt}~!</div>
+                    <Button 
+                        btnTxt={btnTxt} 
+                        handleClick={handleSubmit}
+                        style={{ width: '40%', fontSize: 14, background: '#c4a79f' }}
+                    />
                 </div>
-                <i className='iconfont close'>&#xe612;</i>
+                <i className='iconfont close' onClick={handleClose}>&#xe612;</i>
             </div>
         </ModalMask>
     )
