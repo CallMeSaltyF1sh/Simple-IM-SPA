@@ -1,13 +1,16 @@
-const database_config = {
+const mysql_config = {
 	host: 'localhost',
+	port: '3306',
 	user: 'root',
 	password: 'fzx991010',
 	database: 'chatroom',
 };
 
-const server_port = 8080;
+const server_port = process.env.PORT || 8080;
+const secret = 'nancy';
 
 module.exports =  {
-    database_config,
-    server_port
+    mysql_config,
+	server_port,
+	secret
 };

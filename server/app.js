@@ -5,15 +5,27 @@ const mysql = require('mysql');
 const koaStatic = require('koa-static');
 const bodyParser = require('koa-bodyparser');
 const convert = require('koa-convert');
-const koaLogger = require('koa-logger');
+const logger = require('koa-logger');
 const session = require('koa-session-minimal');
-const MysqlStore = require('koa-mysql-session');
+//const MysqlStore = require('koa-mysql-session');
+const { sign } = require('jsonwebtoken');
+const jwt = require('koa-jwt');
+const helmet = require('koa-helmet');
+const cors = require('koa-cors');
 
-const { database_config, server_port } = require('./config');
+const { server_port, secret } = require('./config');
 
 const app = new Koa();
 
-const pool = mysql.createPool(database_config);
+app.use(jwt({
+    secret
+}).unless({
+    path: [/\/login/, /\/register/]
+}))
+  .use(logger())
+  .use(bodyParser())
+  .use(helmet())
+  .use(cors());
 
 app.listen(server_port, () => {
     console.log(`koa is running at port ${server_port}`);
