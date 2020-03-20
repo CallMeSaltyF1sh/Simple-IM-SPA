@@ -1,9 +1,11 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./index');
+const Login = require('./login');
+const Group = require('./group');
 
 const User = sequelize.define('user', {
     id: {
-        type: Sequelize.UUID,
+        type: Sequelize.UUIDV4,
         unique: true,
         primaryKey: true,
         allowNull: false
@@ -12,22 +14,25 @@ const User = sequelize.define('user', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    isAdmin: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true
-    },
     avatar: {
-        type: Sequelize.STRING,
-        allowNull: true
+        type: Sequelize.STRING
     },
     description: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    createTime: {
-        type: Sequelize.TIME,
-        allowNull: false
-    },
+        type: Sequelize.STRING
+    }
+}, {
+    timestamps: false
+});
+
+User.hasOne(Login, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+});
+User.belongsToMany(Group, {
+    through: 'groupLink'
+});
+User.belongsToMany(User, {
+    through: 'friendLink'
 });
 
 module.exports = User;

@@ -4,7 +4,11 @@ const { host, database, user, password } = mysql_config;
 
 const sequelize = new Sequelize(database, user, password, {
     host: host,
-    dialect: 'mysql'
+    dialect: 'mysql',
+    pool: {
+        max: 10,
+        min: 0
+    }
 });
 
 module.exports = sequelize;
