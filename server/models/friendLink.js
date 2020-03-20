@@ -9,6 +9,10 @@ const FriendLink = sequelize.define('friendLink', {
     id_friend: {
         type: Sequelize.UUID,
         allowNull: false
+    },
+    createTime: {
+        type: Sequelize.TIME,
+        allowNull: false
     }
 });
 

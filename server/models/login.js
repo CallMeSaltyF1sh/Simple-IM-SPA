@@ -1,33 +1,26 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./index');
 
-const User = sequelize.define('user', {
+const Login = sequelize.define('user', {
     id: {
         type: Sequelize.UUID,
         unique: true,
         primaryKey: true,
         allowNull: false
     },
-    nickname: {
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+    },
+    password: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    isAdmin: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true
-    },
-    avatar: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    description: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    createTime: {
+    lastLoginTime: {
         type: Sequelize.TIME,
         allowNull: false
-    },
+    }
 });
 
-module.exports = User;
+module.exports = Login;

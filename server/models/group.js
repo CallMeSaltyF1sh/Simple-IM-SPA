@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./index');
 
-const GroupDetail = sequelize.define('groupDetail', {
+const Group = sequelize.define('groupDetail', {
     id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -19,7 +19,15 @@ const GroupDetail = sequelize.define('groupDetail', {
     avatar: {
         type: Sequelize.STRING,
         allowNull: true
+    },
+    description: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
+    createTime: {
+        type: Sequelize.TIME,
+        allowNull: false
     }
 });
 
-module.exports = GroupDetail;
+module.exports = Group;

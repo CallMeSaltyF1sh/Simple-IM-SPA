@@ -9,6 +9,14 @@ const GroupLink = sequelize.define('groupLink', {
     id_group: {
         type: Sequelize.UUID,
         allowNull: false
+    },
+    joinInTime: {
+        type: Sequelize.TIME,
+        allowNull: false
+    },
+    nickname: {
+        type: Sequelize.STRING,
+        allowNull: true
     }
 });
 
