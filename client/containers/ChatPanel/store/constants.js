@@ -1,0 +1,1 @@
+export const CHANGE_MSG_LIST = 'CHANGE_MSG_LIST';

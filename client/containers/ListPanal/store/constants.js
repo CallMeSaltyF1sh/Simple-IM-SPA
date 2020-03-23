@@ -1,0 +1,1 @@
+export const CHANGE_DIALOG_LIST = 'CHANGE_DIALOG_LIST';

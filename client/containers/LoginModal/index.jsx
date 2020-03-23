@@ -1,18 +1,19 @@
-import React, { memo, useRef } from 'react';
+import React, { memo, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import InputArea from '@/components/InputArea';
 import ModalFrame from '@/components/ModalFrame';
 import { changeLoginModalDisplay } from './store/actions';
 import { changeRegisterModalDisplay } from '../RegisterModal/store/actions';
+import { changeLoginState } from '../MainPanal/store/actions';
 import socket from '@/socket';
 
 const LoginModal = (props) => {
-    const { changeLoginModalDisplayDispatch, changeRegisterModalDisplayDispatch } = props;
+    const { changeLoginModalDisplayDispatch, changeRegisterModalDisplayDispatch, changeLoginStateDispatch } = props;
     const emailEl = useRef(null);
     const pswdEl = useRef(null);
 
-    const handleSubmit = () => {
+    const handleSubmit = useCallback(() => {
         const email = emailEl.current.value;
         const pswd = pswdEl.current.value;
 
@@ -25,9 +26,10 @@ const LoginModal = (props) => {
             else {
                 alert('登录成功！');
                 changeLoginModalDisplayDispatch(false);
+                changeLoginStateDispatch(true);
             }
         });
-    };
+    }, []);
 
     return (
         <ModalFrame 
@@ -65,6 +67,9 @@ const mapDispatchToProps = dispatch => {
 		},
         changeRegisterModalDisplayDispatch(bool) {
             dispatch(changeRegisterModalDisplay(bool));
+        },
+        changeLoginStateDispatch(bool) {
+            dispatch(changeLoginState(bool));
         }
 	}
 };

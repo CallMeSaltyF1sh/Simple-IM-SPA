@@ -14,7 +14,7 @@ const RegisterModal = (props) => {
     const pswdEl = useRef(null);
     const repeatPswdEl = useRef(null);
 
-    const handleSubmit = () => {
+    const handleSubmit = useCallback(() => {
         const email = emailEl.current.value;
         const nickname = nicknameEl.current.value;
         const pswd = pswdEl.current.value;
@@ -35,17 +35,17 @@ const RegisterModal = (props) => {
                 }
             });
         }
-    };
+    }, []);
 
-    const checkNickname = val => {
+    const checkNickname = useCallback(val => {
         return val.length > 0 && val.length <= 25;
-    };
-    const checkPassword = val => {
+    }, []);
+    const checkPassword = useCallback(val => {
         return val.length >= 6 && val.length <= 25;
-    };
-    const checkEmail = val => {
+    }, []);
+    const checkEmail = useCallback(val => {
         return /^([A-Za-z0-9_\-\.])+@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(val);
-    };
+    }, []);
 
     return (
         <ModalFrame 

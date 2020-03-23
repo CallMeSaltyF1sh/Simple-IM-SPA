@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions.js';
+import { changeLoginState } from '../MainPanal/store/actions';
 
 const styles = css`
     .side-bar {
@@ -52,38 +53,60 @@ const styles = css`
     }
 `;
 
-const iconList = [
-    {
-        id: 0,
-        desc: '消息',
-        unicode: '&#xe603;'
-    },
-    {
-        id: 1,
-        desc: '好友',
-        unicode: '&#xe651;'
-    },
-    {
-        id: 2,
-        desc: '群聊',
-        unicode: '&#xe69f;'
-    },
-    {
-        id: 3,
-        desc: '设置',
-        unicode: '&#xe660;'
-    }, 
-    {
-        id: 4,
-        desc: '退出',
-        unicode: '&#xe89c;'
-    }
-];
-
-const SideBar = ({ isLogin = false, loginModalDisplay, changeLoginModalDisplayDispatch }) => {
+const SideBar = (props) => {
+    const { isLogin, changeLoginModalDisplayDispatch, changeLoginStateDispatch } = props;
+    
     const handleLogin = () => {
         changeLoginModalDisplayDispatch(true);
     };
+    const handleLogOut = () => {
+        changeLoginStateDispatch(false);
+        if(window.localStorage.getItem('token')) {
+            window.localStorage.setItem('token', null);
+        }
+    };
+    const handleViewDialogList = () => {
+
+    };
+    const handleViewFriendList = () => {
+
+    };
+    const handleViewGroupList = () => {
+
+    };
+
+    const iconList = [
+        {
+            id: 0,
+            desc: '消息',
+            unicode: '&#xe603;',
+            handler: handleViewDialogList
+        },
+        {
+            id: 1,
+            desc: '好友',
+            unicode: '&#xe651;',
+            handler: handleViewFriendList
+        },
+        {
+            id: 2,
+            desc: '群聊',
+            unicode: '&#xe69f;',
+            handler: handleViewGroupList
+        },
+        {
+            id: 3,
+            desc: '设置',
+            unicode: '&#xe660;',
+            handler: () => {}
+        }, 
+        {
+            id: 4,
+            desc: '退出',
+            unicode: '&#xe89c;',
+            handler: handleLogOut
+        }
+    ];
 
     return (
         <div className='side-bar'>
@@ -92,7 +115,7 @@ const SideBar = ({ isLogin = false, loginModalDisplay, changeLoginModalDisplayDi
                 {
                     isLogin ? 
                     iconList.map(item => (
-                        <div className='icon-list-item' key={item.id}>
+                        <div className='icon-list-item' key={item.id} onClick={item.handler}>
                             <i className='iconfont icon' dangerouslySetInnerHTML={{ __html: item.unicode}}></i>
                         </div>
                     )) : <div className='icon-list-item' onClick={handleLogin}>
@@ -105,14 +128,17 @@ const SideBar = ({ isLogin = false, loginModalDisplay, changeLoginModalDisplayDi
 }
 
 const mapStateToProps = state => ({
-	loginModalDisplay: state.getIn(['loginModal', 'loginModalDisplay'])
+    isLogin: state.getIn(['mainModal', 'isLogin'])
 });
 
 const mapDispatchToProps = dispatch => {
 	return {
 		changeLoginModalDisplayDispatch(bool) {
 			dispatch(changeLoginModalDisplay(bool));
-		}
+		},
+        changeLoginStateDispatch(bool) {
+            dispatch(changeLoginState(bool));
+        }
 	}
 };
 
