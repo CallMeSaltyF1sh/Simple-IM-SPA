@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
 const { getById } = require('../dao/user');
-const { getByEmail, updateLoginTime } = require('../dao/login_info');
+const { getByEmail, updateLoginTime} = require('../dao/login_info');
+const generateJWT = require('../utils/jwt');
+const jwt = require('jsonwebtoken');
+const { secret } = require('../config/index');
 
 async function login(email, password) {
     let response = {
@@ -18,7 +21,8 @@ async function login(email, password) {
                 response = {
                     status: 0,
                     message: 'SUCCESS',
-                    data: info
+                    data: info[0],
+                    token: generateJWT(user.id, email)
                 };
             } else {
                 response = {
@@ -38,4 +42,42 @@ async function login(email, password) {
     return response;
 };
 
-module.exports = login;
+async function loginWithToken(token) {
+    let response = {
+        status: -3,
+        message: '数据库错误'
+    };
+    try {
+        const decoded = jwt.verify(token, secret);
+        console.log(decoded);
+        const { userId, email } = decoded;
+        try {
+            const user = await getByEmail(email);
+            console.log(user);
+            if(user.length) {
+                await updateLoginTime(email);
+                const info = await getById(userId);
+                console.log(info);
+                response = {
+                    status: 0,
+                    message: 'SUCCESS',
+                    data: info[0]
+                };
+            }
+        } catch(e) {
+            console.log(e);
+        }
+    } catch(e) {
+        console.log(e);
+        return {
+            status: -4,
+            message: 'Token已过期，请重新登录emm...'
+        };
+    }
+    return response;
+}
+
+module.exports = {
+    login,
+    loginWithToken
+};
