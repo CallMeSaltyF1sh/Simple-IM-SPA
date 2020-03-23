@@ -5,6 +5,7 @@ import InputArea from '@/components/InputArea';
 import ModalFrame from '@/components/ModalFrame';
 import { changeLoginModalDisplay } from './store/actions';
 import { changeRegisterModalDisplay } from '../RegisterModal/store/actions';
+import socket from '@/socket';
 
 const LoginModal = (props) => {
     const { changeLoginModalDisplayDispatch, changeRegisterModalDisplayDispatch } = props;
@@ -12,8 +13,20 @@ const LoginModal = (props) => {
     const pswdEl = useRef(null);
 
     const handleSubmit = () => {
-        console.log(emailEl.current);
-        console.log(pswdEl.current);
+        const email = emailEl.current.value;
+        const pswd = pswdEl.current.value;
+
+        socket.emit('login', {
+            email: email,
+            password: pswd
+        }, res => {
+            console.log(res)
+            if(res.status !== 0) alert(res.message);
+            else {
+                alert('登录成功！');
+                changeLoginModalDisplayDispatch(false);
+            }
+        });
     };
 
     return (
@@ -30,12 +43,16 @@ const LoginModal = (props) => {
                 unicode='&#xe635;' 
                 type='email'
                 ref={emailEl}
+                passedTips='邮箱不存在'
+                //checkValidity={checkEmail}
             />
             <InputArea 
                 placeholder='请输入密码' 
                 unicode='&#xe623;' 
                 type='password'
                 ref={pswdEl}
+                passedTips='密码不正确'
+                //checkValidity={checkPassword}
             />      
         </ModalFrame>
     )

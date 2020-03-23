@@ -3,7 +3,7 @@ const query = require('../utils/query');
 const sql = {
     insert: `
         INSERT INTO login_info(id, email, password, created_at)
-         VALUES (?, ?, ?, ?)
+         VALUES (?, ?, ?, now())
     `,
     setAdmin: `
         UPDATE login_info SET is_admin=?

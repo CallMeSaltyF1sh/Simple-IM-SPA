@@ -59,10 +59,23 @@ const styles = css`
 `
 
 const InputArea = forwardRef((props, ref) => {
-    const { unicode, checkValidity, placeholder, type, style } = props;
+    const { unicode, checkValidity, passedTips, placeholder, type, style } = props;
     const [isOk, setIsOk] = useState(true);
     const [content, setContent] = useState('');
     const [tips, setTips] = useState('');
+
+    const handleBlur = e => {
+        if(checkValidity) {
+            console.log(checkValidity(e.target.value))
+            if(checkValidity(e.target.value)) {
+                setIsOk(true);
+                setTips('');
+            } else {
+                setIsOk(false);
+                setTips(passedTips);
+            }
+        }
+    };
 
     return (
         <div className='input-area'>
@@ -78,7 +91,7 @@ const InputArea = forwardRef((props, ref) => {
                     className='input' 
                     onChange={(e) => setContent(e.target.value)}
                     //onInput={handleInput}
-                    //onBlur={handleBlur}
+                    onBlur={handleBlur}
                     placeholder={placeholder}
                     style={{...style}}
                 />

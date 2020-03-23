@@ -50,6 +50,7 @@
     "autoprefixer": "^9.7.4",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
+    "bluebird": "^3.7.2",
     "create-keyframe-animation": "^0.1.0",
     "immutable": "^4.0.0-rc.12",
     "jsonwebtoken": "^8.5.1",

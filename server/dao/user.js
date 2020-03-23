@@ -2,8 +2,7 @@ const query = require('../utils/query');
 
 const sql = {
     insert: `
-        INSERT INTO user(id, nickname)
-         VALUES (?, ?)
+        INSERT INTO user(id, nickname) VALUES (?, ?)
     `,
     updateInfo: `
         UPDATE user SET nickname=?, description=?
