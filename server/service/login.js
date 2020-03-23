@@ -1,11 +1,13 @@
 const bcrypt = require('bcrypt');
 const { getById } = require('../dao/user');
-const { getByEmail, updateLoginTime} = require('../dao/login_info');
+const { getByEmail, updateLoginTime } = require('../dao/login_info');
 const generateJWT = require('../utils/jwt');
 const jwt = require('jsonwebtoken');
 const { secret } = require('../config/index');
+const { getJoinedGroupsByUserId } = require('../dao/group');
+const { updateSocket } = require('../dao/socket');
 
-async function login(email, password) {
+async function login(email, password, socket_id) {
     let response = {
         status: -3,
         message: '数据库错误'
@@ -18,11 +20,17 @@ async function login(email, password) {
                 await updateLoginTime(email);
                 const info = await getById(user.id);
                 console.log(info);
+                const groups = await getJoinedGroupsByUserId(user.id);
+                console.log(groups);
+                await updateSocket(socket_id, user.id);
                 response = {
                     status: 0,
                     message: 'SUCCESS',
-                    data: info[0],
-                    token: generateJWT(user.id, email)
+                    data: {
+                        userInfo: info[0],
+                        token: generateJWT(user.id, email),
+                        groups: groups
+                    }
                 };
             } else {
                 response = {
@@ -42,7 +50,7 @@ async function login(email, password) {
     return response;
 };
 
-async function loginWithToken(token) {
+async function loginWithToken(token, socket_id) {
     let response = {
         status: -3,
         message: '数据库错误'
@@ -52,16 +60,22 @@ async function loginWithToken(token) {
         console.log(decoded);
         const { userId, email } = decoded;
         try {
-            const user = await getByEmail(email);
+            const user = await getById(userId);
             console.log(user);
             if(user.length) {
                 await updateLoginTime(email);
                 const info = await getById(userId);
                 console.log(info);
+                const groups = await getJoinedGroupsByUserId(userId);
+                console.log(groups);
+                await updateSocket(socket_id, userId);
                 response = {
                     status: 0,
                     message: 'SUCCESS',
-                    data: info[0]
+                    data: {
+                        userInfo: info[0],
+                        groups: groups
+                    }
                 };
             }
         } catch(e) {

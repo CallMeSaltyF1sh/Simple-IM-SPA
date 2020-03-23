@@ -19,6 +19,7 @@ const enhance = require('./middlewares/enhance');
 const bindRoute = require('./middlewares/bindRoute');
 const userRoute = require('./routes/user');
 const handle401 = require('./middlewares/401handler');
+const { createSocket, deleteSocket } = require('./dao/socket');
 
 const { server_port, secret } = require('./config/index');
 
@@ -46,10 +47,12 @@ io.use(bindRoute(
 ));
 
 app.io.on('connection', async (ctx)=>{
-    console.log('connection', ctx.socket.id);
+    console.log('connection', ctx.socket);
+    await createSocket(ctx.socket.id);
 });
 app.io.on('disconnect', async (ctx) => {
     console.log('disconnect', ctx.socket.id);
+    await deleteSocket(ctx.socket.id);
 });
 
 app.use(static(

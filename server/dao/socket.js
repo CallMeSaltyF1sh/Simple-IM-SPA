@@ -2,8 +2,12 @@ const query = require('../utils/query');
 
 const sql = {
     insert: `
-        INSERT INTO socket(id, user, created_at)
-         VALUES (?, ?, now())
+        INSERT INTO socket(id, created_at)
+         VALUES (?, now())
+    `,
+    update: `
+        UPDATE socket SET user=?
+        WHERE id=?
     `,
     get:`
         SELECT * FROM socket WHERE id=?
@@ -13,8 +17,8 @@ const sql = {
     `
 };
 
-async function createSocket(id, user) {
-    return await query(sql.insert, [id, user]);
+async function createSocket(id) {
+    return await query(sql.insert, [id]);
 }
 
 async function getSocket(id) {
@@ -25,8 +29,13 @@ async function deleteSocket(id) {
     return await query(sql.delete, [id]);
 }
 
+async function updateSocket(id, user) {
+    return await query(sql.update, [user, id]);
+}
+
 module.exports = {
     createSocket,
     getSocket,
-    deleteSocket
+    deleteSocket,
+    updateSocket
 };

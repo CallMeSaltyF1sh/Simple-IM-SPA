@@ -7,11 +7,11 @@ const sql = {
     `,
     edit: `
         UPDATE group SET name=?, description=?
-        where id=?
+        WHERE id=?
     `,
     setAvatar: `
         UPDATE group SET avatar=?
-        where id=?
+        WHERE id=?
     `,
     get: `
         SELECT * FROM group WHERE id=?
@@ -21,7 +21,10 @@ const sql = {
     `,
     changeOwner: `
         UPDATE group SET owner=?
-        where id=?
+        WHERE id=?
+    `,
+    unionSelect: `
+        SELECT * FROM group WHERE id=(SELECT id_group FROM group_link WHERE id_self=?)
     `
 };
 
@@ -49,11 +52,16 @@ async function changeOwner(id, newOwner) {
     return await query(sql.changeOwner, [newOwner, id]);
 }
 
+async function getJoinedGroupsByUserId(id) {
+    return await query(sql.unionSelect, [id]);
+}
+
 module.exports = {
     createGroup,
     editInfo,
     setAvatar,
     getGroupInfo,
     deleteGroup,
-    changeOwner
+    changeOwner,
+    getJoinedGroupsByUserId
 };
