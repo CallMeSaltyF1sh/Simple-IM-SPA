@@ -5,14 +5,15 @@ import InputArea from '@/components/InputArea';
 import ModalFrame from '@/components/ModalFrame';
 import socket from '@/socket';
 import { changeCGModalDisplay } from './store/actions';
+import { setGroupList } from '../MainPanel/store/actions';
 
 const CreateGroupModal = (props) => {
-    const { changeCGModalDisplayDispatch } = props;
-    const { userInfo } = props;
+    const { changeCGModalDisplayDispatch, setGroupListDispatch } = props;
+    const { userInfo, groups } = props;
     const nameEl = useRef(null);
 
     const info = userInfo ? userInfo.toJS() : {};
-    const { id } = info;
+    const groupList = groups ? groups.toJS() : [];
 
     const checkName = useCallback(val => {
         return val.length > 0 && val.length <= 25;
@@ -26,6 +27,7 @@ const CreateGroupModal = (props) => {
             return;
         }
 
+        const { id } = info;
         socket.emit('createGroup', {
             name: name,
             userId: id
@@ -35,6 +37,9 @@ const CreateGroupModal = (props) => {
             else {
                 alert('创建成功！');
                 changeCGModalDisplayDispatch(false);
+                const newGroupInfo = res.data;
+                groupList.unshift(newGroupInfo);
+                setGroupListDispatch(groupList);
             }
         });
     }, []);
@@ -60,13 +65,17 @@ const CreateGroupModal = (props) => {
 
 const mapStateToProps = state => ({
     userInfo: state.getIn(['mainPanel', 'userInfo']),
+    groups: state.getIn(['mainPanel', 'groups'])
 });
 
 const mapDispatchToProps = dispatch => {
 	return {
 		changeCGModalDisplayDispatch(bool) {
 			dispatch(changeCGModalDisplay(bool));
-		}
+		},
+        setGroupListDispatch(groups) {
+            dispatch(setGroupList(groups));
+        }
 	}
 };
 

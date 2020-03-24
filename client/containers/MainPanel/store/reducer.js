@@ -3,7 +3,9 @@ import { fromJS } from 'immutable';
 
 const defaultState = fromJS({
     isLogin: false,
-    userInfo: {}
+    userInfo: {},
+    groups: [],
+    friends: []
 });
 
 export default (state = defaultState, action) => {
@@ -12,6 +14,10 @@ export default (state = defaultState, action) => {
             return state.set('isLogin', action.data);
         case actionTypes.SET_USER_INFO:
             return state.set('userInfo', action.data);
+        case actionTypes.SET_GROUP_LIST:
+            return state.set('groups', action.data);
+        case actionTypes.SET_FRIEND_LIST:
+            return state.set('friends', action.data);
         default:
             return state;
     }

@@ -8,7 +8,7 @@ import ChatPanel from '../ChatPanel/index';
 import LoginModal from '../LoginModal/index';
 import RegisterModal from '../RegisterModal/index';
 import CreateGroupModal from '../CreateGroupModal/index';
-import { changeLoginState, setUserInfo } from './store/actions';
+import { changeLoginState, setUserInfo, setGroupList, setFriendList } from './store/actions';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import socket from '@/socket';
 
@@ -71,6 +71,7 @@ const styles = css`
 const MainPanal = (props) => {
 	const { loginModalDisplay, registerModalDisplay, cgModalDisplay } = props;
 	const { changeLoginStateDispatch, setUserInfoDispatch, changeLoginModalDisplayDispatch } = props;
+	const { setGroupListDispatch, setFriendListDispatch } = props;
 	
 	socket.on('connect', () => {
 		const token = window.localStorage.getItem('token');
@@ -85,8 +86,10 @@ const MainPanal = (props) => {
 					changeLoginModalDisplayDispatch(true);
 					window.localStorage.setItem('token', '');
 				} else {
+					const { userInfo, groups } = res.data;
 					changeLoginStateDispatch(true);
-					setUserInfoDispatch(res.data.userInfo);
+					setUserInfoDispatch(userInfo);
+					setGroupListDispatch(groups);
 				}
 			});
 		}
@@ -129,6 +132,12 @@ const mapDispatchToProps = dispatch => {
 		changeLoginModalDisplayDispatch(bool) {
 			dispatch(changeLoginModalDisplay(bool));
 		},
+		setGroupListDispatch(groups) {
+			dispatch(setGroupList(groups));
+		},
+		setFriendListDispatch(friends) {
+			dispatch(setFriendList(friends));
+		}
 	}
 };
 
