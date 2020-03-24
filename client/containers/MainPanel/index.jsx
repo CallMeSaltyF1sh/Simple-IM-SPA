@@ -1,14 +1,15 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import 'normalize.css';
 import SideBar from '@/containers/SideBar/index';
-import ListPanel from '@/containers/ListPanal/index';
+import ListPanel from '@/containers/ListPanel/index';
 import ChatPanel from '@/containers/ChatPanel/index';
 import LoginModal from '@/containers/LoginModal/index';
 import RegisterModal from '@/containers/RegisterModal/index';
-//import { changeLoginModalDisplay } from '../LoginModal/store/actions';
-//import { changeRegisterModalDisplay } from '../RegisterModal/store/actions';
+import { changeLoginState, setUserInfo } from './store/actions';
+import { changeLoginModalDisplay } from './store/actions';
+import socket from '@/socket';
 
 const styles = css`
 	.app{
@@ -66,7 +67,30 @@ const styles = css`
 	}
 `;
 
-const MainPanal = ({ loginModalDisplay, registerModalDisplay }) => {
+const MainPanal = (props) => {
+	const { loginModalDisplay, registerModalDisplay } = props;
+	const { changeLoginStateDispatch, setUserInfoDispatch, changeLoginModalDisplayDispatch } = props;
+	
+	useEffect(() => {
+		const token = window.localStorage.getItem('token');
+		if(token) {
+			socket.emit('checkToken', {
+				token: token
+			}, res => {
+				console.log(res)
+				if(res.status !== 0) {
+					alert('登录已过期，请重新登录w(ﾟДﾟ)w');
+					changeLoginModalDisplayDispatch(true);
+					window.localStorage.setItem('token', '');
+				} else {
+					changeLoginStateDispatch(true);
+					setUserInfoDispatch(res.data.userInfo);
+				}
+			});
+		}
+	}, []);
+	
+	
 	return (
 		<div className='app'>
 			<div className='container'>
@@ -88,7 +112,15 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
 	return {
-		
+		changeLoginStateDispatch(bool) {
+            dispatch(changeLoginState(bool));
+        },
+		setUserInfoDispatch(info) {
+			dispatch(setUserInfo(info));
+		},
+		changeLoginModalDisplayDispatch(bool) {
+			dispatch(changeLoginModalDisplay(bool));
+		},
 	}
 };
 

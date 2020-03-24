@@ -4,8 +4,8 @@ import { css } from 'astroturf';
 import InputArea from '@/components/InputArea';
 import ModalFrame from '@/components/ModalFrame';
 import { changeLoginModalDisplay } from './store/actions';
-import { changeRegisterModalDisplay } from '../RegisterModal/store/actions';
-import { changeLoginState } from '../MainPanal/store/actions';
+import { changeRegisterModalDisplay } from '@/containers/RegisterModal/store/actions';
+import { changeLoginState } from '@/containers/MainPanel/store/actions';
 import socket from '@/socket';
 
 const LoginModal = (props) => {
@@ -27,6 +27,9 @@ const LoginModal = (props) => {
                 alert('登录成功！');
                 changeLoginModalDisplayDispatch(false);
                 changeLoginStateDispatch(true);
+                if(res.data && res.data.token) {
+                    window.localStorage.setItem('token', res.data.token);
+                }
             }
         });
     }, []);

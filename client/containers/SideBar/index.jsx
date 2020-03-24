@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { css } from 'astroturf';
-import { changeLoginModalDisplay } from '../LoginModal/store/actions.js';
-import { changeLoginState } from '../MainPanal/store/actions';
+import { changeLoginModalDisplay } from '../LoginModal/store/actions';
+import { changeLoginState } from '../MainPanel/store/actions';
 
 const styles = css`
     .side-bar {
@@ -55,7 +55,7 @@ const styles = css`
 
 const SideBar = (props) => {
     const { isLogin, changeLoginModalDisplayDispatch, changeLoginStateDispatch } = props;
-    
+    console.log(isLogin)
     const handleLogin = () => {
         changeLoginModalDisplayDispatch(true);
     };
@@ -128,7 +128,7 @@ const SideBar = (props) => {
 }
 
 const mapStateToProps = state => ({
-    isLogin: state.getIn(['mainModal', 'isLogin'])
+    isLogin: state.getIn(['mainPanel', 'isLogin'])
 });
 
 const mapDispatchToProps = dispatch => {

@@ -8,11 +8,12 @@ module.exports = function(io, routes) {
     }, {});
     return async (ctx) => {
         if(router[ctx.event]) {
-            const { event, data } = ctx;
+            const { event, data, socket } = ctx;
             console.log(data);
             ctx.res = await router[ctx.event] ({
                 event, 
-                data
+                data,
+                socket
             });
         }
     }

@@ -2,29 +2,30 @@ const query = require('../utils/query');
 
 const sql = {
     insert: `
-        INSERT INTO group(id, name, owner, created_at)
+        INSERT INTO group_info(id, name, owner, created_at)
          VALUES (?, ?, ?, now())
     `,
     edit: `
-        UPDATE group SET name=?, description=?
+        UPDATE group_info SET name=?, description=?
         WHERE id=?
     `,
     setAvatar: `
-        UPDATE group SET avatar=?
+        UPDATE group_info SET avatar=?
         WHERE id=?
     `,
     get: `
-        SELECT * FROM group WHERE id=?
+        SELECT * FROM group_info WHERE id=?
     `,
     delete: `
-        DELETE FROM group WHERE id=?
+        DELETE FROM group_info WHERE id=?
     `,
     changeOwner: `
-        UPDATE group SET owner=?
+        UPDATE group_info SET owner=?
         WHERE id=?
     `,
     unionSelect: `
-        SELECT * FROM group WHERE id=(SELECT id_group FROM group_link WHERE id_self=?)
+        SELECT * FROM group_link LEFT OUTER JOIN group_info ON group_link.id_group = group_info.id 
+        WHERE group_link.id_self = ?
     `
 };
 

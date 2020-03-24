@@ -1,10 +1,10 @@
 const bcrypt = require('bcrypt');
 const { getById } = require('../dao/user');
 const { getByEmail, updateLoginTime } = require('../dao/login_info');
-const generateJWT = require('../utils/jwt');
+const { generateJWT } = require('../utils/jwt');
 const jwt = require('jsonwebtoken');
 const { secret } = require('../config/index');
-const { getJoinedGroupsByUserId } = require('../dao/group');
+const { getJoinedGroupsByUserId } = require('../dao/group_info');
 const { updateSocket } = require('../dao/socket');
 
 async function login(email, password, socket_id) {
@@ -14,21 +14,22 @@ async function login(email, password, socket_id) {
     };
     try {
         const user = await getByEmail(email);
+        console.log(user);
         if(user.length) {
             const match = bcrypt.compareSync(password, user[0].password);
             if(match) {
                 await updateLoginTime(email);
-                const info = await getById(user.id);
+                const info = await getById(user[0].id);
                 console.log(info);
-                const groups = await getJoinedGroupsByUserId(user.id);
+                const groups = await getJoinedGroupsByUserId(user[0].id);
                 console.log(groups);
-                await updateSocket(socket_id, user.id);
+                await updateSocket(socket_id, user[0].id);
                 response = {
                     status: 0,
                     message: 'SUCCESS',
                     data: {
                         userInfo: info[0],
-                        token: generateJWT(user.id, email),
+                        token: generateJWT(user[0].id, email),
                         groups: groups
                     }
                 };

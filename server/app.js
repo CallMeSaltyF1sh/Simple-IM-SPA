@@ -47,7 +47,7 @@ io.use(bindRoute(
 ));
 
 app.io.on('connection', async (ctx)=>{
-    console.log('connection', ctx.socket);
+    console.log('connection', ctx.socket.id);
     await createSocket(ctx.socket.id);
 });
 app.io.on('disconnect', async (ctx) => {
