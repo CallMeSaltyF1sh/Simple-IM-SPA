@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import { changeLoginState } from '../MainPanel/store/actions';
+import { changeItemType } from '../ListPanel/store/actions';
 
 const styles = css`
     .side-bar {
@@ -22,7 +23,7 @@ const styles = css`
             width: 64%;
             padding-top: 64%;
             margin: 30px 0 0 18%;
-            background-image: url('../../assets/images/avators/lei.jpg');
+            background-image: url('../../assets/images/avators/1.png');
             background-size: 100% 100%;
             box-sizing: border-box;
             border-radius: 50%;
@@ -54,25 +55,26 @@ const styles = css`
 `;
 
 const SideBar = (props) => {
-    const { isLogin, changeLoginModalDisplayDispatch, changeLoginStateDispatch } = props;
-    console.log(isLogin)
+    const { isLogin } = props;
+    const { changeLoginModalDisplayDispatch, changeLoginStateDispatch, changeItemTypeDispatch } = props;
+    
     const handleLogin = () => {
         changeLoginModalDisplayDispatch(true);
     };
     const handleLogOut = () => {
         changeLoginStateDispatch(false);
         if(window.localStorage.getItem('token')) {
-            window.localStorage.setItem('token', null);
+            window.localStorage.setItem('token', '');
         }
     };
     const handleViewDialogList = () => {
-
+        changeItemTypeDispatch('dialog');
     };
     const handleViewFriendList = () => {
-
+        changeItemTypeDispatch('linkman');
     };
     const handleViewGroupList = () => {
-
+        changeItemTypeDispatch('linkman');
     };
 
     const iconList = [
@@ -138,6 +140,9 @@ const mapDispatchToProps = dispatch => {
 		},
         changeLoginStateDispatch(bool) {
             dispatch(changeLoginState(bool));
+        },
+        changeItemTypeDispatch(type) {
+            dispatch(changeItemType(type));
         }
 	}
 };

@@ -24,7 +24,7 @@ const styles = css`
             height: 44px;
             margin: 12px 10px 0 0;
             border-radius: 50%;
-            background-image: url('../assets/images/avators/3.jpg');
+            background-image: url('../assets/images/avators/a.jpg');
             background-size: 100% 100%;
         }
         .info {
@@ -39,7 +39,7 @@ const styles = css`
             }
             .msg {
                 position: absolute;
-                width: 80%;
+                width: 82%;
                 left: 0;
                 bottom: 16px;
                 font-size: 11px;
@@ -95,7 +95,7 @@ const timeFormat = time => {
     }
 };
 
-const ListItem = ({ name, msgTime, avatarUrl, latestMsg, unreadCnt, focus, onClick }) => {
+const ListItem = ({ name, msgTime, avatarUrl, latestMsg, unreadCnt, focus, onClick=function(){} }) => {
     return (
         <div className={`chat-list-item ${ focus ? 'focus' : ''}`} onClick={onClick}>
             <div className='avatar'></div>

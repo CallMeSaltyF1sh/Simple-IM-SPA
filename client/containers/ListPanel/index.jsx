@@ -1,7 +1,9 @@
 import React, { useState, useRef, memo } from 'react';
+import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import SearchBox from '@/components/SearchBox';
-import ListItem from '@/components/ListItem';
+import DialogItem from '@/components/DialogItem';
+import LinkmanItem from '@/components/LinkmanItem';
 
 const styles = css`
     .list-panel {
@@ -66,7 +68,11 @@ const msgList = [
     
 ];
 
-function ListPanel() {
+const ListPanel = (props) => {
+    const { list: immutableList, itemType } = props;
+    const list = immutableList ? immutableList.toJS() : [];
+    const Item = itemType === 'dialog' ? DialogItem : LinkmanItem;
+
     return (
         <div className='list-panel'>
             <div className='list-panel-top'>
@@ -77,7 +83,7 @@ function ListPanel() {
                 {
                     msgList.map(item => (
                         <div key={item.type + item.id}>
-                            <ListItem {...item} />
+                            <Item {...item} />
                         </div>
                     ))
                 }
@@ -86,4 +92,13 @@ function ListPanel() {
     )
 }
 
-export default memo(ListPanel);
+const mapStateToProps = state => ({
+    list: state.getIn(['listPanel', 'list']),
+    itemType: state.getIn(['listPanel', 'itemType'])
+});
+
+const mapDispatchToProps = dispatch => {
+	return { }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(memo(ListPanel));

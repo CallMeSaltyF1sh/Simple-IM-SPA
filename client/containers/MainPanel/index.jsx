@@ -2,13 +2,13 @@ import React, { memo, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import 'normalize.css';
-import SideBar from '@/containers/SideBar/index';
-import ListPanel from '@/containers/ListPanel/index';
-import ChatPanel from '@/containers/ChatPanel/index';
-import LoginModal from '@/containers/LoginModal/index';
-import RegisterModal from '@/containers/RegisterModal/index';
+import SideBar from '../SideBar/index';
+import ListPanel from '../ListPanel/index';
+import ChatPanel from '../ChatPanel/index';
+import LoginModal from '../LoginModal/index';
+import RegisterModal from '../RegisterModal/index';
 import { changeLoginState, setUserInfo } from './store/actions';
-import { changeLoginModalDisplay } from './store/actions';
+import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import socket from '@/socket';
 
 const styles = css`
@@ -71,8 +71,9 @@ const MainPanal = (props) => {
 	const { loginModalDisplay, registerModalDisplay } = props;
 	const { changeLoginStateDispatch, setUserInfoDispatch, changeLoginModalDisplayDispatch } = props;
 	
-	useEffect(() => {
+	socket.on('connect', () => {
 		const token = window.localStorage.getItem('token');
+		console.log(token);
 		if(token) {
 			socket.emit('checkToken', {
 				token: token
@@ -88,8 +89,11 @@ const MainPanal = (props) => {
 				}
 			});
 		}
-	}, []);
-	
+	});
+	socket.on('disconnect', () => {
+		changeLoginStateDispatch(false);
+		alert('连接中断，请检查网络状态w(ﾟДﾟ)w');
+	});
 	
 	return (
 		<div className='app'>

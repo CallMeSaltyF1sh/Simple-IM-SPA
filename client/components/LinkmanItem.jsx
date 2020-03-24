@@ -21,7 +21,7 @@ const styles = css`
             height: 44px;
             margin: 12px 10px 0 0;
             border-radius: 50%;
-            background-image: url('../assets/images/avators/3.jpg');
+            background-image: url('../assets/images/avators/a.jpg');
             background-size: 100% 100%;
         }
         .info {
@@ -36,7 +36,7 @@ const styles = css`
             }
             .desc {
                 position: absolute;
-                width: 80%;
+                width: 85%;
                 left: 0;
                 bottom: 16px;
                 font-size: 11px;
