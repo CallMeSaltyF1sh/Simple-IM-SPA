@@ -4,11 +4,13 @@ import { reducer as registerModalReducer } from '@/containers/RegisterModal/stor
 import { reducer as mainPanelReducer } from '@/containers/MainPanel/store/index';
 import { reducer as listPanelReducer } from '@/containers/ListPanel/store/index';
 import { reducer as chatPanelReducer } from '@/containers/ChatPanel/store/index';
+import { reducer as cgModalReducer } from '@/containers/CreateGroupModal/store/index';
 
 export default combineReducers({
     loginModal: loginModalReducer,
     registerModal: registerModalReducer,
     mainPanel: mainPanelReducer,
     listPanel: listPanelReducer,
-    chatPanel: chatPanelReducer
+    chatPanel: chatPanelReducer,
+    createGroupModal: cgModalReducer
 });

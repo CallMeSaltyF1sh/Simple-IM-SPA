@@ -19,6 +19,10 @@ const RegisterModal = (props) => {
         const nickname = nicknameEl.current.value;
         const pswd = pswdEl.current.value;
         const repeatPswd = repeatPswdEl.current.value;
+        if(!checkEmail(email) || !checkNickname(nickname) || !checkPassword(pswd)) {
+            alert('请再次检查输入emm...');
+            return;
+        }
         if(pswd !== repeatPswd) alert('确认密码输入不一致');
         else {
             socket.emit('register', {

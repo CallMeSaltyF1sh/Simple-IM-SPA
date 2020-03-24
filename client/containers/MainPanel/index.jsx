@@ -7,6 +7,7 @@ import ListPanel from '../ListPanel/index';
 import ChatPanel from '../ChatPanel/index';
 import LoginModal from '../LoginModal/index';
 import RegisterModal from '../RegisterModal/index';
+import CreateGroupModal from '../CreateGroupModal/index';
 import { changeLoginState, setUserInfo } from './store/actions';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import socket from '@/socket';
@@ -68,7 +69,7 @@ const styles = css`
 `;
 
 const MainPanal = (props) => {
-	const { loginModalDisplay, registerModalDisplay } = props;
+	const { loginModalDisplay, registerModalDisplay, cgModalDisplay } = props;
 	const { changeLoginStateDispatch, setUserInfoDispatch, changeLoginModalDisplayDispatch } = props;
 	
 	socket.on('connect', () => {
@@ -92,6 +93,7 @@ const MainPanal = (props) => {
 	});
 	socket.on('disconnect', () => {
 		changeLoginStateDispatch(false);
+		setUserInfoDispatch({});
 		alert('连接中断，请检查网络状态w(ﾟДﾟ)w');
 	});
 	
@@ -105,13 +107,15 @@ const MainPanal = (props) => {
 
 			{loginModalDisplay && <LoginModal />}
 			{registerModalDisplay && <RegisterModal />}
+			{cgModalDisplay && <CreateGroupModal />}
 		</div>
 	);
 }
 
 const mapStateToProps = state => ({
 	loginModalDisplay: state.getIn(['loginModal', 'display']),
-	registerModalDisplay: state.getIn(['registerModal', 'display'])
+	registerModalDisplay: state.getIn(['registerModal', 'display']),
+	cgModalDisplay: state.getIn(['createGroupModal', 'display'])
 });
 
 const mapDispatchToProps = dispatch => {

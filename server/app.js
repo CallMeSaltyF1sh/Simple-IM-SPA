@@ -15,9 +15,10 @@ const io = new IO({
     pingTimout: 10000,
     pingInterval: 5000
 });
+const userRoute = require('./routes/user');
+const groupRoute = require('./routes/group');
 const enhance = require('./middlewares/enhance');
 const bindRoute = require('./middlewares/bindRoute');
-const userRoute = require('./routes/user');
 const handle401 = require('./middlewares/401handler');
 const errCatcher = require('./middlewares/errCatcher');
 const { createSocket, deleteSocket } = require('./dao/socket');
@@ -55,7 +56,7 @@ app.use(jwt({
 
 io.use(bindRoute(
     app.io,
-    { ...userRoute }
+    { ...userRoute, ...groupRoute }
 ));
 
 app.io.on('connection', async (ctx)=>{

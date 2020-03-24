@@ -78,11 +78,11 @@ const ModalFrame = (props) => {
                 <div className='modal-top'>{title}</div>
                 {children}
                 <div className='bottom-wrapper'>
-                    <div className='switch' onClick={handleSwitch}>> 去{switchTxt}~!</div>
+                    {onSwitch && <div className='switch' onClick={handleSwitch}>> 去{switchTxt}~!</div>}
                     <Button 
                         btnTxt={btnTxt} 
                         handleClick={handleSubmit}
-                        style={{ width: '40%', fontSize: 14, background: '#c4a79f' }}
+                        style={{ width: onSwitch ? '40%' : '100%', fontSize: 14, background: '#c4a79f' }}
                     />
                 </div>
                 <i className='iconfont close' onClick={handleClose}>&#xe612;</i>

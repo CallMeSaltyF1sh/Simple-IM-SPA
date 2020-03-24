@@ -4,6 +4,7 @@ import { css } from 'astroturf';
 import SearchBox from '@/components/SearchBox';
 import DialogItem from '@/components/DialogItem';
 import LinkmanItem from '@/components/LinkmanItem';
+import { changeCGModalDisplay } from '../CreateGroupModal/store/actions';
 
 const styles = css`
     .list-panel {
@@ -70,14 +71,19 @@ const msgList = [
 
 const ListPanel = (props) => {
     const { list: immutableList, itemType } = props;
+    const { changeCGModalDisplayDispatch } = props;
     const list = immutableList ? immutableList.toJS() : [];
     const Item = itemType === 'dialog' ? DialogItem : LinkmanItem;
+
+    const handleAdd = () => {
+        changeCGModalDisplayDispatch(true);
+    };
 
     return (
         <div className='list-panel'>
             <div className='list-panel-top'>
                 <SearchBox />
-                <i className='iconfont add'>&#xe60b;</i>
+                <i className='iconfont add' onClick={handleAdd}>&#xe60b;</i>
             </div>
             <div className='chat-list-wrapper'>
                 {
@@ -98,7 +104,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => {
-	return { }
+	return {
+        changeCGModalDisplayDispatch(bool) {
+            dispatch(changeCGModalDisplay(bool));
+        }
+     }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(memo(ListPanel));
