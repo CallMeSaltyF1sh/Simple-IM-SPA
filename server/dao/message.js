@@ -10,33 +10,36 @@ const sql = {
          VALUES (?, ?, ?, ?, now())
     `,
     getMsgByGroupId: `
-        SELECT * FROM message WHERE to_group=? ORDER BY created_at
+        SELECT * FROM message INNER JOIN user ON message.from=user.id
+        WHERE to_group=? 
+        ORDER BY created_at
     `,
     getMsgByUserId: `
-        SELECT * FROM message WHERE (from=? AND to_user=?) OR (from=? AND to_user=?)
+        SELECT * FROM message 
+        WHERE (from=? AND to_user=?) OR (from=? AND to_user=?)
         ORDER BY created_at
     `
 };
 
-async function insertGroupMsg(id, id_group, type) {
-    return await query(sql.insertGroupMsg, [id, id_group, type]);
+async function sendGroupMsg(id, id_group, content, type) {
+    return await query(sql.insertGroupMsg, [id, id_group, content, type]);
 }
 
-async function insertUsrMsg(id, id_usr, type) {
-    return await query(sql.insertUsrMsg, [id, id_usr, type]);
+async function sendUserMsg(id, id_usr, content, type) {
+    return await query(sql.insertUsrMsg, [id, id_usr, content, type]);
 }
 
 async function getGroupMsg(id_group) {
-    return await query(sql.getGroupMsg, [id_group]);
+    return await query(sql.getMsgByGroupId, [id_group]);
 }
 
 async function getUserMsg(id, id_usr) {
-    return await query(sql.getUserMsg, [id, id_usr, id_usr, id]);
+    return await query(sql.getMsgByUserId, [id, id_usr, id_usr, id]);
 }
 
 module.exports = {
-    insertGroupMsg, 
-    insertUsrMsg,
+    sendGroupMsg, 
+    sendUserMsg,
     getGroupMsg,
     getUserMsg
 };

@@ -23,9 +23,12 @@ const sql = {
         UPDATE group_info SET owner=?
         WHERE id=?
     `,
-    unionSelect: `
-        SELECT * FROM group_link LEFT OUTER JOIN group_info ON group_link.id_group = group_info.id 
+    getAllGroups: `
+        SELECT * FROM group_link INNER JOIN group_info ON group_link.id_group = group_info.id 
         WHERE group_link.id_self = ?
+    `,
+    getDefaultGroup: `
+        SELECT * FROM group_info WHERE is_default=true
     `
 };
 
@@ -54,7 +57,11 @@ async function changeOwner(id, newOwner) {
 }
 
 async function getJoinedGroupsByUserId(id) {
-    return await query(sql.unionSelect, [id]);
+    return await query(sql.getAllGroups, [id]);
+}
+
+async function getDefaultGroup() {
+    return await query(sql.getDefaultGroup, []);
 }
 
 module.exports = {
@@ -64,5 +71,6 @@ module.exports = {
     getGroupInfo,
     deleteGroup,
     changeOwner,
-    getJoinedGroupsByUserId
+    getJoinedGroupsByUserId,
+    getDefaultGroup
 };

@@ -1,11 +1,14 @@
 const bcrypt = require('bcrypt');
 const { v4 } = require('uuid');
 const { saltRounds } = require('../config');
-const { createInfo } = require('../dao/user');
+const { createInfo, getAdmin } = require('../dao/user');
 const { create, getByEmail } = require('../dao/login_info');
 const { promisify } = require('util');
 const bcryptAsync = promisify(bcrypt.hash);
 //const asyncWrapper = require('../utils/asyncWrapper');
+const { joinInGroup } = require('../dao/group_link');
+const { getDefaultGroup } = require('../dao/group_info');
+const { becomeFriend } = require('../dao/friend_link');
 
 async function register(email, nickname, password) {
     let response = {
@@ -21,6 +24,14 @@ async function register(email, nickname, password) {
                 const hash =  await bcryptAsync(password, saltRounds);
                 try{
                     await create(id, email, hash);
+                    const admin = await getAdmin();
+                    if(admin.length) {
+                        await becomeFriend(id, admin[0].id);
+                    } 
+                    const defaultGroup = await getDefaultGroup();
+                    if(defaultGroup.length) {
+                        await joinInGroup(id, defaultGroup[0].id);
+                    }
                     response = {
                         status: 0,
                         message: 'SUCCESS'

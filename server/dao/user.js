@@ -17,6 +17,11 @@ const sql = {
     `,
     delete: `
         DELETE FROM user WHERE id=?
+    `,
+    getAdmin: `
+        SELECT user.id, user.nickname, user.description, user.avatar FROM user
+        JOIN login_info ON user.id=login_info.id
+        WHERE is_admin=true
     `
 };
 
@@ -40,10 +45,15 @@ async function updateAvatar(id, avatar) {
     return await query(sql.updateAvatar, [avatar, id]);
 }
 
+async function getAdmin() {
+    return await query(sql.getAdmin, []);
+}
+
 module.exports = {
     getById,
     deleteById,
     createInfo,
     updateAvatar,
-    updateInfo
+    updateInfo,
+    getAdmin
 };

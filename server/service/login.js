@@ -6,6 +6,9 @@ const jwt = require('jsonwebtoken');
 const { secret } = require('../config/index');
 const { getJoinedGroupsByUserId } = require('../dao/group_info');
 const { updateSocket } = require('../dao/socket');
+const { getAllFriends } = require('../dao/friend_link');
+const { getGroupMsg } = require('../dao/message');
+const { getDefaultGroup } = require('../dao/group_info');
 
 async function login(email, password, socket_id) {
     let response = {
@@ -13,24 +16,34 @@ async function login(email, password, socket_id) {
         message: '数据库错误'
     };
     try {
-        const user = await getByEmail(email);
-        console.log(user);
-        if(user.length) {
-            const match = bcrypt.compareSync(password, user[0].password);
+        const result = await getByEmail(email);
+        console.log(result);
+        if(result.length) {
+            const user = result[0];
+            const match = bcrypt.compareSync(password, user.password);
             if(match) {
                 await updateLoginTime(email);
-                const info = await getById(user[0].id);
+                const info = await getById(user.id);
                 console.log(info);
-                const groups = await getJoinedGroupsByUserId(user[0].id);
-                console.log(groups);
-                await updateSocket(socket_id, user[0].id);
+                const groups = await getJoinedGroupsByUserId(user.id);
+                console.log('groups:', groups);
+                const friends = await getAllFriends(user.id);
+                console.log('friends', friends);
+                const defaultGroup = await getDefaultGroup();
+                let msgs = [];
+                if(defaultGroup.length) {
+                    msgs = await getGroupMsg(defaultGroup[0].id);
+                }
+                await updateSocket(socket_id, user.id);
                 response = {
                     status: 0,
                     message: 'SUCCESS',
                     data: {
                         userInfo: info[0],
-                        token: generateJWT(user[0].id, email),
-                        groups: groups
+                        token: generateJWT(user.id, email),
+                        groups: groups,
+                        friends: friends,
+                        defaultMsgs: msgs
                     }
                 };
             } else {
@@ -69,13 +82,22 @@ async function loginWithToken(token, socket_id) {
                 console.log(info);
                 const groups = await getJoinedGroupsByUserId(userId);
                 console.log(groups);
+                const friends = await getAllFriends(userId);
+                console.log(friends);
+                const defaultGroup = await getDefaultGroup();
+                let msgs = [];
+                if(defaultGroup.length) {
+                    msgs = await getGroupMsg(defaultGroup[0].id);
+                }
                 await updateSocket(socket_id, userId);
                 response = {
                     status: 0,
                     message: 'SUCCESS',
                     data: {
                         userInfo: info[0],
-                        groups: groups
+                        groups: groups,
+                        friends: friends,
+                        defaultMsgs: msgs
                     }
                 };
             }

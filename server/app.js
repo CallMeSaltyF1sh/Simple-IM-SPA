@@ -17,6 +17,7 @@ const io = new IO({
 });
 const userRoute = require('./routes/user');
 const groupRoute = require('./routes/group');
+const msgRoute = require('./routes/message');
 const enhance = require('./middlewares/enhance');
 const bindRoute = require('./middlewares/bindRoute');
 const handle401 = require('./middlewares/401handler');
@@ -56,7 +57,7 @@ app.use(jwt({
 
 io.use(bindRoute(
     app.io,
-    { ...userRoute, ...groupRoute }
+    { ...userRoute, ...groupRoute, ...msgRoute }
 ));
 
 app.io.on('connection', async (ctx)=>{

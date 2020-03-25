@@ -14,6 +14,13 @@ module.exports = {
         console.log('response', ctx);
         const { email, password } = ctx.data;
         const response = await login(email, password, ctx.socket.id);
+        if(response.data) {
+            const { groups = [], userInfo = {} } = response.data;
+            groups.forEach(group => {
+                ctx.socket.socket.join(group.id);
+            });
+            ctx.socket.user = userInfo.id;
+        }
         console.log('login：')
         console.log(response)
         return response;
@@ -22,6 +29,13 @@ module.exports = {
         console.log('response', ctx);
         const { token } = ctx.data;
         const response = await loginWithToken(token, ctx.socket.id);
+        if(response.data) {
+            const { groups = [], userInfo = {} } = response.data;
+            groups.forEach(group => {
+                ctx.socket.socket.join(group.id);
+            });
+            ctx.socket.user = userInfo.id;
+        }
         return response;
     }
 }
