@@ -49,9 +49,11 @@ const styles = css`
     }
 `
 
-const ListItem = ({ name, avatarUrl, description='', onClick=function(){} }) => {
+const ListItem = (props) => {
+    const { name, avatar, description='', type, onClick=function(){}  } = props;
+    
     return (
-        <div className={`chat-list-item ${ focus ? 'focus' : ''}`} onClick={onClick}>
+        <div className={`chat-list-item`} onClick={onClick}>
             <div className='avatar'></div>
             <div className='info'>
                 <div className='name'>{name}</div>

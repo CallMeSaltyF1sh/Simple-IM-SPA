@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
+import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import { css } from 'astroturf';
+import socket from '@/socket';
+import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 
 const styles = css`
     .edit-area {
@@ -83,8 +86,40 @@ const styles = css`
     }
 `
 
-const EditArea = () => {
+const EditArea = (props) => {
+    const { targetInfo, targetType, isLogin } = props;
+    const { changeLoginModalDisplayDispatch } = props;
     const [ content, setContent ] = useState('');
+
+    const info = targetInfo ? targetInfo.toJS() : {};
+
+    const sendMsg = (content, type) => {
+        socket.emit('sendMsg', {
+            to: info.id,
+            content,
+            type,
+            targetType
+        }, res => {
+            console.log(res);
+            alert(res);
+        });
+    };
+
+    const sendTxtMsg = () => {
+        if(!isLogin) {
+            alert('登录后才能发消息嗷');
+            changeLoginModalDisplayDispatch(true);
+            return;
+        }
+        sendMsg(content, 'txt');
+    };
+
+    const sendMsgByEnterKey = e => {
+        if(e.key === 'Enter' && !e.shiftKey) {
+            sendTxtMsg();
+        }
+    };
+
     return (
         <div className='edit-area'>
             <div className='tools-bar'>
@@ -92,8 +127,12 @@ const EditArea = () => {
                 <i className='iconfont icon'>&#xe646;</i>
                 <i className='iconfont icon'>&#xe610;</i>
             </div>
-            <textarea className='txt-area' onChange={(e) => setContent(e.target.value)}></textarea>
-            <div className='send-msg'>
+            <textarea 
+                className='txt-area' 
+                onChange={(e) => setContent(e.target.value)}
+                onKeyDown={sendMsgByEnterKey}>
+            </textarea>
+            <div className='send-msg' onClick={sendTxtMsg}>
                 <span>发送</span>
                 <i className='iconfont send'>&#xe613;</i>
             </div>
@@ -101,4 +140,18 @@ const EditArea = () => {
     )
 };
 
-export default EditArea;
+const mapStateToProps = state => ({
+    targetType: state.getIn(['chatPanel', 'targetType']),
+    targetInfo: state.getIn(['chatPanel', 'targetInfo']),
+    isLogin: state.getIn(['mainPanel', 'isLogin'])
+});
+
+const mapDispatchToProps = dispatch => {
+	return {
+        changeLoginModalDisplayDispatch(bool) {
+            dispatch(changeLoginModalDisplay(bool));
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(memo(EditArea));

@@ -5,12 +5,15 @@ import InputArea from '@/components/InputArea';
 import ModalFrame from '@/components/ModalFrame';
 import { changeLoginModalDisplay } from './store/actions';
 import { changeRegisterModalDisplay } from '../RegisterModal/store/actions';
-import { changeLoginState, setUserInfo, setGroupList } from '../MainPanel/store/actions';
+import { changeLoginState, setUserInfo, setGroupList, setFriendList, setDialogList } from '../MainPanel/store/actions';
+import { changeLinkmanList } from '../ListPanel/store/actions';
+import { changeMsgList } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
 const LoginModal = (props) => {
     const { changeLoginModalDisplayDispatch, changeRegisterModalDisplayDispatch, changeLoginStateDispatch } = props;
-    const { setUserInfoDispatch, setGroupListDispatch } = props;
+    const { setUserInfoDispatch, setGroupListDispatch, setFriendListDispatch, setDialogListDispatch } = props;
+    const { changeLinkmanListDispatch, changeMsgListDispatch } = props;
     const emailEl = useRef(null);
     const pswdEl = useRef(null);
 
@@ -29,10 +32,21 @@ const LoginModal = (props) => {
                 changeLoginModalDisplayDispatch(false);
                 changeLoginStateDispatch(true);
                 if(res.data) {
-                    const { userInfo, token, groups } = res.data;
+                    const { userInfo, token, groups, friends, defaultMsgs } = res.data;
                     window.localStorage.setItem('token', token);
+                    const newGroups = groups.map(group => {
+						return { ...group, type: 'group' };
+					});
+					const newFriends = friends.map(friend => {
+						return { ...friend, type: 'user' };
+					});
+					const list = [...newGroups, ...newFriends];
                     setUserInfoDispatch(userInfo);
                     setGroupListDispatch(groups);
+                    setFriendListDispatch(friends);
+                    changeLinkmanListDispatch(list);
+					changeMsgListDispatch(defaultMsgs);
+                    setDialogListDispatch(list);
                 }
             }
         });
@@ -83,6 +97,18 @@ const mapDispatchToProps = dispatch => {
         },
         setGroupListDispatch(groups) {
             dispatch(setGroupList(groups));
+        },
+        setFriendListDispatch(friends) {
+            dispatch(setFriendList(friends));
+        },
+        changeLinkmanListDispatch(list) {
+			dispatch(changeLinkmanList(list));
+		},
+		changeMsgListDispatch(list) {
+			dispatch(changeMsgList(list));
+		},
+        setDialogListDispatch(list) {
+            dispatch(setDialogList(list));
         }
 	}
 };

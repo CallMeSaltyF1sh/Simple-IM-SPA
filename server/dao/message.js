@@ -2,21 +2,21 @@ const query = require('../utils/query');
 
 const sql = {
     insertUsrMsg: `
-        INSERT INTO message(from, to_user, content, type, created_at)
+        INSERT INTO message(from_id, to_user, content, msg_type, created_at)
          VALUES (?, ?, ?, ?, now())
     `,
     insertGroupMsg: `
-        INSERT INTO message(from, to_group, content, type, created_at)
+        INSERT INTO message(from_id, to_group, content, msg_type, created_at)
          VALUES (?, ?, ?, ?, now())
     `,
     getMsgByGroupId: `
-        SELECT * FROM message INNER JOIN user ON message.from=user.id
+        SELECT * FROM message INNER JOIN user ON message.from_id=user.id
         WHERE to_group=? 
         ORDER BY created_at
     `,
     getMsgByUserId: `
         SELECT * FROM message 
-        WHERE (from=? AND to_user=?) OR (from=? AND to_user=?)
+        WHERE (from_id=? AND to_user=?) OR (from_id=? AND to_user=?)
         ORDER BY created_at
     `
 };

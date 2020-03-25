@@ -5,7 +5,8 @@ const defaultState = fromJS({
     isLogin: false,
     userInfo: {},
     groups: [],
-    friends: []
+    friends: [],
+    dialogs: []
 });
 
 export default (state = defaultState, action) => {
@@ -18,6 +19,8 @@ export default (state = defaultState, action) => {
             return state.set('groups', action.data);
         case actionTypes.SET_FRIEND_LIST:
             return state.set('friends', action.data);
+        case actionTypes.SET_DIALOG_LIST:
+            return  state.set('dialogs', action.data);
         default:
             return state;
     }

@@ -1,9 +1,11 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import ChatPanelHeader from '@/components/ChatPanelHeader';
 import ScrollArea from '@/components/ScrollArea';
-import EditArea from '@/components/EditArea';
 import MsgItem from '@/components/MsgItem';
+import EditArea from '../EditArea/index';
+import socket from '@/socket';
 
 const styles = css`
     .chat-panel {
@@ -33,7 +35,7 @@ const styles = css`
         }
     }
 `
-
+/*
 const msgList = [
     {
         time: '20:00',
@@ -67,20 +69,34 @@ const msgList = [
         avatarUrl: ''
     }
 ]
+*/
 
-function ChatPanel() {
+const ChatPanel = (props) => {
+    const { targetInfo, msgList, userInfo } = props;
+
+    const target = targetInfo ? targetInfo.toJS() : {};
+    const list = msgList ? msgList.toJS() : [];
+    const user = userInfo ? userInfo.toJS() : {};
+
+    const targetId = target.id;
+    const userId = user.id;
+    const name = target.name ? target.name : target.nickname;
+
     useEffect(() => {
         document.querySelector('#msglist_bottom').scrollIntoView();   
     });
 
     return (
         <div className='chat-panel'>
-            <ChatPanelHeader />
+            <ChatPanelHeader name={name} />
             <div className='scroll-area'>
                 {
-                    msgList.map((item,index) => (
-                        <MsgItem key={index} {...item} />
-                    ))
+                    list.map((item,index) => {
+                        let isMine = item.id === userId;
+                        return (
+                            <MsgItem key={index} {...item} isMine={isMine} />
+                        )
+                    })
                 }
                 <div id='msglist_bottom'></div>
             </div>
@@ -89,5 +105,14 @@ function ChatPanel() {
     )
 }
 
+const mapStateToProps = state => ({
+    targetInfo: state.getIn(['chatPanel', 'targetInfo']),
+    msgList: state.getIn(['chatPanel', 'list']),
+    userInfo: state.getIn(['mainPanel', 'userInfo'])
+});
 
-export default memo(ChatPanel);
+const mapDispatchToProps = dispatch => {
+	return { }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(memo(ChatPanel));

@@ -8,8 +8,10 @@ import ChatPanel from '../ChatPanel/index';
 import LoginModal from '../LoginModal/index';
 import RegisterModal from '../RegisterModal/index';
 import CreateGroupModal from '../CreateGroupModal/index';
-import { changeLoginState, setUserInfo, setGroupList, setFriendList } from './store/actions';
+import { changeLoginState, setUserInfo, setGroupList, setFriendList, setDialogList } from './store/actions';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
+import { changeLinkmanList } from '../ListPanel/store/actions';
+import { changeMsgList } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
 const styles = css`
@@ -71,7 +73,8 @@ const styles = css`
 const MainPanal = (props) => {
 	const { loginModalDisplay, registerModalDisplay, cgModalDisplay } = props;
 	const { changeLoginStateDispatch, setUserInfoDispatch, changeLoginModalDisplayDispatch } = props;
-	const { setGroupListDispatch, setFriendListDispatch } = props;
+	const { setGroupListDispatch, setFriendListDispatch, setDialogListDispatch } = props;
+	const { changeLinkmanListDispatch, changeMsgListDispatch } = props;
 	
 	socket.on('connect', () => {
 		const token = window.localStorage.getItem('token');
@@ -86,10 +89,21 @@ const MainPanal = (props) => {
 					changeLoginModalDisplayDispatch(true);
 					window.localStorage.setItem('token', '');
 				} else {
-					const { userInfo, groups } = res.data;
+					const { userInfo, groups, friends, defaultMsgs } = res.data;
+					const newGroups = groups.map(group => {
+						return { ...group, type: 'group' };
+					});
+					const newFriends = friends.map(friend => {
+						return { ...friend, type: 'user' };
+					});
+					const list = [...newGroups, ...newFriends];
 					changeLoginStateDispatch(true);
 					setUserInfoDispatch(userInfo);
 					setGroupListDispatch(groups);
+					setFriendListDispatch(friends);
+					changeLinkmanListDispatch(list);
+					changeMsgListDispatch(defaultMsgs);
+					setDialogListDispatch(list);
 				}
 			});
 		}
@@ -98,6 +112,9 @@ const MainPanal = (props) => {
 		changeLoginStateDispatch(false);
 		setUserInfoDispatch({});
 		alert('连接中断，请检查网络状态w(ﾟДﾟ)w');
+	});
+	socket.on('message', (msg) => {
+		console.log('get msg', msg);
 	});
 	
 	return (
@@ -137,6 +154,15 @@ const mapDispatchToProps = dispatch => {
 		},
 		setFriendListDispatch(friends) {
 			dispatch(setFriendList(friends));
+		},
+		changeLinkmanListDispatch(list) {
+			dispatch(changeLinkmanList(list));
+		},
+		changeMsgListDispatch(list) {
+			dispatch(changeMsgList(list));
+		},
+		setDialogListDispatch(list) {
+			dispatch(setDialogList(list));
 		}
 	}
 };

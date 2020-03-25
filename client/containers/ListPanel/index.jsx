@@ -5,6 +5,7 @@ import SearchBox from '@/components/SearchBox';
 import DialogItem from '@/components/DialogItem';
 import LinkmanItem from '@/components/LinkmanItem';
 import { changeCGModalDisplay } from '../CreateGroupModal/store/actions';
+import { setTargetType, setTargetInfo } from '../ChatPanel/store/actions';
 
 const styles = css`
     .list-panel {
@@ -72,12 +73,20 @@ const msgList = [
 const ListPanel = (props) => {
     const { list: immutableList, itemType } = props;
     const { changeCGModalDisplayDispatch } = props;
+    const { setTargetInfoDispatch, setTargetTypeDispatch } = props;
     const list = immutableList ? immutableList.toJS() : [];
-    const Item = itemType === 'dialog' ? DialogItem : LinkmanItem;
+    // const Item = itemType === 'dialog' ? DialogItem : LinkmanItem;
+    const Item = LinkmanItem;
 
     const handleAdd = () => {
         changeCGModalDisplayDispatch(true);
     };
+
+    const handleClick = (item,e) => {
+        console.log(item);
+        setTargetTypeDispatch(item.type);
+        setTargetInfoDispatch(item);
+    }
 
     return (
         <div className='list-panel'>
@@ -87,11 +96,14 @@ const ListPanel = (props) => {
             </div>
             <div className='chat-list-wrapper'>
                 {
-                    msgList.map(item => (
-                        <div key={item.type + item.id}>
-                            <Item {...item} />
-                        </div>
-                    ))
+                    list.map(item => {
+                        let name = item.name ? item.name : item.nickname;
+                        return (
+                            <div key={item.type + item.id} onClick={handleClick.bind(this, item)}>
+                                <Item {...item} name={name} />
+                            </div>
+                        ) 
+                    })
                 }
             </div>
         </div>
@@ -107,6 +119,12 @@ const mapDispatchToProps = dispatch => {
 	return {
         changeCGModalDisplayDispatch(bool) {
             dispatch(changeCGModalDisplay(bool));
+        },
+        setTargetTypeDispatch(type) {
+            dispatch(setTargetType(type));
+        },
+        setTargetInfoDispatch(info) {
+            dispatch(setTargetInfo(info));
         }
      }
 };

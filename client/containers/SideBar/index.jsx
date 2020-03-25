@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import { changeLoginState } from '../MainPanel/store/actions';
-import { changeItemType } from '../ListPanel/store/actions';
+import { changeItemType, changeLinkmanList } from '../ListPanel/store/actions';
 
 const styles = css`
     .side-bar {
@@ -56,8 +56,15 @@ const styles = css`
 
 const SideBar = (props) => {
     const { isLogin } = props;
-    const { changeLoginModalDisplayDispatch, changeLoginStateDispatch, changeItemTypeDispatch } = props;
-    
+    const { changeLoginModalDisplayDispatch, changeLoginStateDispatch } = props;
+    const { changeItemTypeDispatch, changeLinkmanListDispatch } = props;
+    const { groups, friends, dialogs, userInfo } = props;
+
+    const groupsJS = groups ? groups.toJS() : [];
+    const friendsJS = friends ? friends.toJS() : [];
+    const dialogsJS = dialogs ? dialogs.toJS() : [];
+    const userInfoJS = userInfo ? userInfo.toJS() : {};
+
     const handleLogin = () => {
         changeLoginModalDisplayDispatch(true);
     };
@@ -69,12 +76,15 @@ const SideBar = (props) => {
     };
     const handleViewDialogList = () => {
         changeItemTypeDispatch('dialog');
+        changeLinkmanListDispatch(dialogsJS);
     };
     const handleViewFriendList = () => {
         changeItemTypeDispatch('linkman');
+        changeLinkmanListDispatch(friendsJS);
     };
     const handleViewGroupList = () => {
         changeItemTypeDispatch('linkman');
+        changeLinkmanListDispatch(groupsJS);
     };
 
     const iconList = [
@@ -130,7 +140,11 @@ const SideBar = (props) => {
 }
 
 const mapStateToProps = state => ({
-    isLogin: state.getIn(['mainPanel', 'isLogin'])
+    isLogin: state.getIn(['mainPanel', 'isLogin']),
+    groups: state.getIn(['mainPanel', 'groups']),
+    friends: state.getIn(['mainPanel', 'friends']),
+    dialogs: state.getIn(['mainPanel', 'dialogs']),
+    userInfo: state.getIn(['mainPanel', 'userInfo'])
 });
 
 const mapDispatchToProps = dispatch => {
@@ -143,6 +157,9 @@ const mapDispatchToProps = dispatch => {
         },
         changeItemTypeDispatch(type) {
             dispatch(changeItemType(type));
+        },
+        changeLinkmanListDispatch(list) {
+            dispatch(changeLinkmanList(list));
         }
 	}
 };

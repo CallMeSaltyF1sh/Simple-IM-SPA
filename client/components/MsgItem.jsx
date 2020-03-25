@@ -1,6 +1,7 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { css } from 'astroturf';
+import { timeFormat } from '@/utils';
 
 const styles = css`
     .msg-piece {
@@ -68,15 +69,17 @@ const styles = css`
     }
 `
 
-const MsgItem = ({nickname, msg, time, avatarUrl, isMine}) => {
+const MsgItem = (props) => {
+    const { id, nickname, content, created_at, avatar, isMine } = props;
+
     return (
         <div className={`msg-piece ${ isMine ? 'msg-piece-right' : '' }`}>
             <div className='msg-body'>
                 <div className='avatar'></div>
                 <div className='txt-wrapper'>
                     <p className='name'>{nickname}</p>
-                    <p className='msg'>{msg}</p>
-                    <p className='time'>{time}</p>
+                    <p className='msg'>{content}</p>
+                    <p className='time'>{timeFormat(created_at)}</p>
                 </div>
             </div>
         </div>

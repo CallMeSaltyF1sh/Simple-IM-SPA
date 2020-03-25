@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { css } from 'astroturf';
 import { PropTypes } from 'prop-types';
+import { timeFormat } from '@/utils';
 
 const styles = css`
     .chat-list-item {
@@ -77,25 +78,9 @@ const styles = css`
     }
 `
 
-const timeFormat = time => {
-    let month = time.getMonth() + 1,
-        day = time.getDate(),
-        year = time.getFullYear(),
-        hour = time.getHours(),
-        minute = time.getMinutes(),
-        second = time.getSeconds(),
-        timeStamp = time.getTime(),
-        currTime = +new Date();
-    if(currTime - timeStamp < 86400000) {
-        hour = hour >= 10 ? hour : '0' + hour;
-        minute = minute >= 10 ? minute : '0' + minute;
-        return `${hour}:${minute}`;
-    } else {
-        return `${year}/${month}/${day}`;
-    }
-};
-
-const ListItem = ({ name, msgTime, avatarUrl, latestMsg, unreadCnt, focus, onClick=function(){} }) => {
+const ListItem = (props) => {
+    const { name, msgTime, avatar, latestMsg, unreadCnt, focus, onClick=function(){} } = props;
+    
     return (
         <div className={`chat-list-item ${ focus ? 'focus' : ''}`} onClick={onClick}>
             <div className='avatar'></div>

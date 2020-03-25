@@ -1,1 +1,3 @@
 export const CHANGE_MSG_LIST = 'CHANGE_MSG_LIST';
+export const SET_TARGET_TYPE = 'SET_TARGET_TYPE';
+export const SET_TARGET_INFO = 'SET_TARGET_INFO';

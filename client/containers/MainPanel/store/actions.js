@@ -20,3 +20,8 @@ export const setFriendList = data => ({
     type: actionTypes.SET_FRIEND_LIST,
     data: fromJS(data)
 });
+
+export const setDialogList = data => ({
+    type: actionTypes.SET_DIALOG_LIST,
+    data: fromJS(data)
+})

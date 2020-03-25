@@ -12,6 +12,9 @@ const styles = css`
         .chatter-name {
             position: absolute;
             margin: 16px 0 0 20px;
+            width: 75%;
+            overflow: hidden;
+            text-overflow: ellipsis;
             font-size: 17px;
             color: #aa8f7c;
             letter-spacing: 2px;
@@ -31,10 +34,12 @@ const styles = css`
     }
 `
 
-const ChatPanelHeader = () => {
+const ChatPanelHeader = (props) => {
+    const { name } = props;
+
     return (
         <div className='chat-panel-header'>
-            <div className='chatter-name'>咸大猪</div>
+            <div className='chatter-name'>{name}</div>
             <i className='iconfont more'>&#xe618;</i>
         </div>
     )
