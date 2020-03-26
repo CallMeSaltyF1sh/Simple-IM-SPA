@@ -1,10 +1,15 @@
-const { create } = require('../service/group');
+const { create, getGroupById } = require('../service/group');
 
 module.exports = {
     createGroup: async (ctx) => {
         const { name, userId } = ctx.data;
         const response = await create(name, userId);
         console.log(response);
+        return response;
+    },
+    getGroupInfo: async (ctx) => {
+        const { id } = ctx.data;
+        const response = await getGroupById(id);
         return response;
     }
 };

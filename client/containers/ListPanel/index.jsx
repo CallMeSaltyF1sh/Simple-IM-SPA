@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo } from 'react';
+import React, { useState, useRef, memo, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import SearchBox from '@/components/SearchBox';
@@ -73,10 +73,16 @@ const msgList = [
 */
 
 const ListPanel = (props) => {
-    const { list: immutableList, itemType } = props;
+    const { itemType, friends, groups, dialogs } = props;
     const { changeCGModalDisplayDispatch } = props;
     const { setTargetInfoDispatch, setTargetTypeDispatch } = props;
-    const list = immutableList ? immutableList.toJS() : [];
+    
+    const friendsJS = friends ? friends.toJS() : [];
+    const groupsJS = groups ? groups.toJS() : [];
+    const dialogsJS = dialogs ? dialogs.toJS() : [];
+
+    const [list, setList] = useState([]);
+    
     const Item = itemType === 'dialog' ? DialogItem : LinkmanItem;
 
     const handleAdd = () => {
@@ -88,6 +94,20 @@ const ListPanel = (props) => {
         setTargetTypeDispatch(item.owner ? 'group' : 'user');
         setTargetInfoDispatch(item);
     }
+
+    useEffect(() => {
+        switch(itemType) {
+            case 'friend': 
+                setList(friendsJS);
+                break;
+            case 'group':
+                setList(groupsJS);
+                break;
+            case 'dialog':
+            default: 
+                setList(dialogsJS);
+        }
+    }, [groups, friends, dialogs, itemType]);
 
     return (
         <div className='list-panel'>
@@ -112,8 +132,10 @@ const ListPanel = (props) => {
 }
 
 const mapStateToProps = state => ({
-    list: state.getIn(['listPanel', 'list']),
-    itemType: state.getIn(['listPanel', 'itemType'])
+    itemType: state.getIn(['listPanel', 'itemType']),
+    friends: state.getIn(['mainPanel', 'friends']),
+    groups: state.getIn(['mainPanel', 'groups']),
+    dialogs: state.getIn(['mainPanel', 'dialogs'])
 });
 
 const mapDispatchToProps = dispatch => {

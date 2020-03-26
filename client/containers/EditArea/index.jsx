@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import { css } from 'astroturf';
 import socket from '@/socket';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
-import { addGroupMsg, addUserMsg } from '../MainPanel/store/actions';
+import { addGroupMsg, addUserMsg, updateDialogList } from '../MainPanel/store/actions';
 
 const styles = css`
     .edit-area {
@@ -90,7 +90,7 @@ const styles = css`
 const EditArea = (props) => {
     const { targetInfo, targetType, isLogin } = props;
     const { changeLoginModalDisplayDispatch } = props;
-    const { addGroupMsgDispatch, addUserMsgDispatch } = props;
+    const { addGroupMsgDispatch, addUserMsgDispatch, updateDialogListDispatch } = props;
     const [ content, setContent ] = useState('');
 
     const info = targetInfo ? targetInfo.toJS() : {};
@@ -119,6 +119,7 @@ const EditArea = (props) => {
                 } else if (targetType === 'user') {
                     addUserMsgDispatch(to, msg);
                 }
+                updateDialogListDispatch(to, msg, targetType);
             }
         });
     };
@@ -130,6 +131,7 @@ const EditArea = (props) => {
             return;
         }
         sendMsg(content, 'txt');
+        setContent('');
     };
 
     const sendMsgByEnterKey = e => {
@@ -147,6 +149,7 @@ const EditArea = (props) => {
             </div>
             <textarea 
                 className='txt-area' 
+                value={content}
                 onChange={(e) => setContent(e.target.value)}
                 onKeyDown={sendMsgByEnterKey}>
             </textarea>
@@ -176,6 +179,9 @@ const mapDispatchToProps = dispatch => {
         },
         addUserMsgDispatch(id, msg) {
             dispatch(addUserMsg(id, msg));
+        },
+        updateDialogListDispatch(id, msg, targetType) {
+            dispatch(updateDialogList(id, msg, targetType));
         }
     }
 };

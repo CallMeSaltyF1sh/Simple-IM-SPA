@@ -8,9 +8,17 @@ import ChatPanel from '../ChatPanel/index';
 import LoginModal from '../LoginModal/index';
 import RegisterModal from '../RegisterModal/index';
 import CreateGroupModal from '../CreateGroupModal/index';
-import { changeLoginState, setUserInfo, setGroupList, setFriendList, setDialogList, addGroupMsg, addUserMsg } from './store/actions';
+import { 
+	changeLoginState, 
+	setUserInfo, 
+	setGroupList, 
+	setFriendList, 
+	setDialogList, 
+	addGroupMsg, 
+	addUserMsg, 
+	updateDialogList 
+} from './store/actions';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
-import { changeLinkmanList } from '../ListPanel/store/actions';
 import { changeMsgList } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
@@ -74,7 +82,7 @@ const MainPanal = (props) => {
 	const { loginModalDisplay, registerModalDisplay, cgModalDisplay } = props;
 	const { changeLoginStateDispatch, setUserInfoDispatch, changeLoginModalDisplayDispatch } = props;
 	const { setGroupListDispatch, setFriendListDispatch, setDialogListDispatch } = props;
-	const { changeLinkmanListDispatch, changeMsgListDispatch } = props;
+	const { changeMsgListDispatch, updateDialogListDispatch } = props;
 	const { addGroupMsgDispatch, addUserMsgDispatch } = props;
 
 	socket.on('connect', () => {
@@ -119,7 +127,6 @@ const MainPanal = (props) => {
                     setGroupListDispatch(groups);
                     setFriendListDispatch(friends);
                     setDialogListDispatch(list);
-                    changeLinkmanListDispatch(list);
                     changeMsgListDispatch(defaultMsgs); 
 				}
 			});
@@ -148,6 +155,7 @@ const MainPanal = (props) => {
             } else if (targetType === 'user') {
                 addUserMsgDispatch(to, msg);
             }
+			updateDialogListDispatch(to, msg, targetType);
         }
 	});
 	
@@ -203,6 +211,9 @@ const mapDispatchToProps = dispatch => {
 		},
 		addUserMsgDispatch(id, msg) {
 			dispatch(addUserMsg(id, msg));
+		},
+		updateDialogListDispatch(id, msg, targetType) {
+			dispatch(updateDialogList(id, msg, targetType));
 		}
 	}
 };

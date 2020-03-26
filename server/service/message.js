@@ -38,9 +38,10 @@ async function bindAllGroupMsgs(groups) {
     const promises = groups.map(group => getGroupMsgAsync(group.id));
     const res = await Promise.all(promises);
     return groups.map((item, index) => {
+        let msgs = res[index] ? res[index].reverse() : [];
         return {
             ...item,
-            msgs: res[index] || []
+            msgs
         }
     });
 }
@@ -49,9 +50,10 @@ async function bindAllUserMsgs(userId, friends) {
     const promises = friends.map(friend => getUserMsgAsync(userId, friend.id));
     const res = await Promise.all(promises);
     return friends.map((item, index) => {
+        let msgs = res[index] ? res[index].reverse() : [];
         return {
             ...item,
-            msgs: res[index] || []
+            msgs
         }
     });
 }

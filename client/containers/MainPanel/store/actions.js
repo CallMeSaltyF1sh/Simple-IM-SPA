@@ -41,4 +41,11 @@ export const addUserMsg = (userId, msg) => ({
     type: actionTypes.ADD_USER_MSG,
     msg: fromJS(msg),
     userId
-})
+});
+
+export const updateDialogList = (id, msg, targetType) => ({
+    type: actionTypes.UPDATE_DIALOG_LIST,
+    msg,
+    to_id: id,
+    targetType
+});

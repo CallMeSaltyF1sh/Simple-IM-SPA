@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import { changeLoginState } from '../MainPanel/store/actions';
-import { changeItemType, changeLinkmanList } from '../ListPanel/store/actions';
+import { changeItemType } from '../ListPanel/store/actions';
 
 const styles = css`
     .side-bar {
@@ -57,7 +57,7 @@ const styles = css`
 const SideBar = (props) => {
     const { isLogin } = props;
     const { changeLoginModalDisplayDispatch, changeLoginStateDispatch } = props;
-    const { changeItemTypeDispatch, changeLinkmanListDispatch } = props;
+    const { changeItemTypeDispatch} = props;
     const { groups, friends, dialogs, userInfo } = props;
 
     const groupsJS = groups ? groups.toJS() : [];
@@ -76,15 +76,12 @@ const SideBar = (props) => {
     };
     const handleViewDialogList = () => {
         changeItemTypeDispatch('dialog');
-        changeLinkmanListDispatch(dialogsJS);
     };
     const handleViewFriendList = () => {
-        changeItemTypeDispatch('linkman');
-        changeLinkmanListDispatch(friendsJS);
+        changeItemTypeDispatch('friend');
     };
     const handleViewGroupList = () => {
-        changeItemTypeDispatch('linkman');
-        changeLinkmanListDispatch(groupsJS);
+        changeItemTypeDispatch('group');
     };
 
     const iconList = [
@@ -157,9 +154,6 @@ const mapDispatchToProps = dispatch => {
         },
         changeItemTypeDispatch(type) {
             dispatch(changeItemType(type));
-        },
-        changeLinkmanListDispatch(list) {
-            dispatch(changeLinkmanList(list));
         }
 	}
 };

@@ -6,3 +6,4 @@ export const SET_DIALOG_LIST = 'SET_DIALOG_LIST';
 export const ADD_GROUP = 'ADD_GROUP';
 export const ADD_GROUP_MSG = 'ADD_GROUP_MSG';
 export const ADD_USER_MSG = 'ADD_USER_MSG';
+export const UPDATE_DIALOG_LIST = 'UPDATE_DIALOG_LIST';

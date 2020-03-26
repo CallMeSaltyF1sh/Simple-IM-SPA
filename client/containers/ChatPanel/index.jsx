@@ -89,7 +89,7 @@ const ChatPanel = (props) => {
     if(targetType === 'group') {
         res = groupsJS.find(curr => curr.id === targetId);
     } else {
-        res = groupsJS.find(curr => curr.id === targetId);
+        res = friendsJS.find(curr => curr.id === targetId);
     }
     list = (res && res.msgs) ? res.msgs : [];
 

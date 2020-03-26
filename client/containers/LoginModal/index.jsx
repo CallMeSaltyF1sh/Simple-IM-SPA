@@ -5,15 +5,20 @@ import InputArea from '@/components/InputArea';
 import ModalFrame from '@/components/ModalFrame';
 import { changeLoginModalDisplay } from './store/actions';
 import { changeRegisterModalDisplay } from '../RegisterModal/store/actions';
-import { changeLoginState, setUserInfo, setGroupList, setFriendList, setDialogList } from '../MainPanel/store/actions';
-import { changeLinkmanList } from '../ListPanel/store/actions';
+import { 
+    changeLoginState, 
+    setUserInfo, 
+    setGroupList, 
+    setFriendList, 
+    setDialogList 
+} from '../MainPanel/store/actions';
 import { changeMsgList } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
 const LoginModal = (props) => {
     const { changeLoginModalDisplayDispatch, changeRegisterModalDisplayDispatch, changeLoginStateDispatch } = props;
     const { setUserInfoDispatch, setGroupListDispatch, setFriendListDispatch, setDialogListDispatch } = props;
-    const { changeLinkmanListDispatch, changeMsgListDispatch } = props;
+    const { changeMsgListDispatch } = props;
     const emailEl = useRef(null);
     const pswdEl = useRef(null);
 
@@ -61,7 +66,6 @@ const LoginModal = (props) => {
                     setGroupListDispatch(groups);
                     setFriendListDispatch(friends);
                     setDialogListDispatch(list);
-                    changeLinkmanListDispatch(list);
                     changeMsgListDispatch(defaultMsgs);   
                 }
             }
@@ -117,9 +121,6 @@ const mapDispatchToProps = dispatch => {
         setFriendListDispatch(friends) {
             dispatch(setFriendList(friends));
         },
-        changeLinkmanListDispatch(list) {
-			dispatch(changeLinkmanList(list));
-		},
 		changeMsgListDispatch(list) {
 			dispatch(changeMsgList(list));
 		},

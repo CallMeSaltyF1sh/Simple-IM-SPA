@@ -12,5 +12,5 @@ export default combineReducers({
     mainPanel: mainPanelReducer,
     listPanel: listPanelReducer,
     chatPanel: chatPanelReducer,
-    createGroupModal: cgModalReducer
+    createGroupModal: cgModalReducer,
 });

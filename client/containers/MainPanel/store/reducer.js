@@ -1,5 +1,6 @@
 import * as actionTypes from './constants';
 import { fromJS } from 'immutable';
+//import socket from '@/socket';
 
 const defaultState = fromJS({
     isLogin: false,
@@ -40,6 +41,41 @@ export default (state = defaultState, action) => {
                     msgs.push(action.msg)
                 ))
             ))
+        }
+        case actionTypes.UPDATE_DIALOG_LIST: {
+            console.log(action.msg);
+            const index = state.getIn(['dialogs']).findIndex(item => item.get('id') === action.to_id);
+            if(index !== -1) {
+                return state.updateIn(['dialogs', index], dialog => (
+                    dialog.update('msgs', msgs => (
+                        msgs.push(fromJS(action.msg))
+                    ))
+                    .set('latestMsg', action.msg.content)
+                    .set('sender', action.msg.nickname)
+                    .set('time', action.msg.created_at)
+                )) 
+            } else {
+                /*
+                let newDialog;
+                if(action.targetType === 'group') {
+                    socket.emit('getGroupInfo', {
+                        id: action.to_id
+                    }, res => {
+                        console.log(res);
+                        if(res.data) {
+                            newDialog = {
+                                ...res.data,
+                                latestMsg: action.msg.content,
+                                sender: action.msg.nickname,
+                                time: action.msg.created_at
+                            };
+                        }
+                    })
+                } else {
+
+                }
+                */
+            }
         }
         default:
             return state;

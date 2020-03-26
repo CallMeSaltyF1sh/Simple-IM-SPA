@@ -23,6 +23,25 @@ async function create(name, owner) {
     return response;
 }
 
+async function getGroupById(id) {
+    let response = {
+        status: -3,
+        message: '数据库错误'
+    };
+    try {
+        const res = await getGroupInfo(id);
+        response = {
+            status: 0,
+            message: 'SUCCESS',
+            data: res[0]
+        }
+    } catch(e) {
+        console.log(e);
+    }
+    return response;
+}
+
 module.exports = {
-    create
+    create,
+    getGroupById
 };
