@@ -24,4 +24,9 @@ export const setFriendList = data => ({
 export const setDialogList = data => ({
     type: actionTypes.SET_DIALOG_LIST,
     data: fromJS(data)
-})
+});
+
+export const addGroup = data => ({
+    type: actionTypes.ADD_GROUP,
+    data: fromJS(data)
+});

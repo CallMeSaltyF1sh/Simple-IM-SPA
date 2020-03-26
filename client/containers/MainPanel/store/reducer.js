@@ -20,7 +20,11 @@ export default (state = defaultState, action) => {
         case actionTypes.SET_FRIEND_LIST:
             return state.set('friends', action.data);
         case actionTypes.SET_DIALOG_LIST:
-            return  state.set('dialogs', action.data);
+            return state.set('dialogs', action.data);
+        case actionTypes.ADD_GROUP:
+            return state.updateIn(['groups'], groups => (
+                groups.unshift(action.data)
+            ))
         default:
             return state;
     }

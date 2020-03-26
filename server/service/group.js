@@ -1,4 +1,5 @@
-const { createGroup } = require('../dao/group_info');
+const { createGroup, getGroupInfo } = require('../dao/group_info');
+const { joinInGroup } = require('../dao/group_link');
 const { v4 } = require('uuid');
 
 async function create(name, owner) {
@@ -8,11 +9,13 @@ async function create(name, owner) {
     };
     try {
         const id = v4();
-        const res = await createGroup(id, name, owner);
-        console.log(res);
+        await createGroup(id, name, owner);
+        await joinInGroup(owner, id);
+        const newGroup = await getGroupInfo(id);
         response = {
             status: 0,
-            message: 'SUCCESS'
+            message: 'SUCCESS',
+            data: newGroup[0]
         }
     } catch(e) {
         console.log(e);

@@ -5,10 +5,10 @@ import InputArea from '@/components/InputArea';
 import ModalFrame from '@/components/ModalFrame';
 import socket from '@/socket';
 import { changeCGModalDisplay } from './store/actions';
-import { setGroupList } from '../MainPanel/store/actions';
+import { addGroup } from '../MainPanel/store/actions';
 
 const CreateGroupModal = (props) => {
-    const { changeCGModalDisplayDispatch, setGroupListDispatch } = props;
+    const { changeCGModalDisplayDispatch, addGroupDispatch } = props;
     const { userInfo, groups } = props;
     const nameEl = useRef(null);
 
@@ -37,9 +37,10 @@ const CreateGroupModal = (props) => {
             else {
                 alert('创建成功！');
                 changeCGModalDisplayDispatch(false);
-                const newGroupInfo = res.data;
-                groupList.unshift(newGroupInfo);
-                setGroupListDispatch(groupList);
+                //const newGroupInfo = res.data;
+                //groupList.unshift(newGroupInfo);
+                //setGroupListDispatch(groupList);
+                addGroupDispatch(res.data)
             }
         });
     }, []);
@@ -73,8 +74,13 @@ const mapDispatchToProps = dispatch => {
 		changeCGModalDisplayDispatch(bool) {
 			dispatch(changeCGModalDisplay(bool));
 		},
+        /*
         setGroupListDispatch(groups) {
             dispatch(setGroupList(groups));
+        },
+        */
+        addGroupDispatch(newGroup) {
+            dispatch(addGroup(newGroup));
         }
 	}
 };
