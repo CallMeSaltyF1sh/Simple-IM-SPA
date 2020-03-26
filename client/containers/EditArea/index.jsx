@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import { css } from 'astroturf';
 import socket from '@/socket';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
+import { addGroupMsg, addUserMsg } from '../MainPanel/store/actions';
 
 const styles = css`
     .edit-area {
@@ -89,6 +90,7 @@ const styles = css`
 const EditArea = (props) => {
     const { targetInfo, targetType, isLogin } = props;
     const { changeLoginModalDisplayDispatch } = props;
+    const { addGroupMsgDispatch, addUserMsgDispatch } = props;
     const [ content, setContent ] = useState('');
 
     const info = targetInfo ? targetInfo.toJS() : {};
@@ -101,6 +103,23 @@ const EditArea = (props) => {
             targetType
         }, res => {
             console.log(res);
+            if(res.content) {
+                const { content, to, from, type } = res;
+                const msg = {
+                    created_at: new Date(),
+                    content,
+                    id: from.id,
+                    avatar: from.avatar,
+                    nickname: from.nickname,
+                    description: from.description,
+                    msg_type: type
+                };
+                if(targetType === 'group') {
+                    addGroupMsgDispatch(to, msg);
+                } else if (targetType === 'user') {
+                    addUserMsgDispatch(to, msg);
+                }
+            }
         });
     };
 
@@ -142,13 +161,21 @@ const EditArea = (props) => {
 const mapStateToProps = state => ({
     targetType: state.getIn(['chatPanel', 'targetType']),
     targetInfo: state.getIn(['chatPanel', 'targetInfo']),
-    isLogin: state.getIn(['mainPanel', 'isLogin'])
+    isLogin: state.getIn(['mainPanel', 'isLogin']),
+    groups: state.getIn(['mainPanel', 'groups']),
+    friends: state.getIn(['mainPanel', 'friends'])
 });
 
 const mapDispatchToProps = dispatch => {
 	return {
         changeLoginModalDisplayDispatch(bool) {
             dispatch(changeLoginModalDisplay(bool));
+        },
+        addGroupMsgDispatch(id ,msg) {
+            dispatch(addGroupMsg(id, msg));
+        },
+        addUserMsgDispatch(id, msg) {
+            dispatch(addUserMsg(id, msg));
         }
     }
 };

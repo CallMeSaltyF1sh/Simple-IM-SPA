@@ -27,7 +27,7 @@ async function createMsg(to, content, type, targetType, userId) {
             }
         }
         const from = await getById(userId);
-        msg = { from: from[0], to, content, type };
+        msg = { from: from[0], to, content, type, targetType };
     } catch(e) {
         console.log(e);
     }

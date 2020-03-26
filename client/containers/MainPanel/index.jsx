@@ -8,7 +8,7 @@ import ChatPanel from '../ChatPanel/index';
 import LoginModal from '../LoginModal/index';
 import RegisterModal from '../RegisterModal/index';
 import CreateGroupModal from '../CreateGroupModal/index';
-import { changeLoginState, setUserInfo, setGroupList, setFriendList, setDialogList } from './store/actions';
+import { changeLoginState, setUserInfo, setGroupList, setFriendList, setDialogList, addGroupMsg, addUserMsg } from './store/actions';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import { changeLinkmanList } from '../ListPanel/store/actions';
 import { changeMsgList } from '../ChatPanel/store/actions';
@@ -75,7 +75,8 @@ const MainPanal = (props) => {
 	const { changeLoginStateDispatch, setUserInfoDispatch, changeLoginModalDisplayDispatch } = props;
 	const { setGroupListDispatch, setFriendListDispatch, setDialogListDispatch } = props;
 	const { changeLinkmanListDispatch, changeMsgListDispatch } = props;
-	
+	const { addGroupMsgDispatch, addUserMsgDispatch } = props;
+
 	socket.on('connect', () => {
 		const token = window.localStorage.getItem('token');
 		console.log(token);
@@ -129,8 +130,25 @@ const MainPanal = (props) => {
 		setUserInfoDispatch({});
 		alert('连接中断，请检查网络状态w(ﾟДﾟ)w');
 	});
-	socket.on('message', (msg) => {
-		console.log('get msg', msg);
+	socket.on('message', res => {
+		console.log('get msg', res);
+		if(res.content) {
+            const { content, to, from, type, targetType } = res;
+            const msg = {
+                created_at: new Date(),
+                content,
+                id: from.id,
+                avatar: from.avatar,
+                nickname: from.nickname,
+                description: from.description,
+                msg_type: type
+            };
+            if(targetType === 'group') {
+                addGroupMsgDispatch(to, msg);
+            } else if (targetType === 'user') {
+                addUserMsgDispatch(to, msg);
+            }
+        }
 	});
 	
 	return (
@@ -179,6 +197,12 @@ const mapDispatchToProps = dispatch => {
 		},
 		setDialogListDispatch(list) {
 			dispatch(setDialogList(list));
+		},
+		addGroupMsgDispatch(id, msg) {
+			dispatch(addGroupMsg(id, msg));
+		},
+		addUserMsgDispatch(id, msg) {
+			dispatch(addUserMsg(id, msg));
 		}
 	}
 };

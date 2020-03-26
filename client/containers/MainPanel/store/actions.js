@@ -30,3 +30,15 @@ export const addGroup = data => ({
     type: actionTypes.ADD_GROUP,
     data: fromJS(data)
 });
+
+export const addGroupMsg = (groupId, msg) => ({
+    type: actionTypes.ADD_GROUP_MSG,
+    msg: fromJS(msg),
+    groupId
+});
+
+export const addUserMsg = (userId, msg) => ({
+    type: actionTypes.ADD_USER_MSG,
+    msg: fromJS(msg),
+    userId
+})

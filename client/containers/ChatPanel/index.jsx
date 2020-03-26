@@ -72,15 +72,26 @@ const msgList = [
 */
 
 const ChatPanel = (props) => {
-    const { targetInfo, userInfo } = props;
+    const { targetInfo, userInfo, friends, groups, isLogin, targetType } = props;
 
     const target = targetInfo ? targetInfo.toJS() : {};
     const user = userInfo ? userInfo.toJS() : {};
-    const list = target.msgs ? target.msgs : [];
+    //const list = target.msgs ? target.msgs : [];
 
     const targetId = target.id;
     const userId = user.id;
     const name = target.name ? target.name : target.nickname;
+
+    const groupsJS = groups ? groups.toJS() : [];
+    const friendsJS = friends ? friends.toJS() : [];
+
+    let list, res;
+    if(targetType === 'group') {
+        res = groupsJS.find(curr => curr.id === targetId);
+    } else {
+        res = groupsJS.find(curr => curr.id === targetId);
+    }
+    list = (res && res.msgs) ? res.msgs : [];
 
     useEffect(() => {
         document.querySelector('#msglist_bottom').scrollIntoView();   
@@ -108,7 +119,11 @@ const ChatPanel = (props) => {
 
 const mapStateToProps = state => ({
     targetInfo: state.getIn(['chatPanel', 'targetInfo']),
-    userInfo: state.getIn(['mainPanel', 'userInfo'])
+    userInfo: state.getIn(['mainPanel', 'userInfo']),
+    targetType: state.getIn(['chatPanel', 'targetType']),
+    isLogin: state.getIn(['mainPanel', 'isLogin']),
+    groups: state.getIn(['mainPanel', 'groups']),
+    friends: state.getIn(['mainPanel', 'friends'])
 });
 
 const mapDispatchToProps = dispatch => {

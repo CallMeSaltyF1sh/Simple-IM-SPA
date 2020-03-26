@@ -85,7 +85,7 @@ const ListPanel = (props) => {
 
     const handleClick = (item,e) => {
         console.log(item);
-        setTargetTypeDispatch(item.type);
+        setTargetTypeDispatch(item.owner ? 'group' : 'user');
         setTargetInfoDispatch(item);
     }
 

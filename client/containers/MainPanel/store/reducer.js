@@ -25,6 +25,22 @@ export default (state = defaultState, action) => {
             return state.updateIn(['groups'], groups => (
                 groups.unshift(action.data)
             ))
+        case actionTypes.ADD_GROUP_MSG: {
+            const index = state.getIn(['groups']).findIndex(group => group.get('id') === action.groupId);
+            return state.updateIn(['groups', index], group => (
+                group.update('msgs', msgs => (
+                    msgs.push(action.msg)
+                ))
+            ))
+        }
+        case actionTypes.ADD_USER_MSG: {
+            const index = state.getIn(['friends']).findIndex(friend => friend.get('id') === action.userId);
+            return state.updateIn(['friends', index], friend => (
+                friend.update('msgs', msgs => (
+                    msgs.push(action.msg)
+                ))
+            ))
+        }
         default:
             return state;
     }

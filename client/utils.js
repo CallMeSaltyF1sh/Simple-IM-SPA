@@ -1,5 +1,5 @@
 const timeFormat = time => {
-    time = new Date(time);
+    time = typeof time === 'object' ? time : new Date(time);
     //const offset = 8 * 60 * 60 * 1000;
     //const time = new Date(new Date(date).getTime() - offset);
     let month = time.getMonth() + 1,
