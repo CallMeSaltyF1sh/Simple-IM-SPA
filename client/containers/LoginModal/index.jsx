@@ -34,19 +34,35 @@ const LoginModal = (props) => {
                 if(res.data) {
                     const { userInfo, token, groups, friends, defaultMsgs } = res.data;
                     window.localStorage.setItem('token', token);
-                    const newGroups = groups.map(group => {
-						return { ...group, type: 'group' };
-					});
-					const newFriends = friends.map(friend => {
-						return { ...friend, type: 'user' };
-					});
-					const list = [...newGroups, ...newFriends];
+
+                    let list = [...groups, ...friends];
+                    list = list.map(item => {
+                        let latestMsg, time, sender,
+                            msgs = item.msgs;
+                        if(msgs && msgs.length) {
+                            latestMsg = msgs[msgs.length-1].content;
+                            time = msgs[msgs.length-1].created_at;
+                            if(item.owner) sender = msgs[msgs.length-1].nickname;
+                        }
+
+                        return {
+                            ...item,
+                            latestMsg,
+                            time,
+                            sender
+                        }
+                    });
+                    list = list.filter(item => item.latestMsg).sort((a,b) => 
+                        new Date(b.time) - new Date(a.time)
+                    );
+                    console.log(list);
+
                     setUserInfoDispatch(userInfo);
                     setGroupListDispatch(groups);
                     setFriendListDispatch(friends);
-                    changeLinkmanListDispatch(list);
-					changeMsgListDispatch(defaultMsgs);
                     setDialogListDispatch(list);
+                    changeLinkmanListDispatch(list);
+                    changeMsgListDispatch(defaultMsgs);   
                 }
             }
         });

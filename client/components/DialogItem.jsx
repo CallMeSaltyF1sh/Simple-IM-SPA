@@ -42,7 +42,7 @@ const styles = css`
                 position: absolute;
                 width: 82%;
                 left: 0;
-                bottom: 16px;
+                bottom: 18px;
                 font-size: 11px;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -52,7 +52,7 @@ const styles = css`
             .time {
                 position: absolute;
                 right: 0;
-                top: 16px;
+                top: 18px;
                 font-size: 11px;
                 color: #bbb;
             }
@@ -79,15 +79,15 @@ const styles = css`
 `
 
 const ListItem = (props) => {
-    const { name, msgTime, avatar, latestMsg, unreadCnt, focus, onClick=function(){} } = props;
+    const { name, time, avatar, latestMsg, unreadCnt, focus, sender, onClick=function(){} } = props;
     
     return (
         <div className={`chat-list-item ${ focus ? 'focus' : ''}`} onClick={onClick}>
             <div className='avatar'></div>
             <div className='info'>
                 <div className='name'>{name}</div>
-                <div className='msg'>{latestMsg}</div>
-                <div className='time'>{timeFormat(msgTime)}</div>
+                <div className='msg'>{`${sender ? sender+': ' : ''}${latestMsg}`}</div>
+                <div className='time'>{timeFormat(time)}</div>
                 {
                     unreadCnt > 0 ? 
                         <div className={`unread ${unreadCnt > 99 ? 'longer' : ''}`}>

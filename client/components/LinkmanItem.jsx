@@ -38,7 +38,7 @@ const styles = css`
                 position: absolute;
                 width: 85%;
                 left: 0;
-                bottom: 16px;
+                bottom: 18px;
                 font-size: 11px;
                 white-space: nowrap;
                 text-overflow: ellipsis;

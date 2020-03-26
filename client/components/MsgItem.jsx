@@ -70,7 +70,7 @@ const styles = css`
 `
 
 const MsgItem = (props) => {
-    const { id, nickname, content, created_at, avatar, isMine } = props;
+    const { id, nickname, content, created_at, avatar, isMine, msg_type } = props;
 
     return (
         <div className={`msg-piece ${ isMine ? 'msg-piece-right' : '' }`}>

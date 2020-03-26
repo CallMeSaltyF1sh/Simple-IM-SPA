@@ -46,6 +46,7 @@ const styles = css`
     }
 `;
 
+/*
 //mock
 const msgList = [
     {
@@ -69,14 +70,14 @@ const msgList = [
     },
     
 ];
+*/
 
 const ListPanel = (props) => {
     const { list: immutableList, itemType } = props;
     const { changeCGModalDisplayDispatch } = props;
     const { setTargetInfoDispatch, setTargetTypeDispatch } = props;
     const list = immutableList ? immutableList.toJS() : [];
-    // const Item = itemType === 'dialog' ? DialogItem : LinkmanItem;
-    const Item = LinkmanItem;
+    const Item = itemType === 'dialog' ? DialogItem : LinkmanItem;
 
     const handleAdd = () => {
         changeCGModalDisplayDispatch(true);

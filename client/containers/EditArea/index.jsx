@@ -101,7 +101,6 @@ const EditArea = (props) => {
             targetType
         }, res => {
             console.log(res);
-            alert(res);
         });
     };
 

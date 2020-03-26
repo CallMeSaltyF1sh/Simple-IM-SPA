@@ -72,11 +72,11 @@ const msgList = [
 */
 
 const ChatPanel = (props) => {
-    const { targetInfo, msgList, userInfo } = props;
+    const { targetInfo, userInfo } = props;
 
     const target = targetInfo ? targetInfo.toJS() : {};
-    const list = msgList ? msgList.toJS() : [];
     const user = userInfo ? userInfo.toJS() : {};
+    const list = target.msgs ? target.msgs : [];
 
     const targetId = target.id;
     const userId = user.id;
@@ -86,6 +86,7 @@ const ChatPanel = (props) => {
         document.querySelector('#msglist_bottom').scrollIntoView();   
     });
 
+    console.log(list)
     return (
         <div className='chat-panel'>
             <ChatPanelHeader name={name} />
@@ -94,7 +95,7 @@ const ChatPanel = (props) => {
                     list.map((item,index) => {
                         let isMine = item.id === userId;
                         return (
-                            <MsgItem key={index} {...item} isMine={isMine} />
+                            <MsgItem key={item.id+item.created_at} {...item} isMine={isMine} />
                         )
                     })
                 }
@@ -107,7 +108,6 @@ const ChatPanel = (props) => {
 
 const mapStateToProps = state => ({
     targetInfo: state.getIn(['chatPanel', 'targetInfo']),
-    msgList: state.getIn(['chatPanel', 'list']),
     userInfo: state.getIn(['mainPanel', 'userInfo'])
 });
 
