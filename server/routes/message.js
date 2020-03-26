@@ -1,37 +1,19 @@
 const assert = require('assert');
-const { sendGroupMsg, sendUserMsg, getGroupMsg, getUserMsg } = require('../dao/message');
-const { getById } = require('../dao/user');
-const { getGroupInfo } = require('../dao/group_info');
+const { createMsg } = require('../service/message');
 
 module.exports = {
     sendMsg: async (ctx) => {
         const { to, content, type, targetType } = ctx.data;
         assert(to, '接收方id不为空');
 
-        if(targetType === 'group') {
-            const group = await getGroupInfo(to);
-            assert(group, '群组不存在');
-            try {
-                await sendGroupMsg(ctx.socket.user, to, content, type);
-            } catch(e) {
-                console.log(e);
-            }
-        } else {
-            const user = await getById(to);
-            assert(user, '用户不存在');
-            try {
-                await sendUserMsg(ctx.socket.user, to, content, type);
-            } catch(e) {
-                console.log(e);
-            }
+        const msg = await createMsg(to, content, type, targetType, ctx.socket.user);
+        if(msg.content) {
+            ctx.socket.socket.to(to).emit('message', msg);
         }
-        //构造消息发给接收方
-        const from = await getById(ctx.socket.user);
-        const msg = { from: from[0], to, content, type };
-        ctx.socket.socket.to(to).emit('message', msg);
-
+        console.log('get msg:', msg);
         return msg;
     },
+    
     /*
     getMsg: async (ctx) => {
         const { userIds, groupIds } = ctx.data;
@@ -43,6 +25,7 @@ module.exports = {
         });
     },
     */
+   /*
     getMsgById: async (ctx) => {
         const { id, targetType } = ctx.data;
         assert(id, 'id不为空');
@@ -56,4 +39,5 @@ module.exports = {
         console.log(result);
         return result;
     }
+    */
 };

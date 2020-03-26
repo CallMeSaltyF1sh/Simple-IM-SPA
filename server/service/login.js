@@ -9,6 +9,7 @@ const { updateSocket } = require('../dao/socket');
 const { getAllFriends } = require('../dao/friend_link');
 const { getGroupMsg } = require('../dao/message');
 const { getDefaultGroup } = require('../dao/group_info');
+const { bindAllGroupMsgs, bindAllUserMsgs } = require('../service/message');
 
 async function login(email, password, socket_id) {
     let response = {
@@ -17,7 +18,6 @@ async function login(email, password, socket_id) {
     };
     try {
         const result = await getByEmail(email);
-        console.log(result);
         if(result.length) {
             const user = result[0];
             const match = bcrypt.compareSync(password, user.password);
@@ -25,15 +25,21 @@ async function login(email, password, socket_id) {
                 await updateLoginTime(email);
                 const info = await getById(user.id);
                 console.log(info);
-                const groups = await getJoinedGroupsByUserId(user.id);
+                let groups = await getJoinedGroupsByUserId(user.id);
                 console.log('groups:', groups);
-                const friends = await getAllFriends(user.id);
+                let friends = await getAllFriends(user.id);
                 console.log('friends', friends);
+
+                groups = await bindAllGroupMsgs(groups);
+                friends = await bindAllUserMsgs(user.id, friends);
+
+                /*
                 const defaultGroup = await getDefaultGroup();
                 let msgs = [];
                 if(defaultGroup.length) {
                     msgs = await getGroupMsg(defaultGroup[0].id);
                 }
+                */
                 await updateSocket(socket_id, user.id);
                 response = {
                     status: 0,
@@ -43,7 +49,7 @@ async function login(email, password, socket_id) {
                         token: generateJWT(user.id, email),
                         groups: groups,
                         friends: friends,
-                        defaultMsgs: msgs
+                        defaultMsgs: []
                     }
                 };
             } else {
@@ -75,20 +81,25 @@ async function loginWithToken(token, socket_id) {
         const { userId, email } = decoded;
         try {
             const user = await getById(userId);
-            console.log(user);
             if(user.length) {
                 await updateLoginTime(email);
                 const info = await getById(userId);
                 console.log(info);
-                const groups = await getJoinedGroupsByUserId(userId);
+                let groups = await getJoinedGroupsByUserId(userId);
                 console.log(groups);
-                const friends = await getAllFriends(userId);
+                let friends = await getAllFriends(userId);
                 console.log(friends);
+
+                groups = await bindAllGroupMsgs(groups);
+                friends = await bindAllUserMsgs(userId, friends);
+
+                /*
                 const defaultGroup = await getDefaultGroup();
                 let msgs = [];
                 if(defaultGroup.length) {
                     msgs = await getGroupMsg(defaultGroup[0].id);
                 }
+                */
                 await updateSocket(socket_id, userId);
                 response = {
                     status: 0,
@@ -97,7 +108,7 @@ async function loginWithToken(token, socket_id) {
                         userInfo: info[0],
                         groups: groups,
                         friends: friends,
-                        defaultMsgs: msgs
+                        defaultMsgs: []
                     }
                 };
             }
