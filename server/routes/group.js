@@ -5,6 +5,9 @@ module.exports = {
         const { name, userId } = ctx.data;
         const response = await create(name, userId);
         console.log(response);
+        if(response.status === 0) {
+            ctx.socket.socket.join(response.data.id);
+        }
         return response;
     },
     getGroupInfo: async (ctx) => {

@@ -100,7 +100,7 @@ const ChatPanel = (props) => {
     console.log(list)
     return (
         <div className='chat-panel'>
-            <ChatPanelHeader name={name} />
+            <ChatPanelHeader name={name} isLogin={isLogin} />
             <div className='scroll-area'>
                 {
                     list.map((item,index) => {

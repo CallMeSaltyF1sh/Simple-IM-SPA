@@ -40,7 +40,11 @@ const CreateGroupModal = (props) => {
                 //const newGroupInfo = res.data;
                 //groupList.unshift(newGroupInfo);
                 //setGroupListDispatch(groupList);
-                addGroupDispatch(res.data)
+                const newGroup = {
+                    ...res.data,
+                    msgs: []
+                };
+                addGroupDispatch(newGroup);
             }
         });
     }, []);

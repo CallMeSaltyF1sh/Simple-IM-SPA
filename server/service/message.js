@@ -9,17 +9,18 @@ async function createMsg(to, content, type, targetType, userId) {
         message: '数据库错误'
     };
     try {
+        let to_info;
         if(targetType === 'group') {
-            const group = await getGroupInfo(to);
-            assert(group, '群组不存在');
+            to_info = await getGroupInfo(to);
+            assert(to_info, '群组不存在');
             try {
                 await sendGroupMsg(userId, to, content, type);
             } catch(e) {
                 console.log(e);
             }
         } else if (targetType === 'user') {
-            const user = await getById(to);
-            assert(user, '用户不存在');
+            to_info = await getById(to);
+            assert(to_info, '用户不存在');
             try {
                 await sendUserMsg(userId, to, content, type);
             } catch(e) {
@@ -27,7 +28,8 @@ async function createMsg(to, content, type, targetType, userId) {
             }
         }
         const from = await getById(userId);
-        msg = { from: from[0], to, content, type, targetType };
+        console.log(to_info)
+        msg = { from: from[0], to: to_info[0], content, type, targetType };
     } catch(e) {
         console.log(e);
     }

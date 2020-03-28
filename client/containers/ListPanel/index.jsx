@@ -35,6 +35,11 @@ const styles = css`
                     color: #ad876e;
                 }
             }
+            .placeholder {
+                margin: 16px 18px;
+                color: #ad876e;
+                font-size: 18px;
+            }
         }
         .chat-list-wrapper {
             flex: 1;
@@ -73,7 +78,7 @@ const msgList = [
 */
 
 const ListPanel = (props) => {
-    const { itemType, friends, groups, dialogs } = props;
+    const { itemType, friends, groups, dialogs, isLogin } = props;
     const { changeCGModalDisplayDispatch } = props;
     const { setTargetInfoDispatch, setTargetTypeDispatch } = props;
     
@@ -112,8 +117,9 @@ const ListPanel = (props) => {
     return (
         <div className='list-panel'>
             <div className='list-panel-top'>
-                <SearchBox />
-                <i className='iconfont add' onClick={handleAdd}>&#xe60b;</i>
+                { isLogin && <SearchBox /> }
+                { isLogin && <i className='iconfont add' onClick={handleAdd}>&#xe60b;</i> }
+                { !isLogin && <div className='placeholder'>Dialog List</div> }
             </div>
             <div className='chat-list-wrapper'>
                 {
@@ -135,7 +141,8 @@ const mapStateToProps = state => ({
     itemType: state.getIn(['listPanel', 'itemType']),
     friends: state.getIn(['mainPanel', 'friends']),
     groups: state.getIn(['mainPanel', 'groups']),
-    dialogs: state.getIn(['mainPanel', 'dialogs'])
+    dialogs: state.getIn(['mainPanel', 'dialogs']),
+    isLogin: state.getIn(['mainPanel', 'isLogin'])
 });
 
 const mapDispatchToProps = dispatch => {

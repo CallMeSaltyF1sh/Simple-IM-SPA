@@ -151,9 +151,9 @@ const MainPanal = (props) => {
                 msg_type: type
             };
             if(targetType === 'group') {
-                addGroupMsgDispatch(to, msg);
+                addGroupMsgDispatch(to.id, msg);
             } else if (targetType === 'user') {
-                addUserMsgDispatch(to, msg);
+                addUserMsgDispatch(to.id, msg);
             }
 			updateDialogListDispatch(to, msg, targetType);
         }
@@ -212,8 +212,8 @@ const mapDispatchToProps = dispatch => {
 		addUserMsgDispatch(id, msg) {
 			dispatch(addUserMsg(id, msg));
 		},
-		updateDialogListDispatch(id, msg, targetType) {
-			dispatch(updateDialogList(id, msg, targetType));
+		updateDialogListDispatch(to, msg, targetType) {
+			dispatch(updateDialogList(to, msg, targetType));
 		}
 	}
 };

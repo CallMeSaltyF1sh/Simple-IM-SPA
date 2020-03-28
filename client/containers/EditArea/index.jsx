@@ -115,9 +115,9 @@ const EditArea = (props) => {
                     msg_type: type
                 };
                 if(targetType === 'group') {
-                    addGroupMsgDispatch(to, msg);
+                    addGroupMsgDispatch(to.id, msg);
                 } else if (targetType === 'user') {
-                    addUserMsgDispatch(to, msg);
+                    addUserMsgDispatch(to.id, msg);
                 }
                 updateDialogListDispatch(to, msg, targetType);
             }
@@ -144,8 +144,8 @@ const EditArea = (props) => {
         <div className='edit-area'>
             <div className='tools-bar'>
                 <i className='iconfont icon'>&#xe827;</i>
-                <i className='iconfont icon'>&#xe646;</i>
-                <i className='iconfont icon'>&#xe610;</i>
+                    { isLogin && <i className='iconfont icon'>&#xe646;</i> }
+                    { isLogin && <i className='iconfont icon'>&#xe610;</i> } 
             </div>
             <textarea 
                 className='txt-area' 

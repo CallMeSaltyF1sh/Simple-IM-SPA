@@ -2,8 +2,19 @@ import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
-import { changeLoginState } from '../MainPanel/store/actions';
+import { 
+    changeLoginState,
+    setUserInfo, 
+    setGroupList, 
+    setFriendList, 
+    setDialogList 
+} from '../MainPanel/store/actions';
 import { changeItemType } from '../ListPanel/store/actions';
+import { changeMsgList } from '../ChatPanel/store/actions';
+
+const sideBarBgColor = 'rgba(252,210,118,0.75)';
+const listItemOnHoverBgColor = 'rgba(208,181,166,0.5)';
+const iconColor = '#b57c5c';
 
 const styles = css`
     .side-bar {
@@ -15,7 +26,7 @@ const styles = css`
         min-width: 96px;
         max-width: 96px;
         height: 100%;
-        background-color: rgba(252,210,118,0.75);
+        background-color: ${sideBarBgColor};
         border-top-left-radius: 30px;
         border-bottom-left-radius: 30px;
         box-shadow: 5px 0px 10px -5px #888;
@@ -44,11 +55,11 @@ const styles = css`
             text-align: center;
             transition: all 0.3s;
             &:hover {
-                background-color: rgba(208,181,166,0.5);
+                background-color: ${listItemOnHoverBgColor};
             }
             .icon {
                 font-size: 30px;
-                color: #b57c5c;
+                color: ${iconColor};
             }
         }
     }
@@ -57,7 +68,8 @@ const styles = css`
 const SideBar = (props) => {
     const { isLogin } = props;
     const { changeLoginModalDisplayDispatch, changeLoginStateDispatch } = props;
-    const { changeItemTypeDispatch} = props;
+    const { setDialogListDispatch, setUserInfoDispatch, changeItemTypeDispatch } = props;
+    const { setGroupListDispatch, setFriendListDispatch, changeMsgListDispatch } = props;
     const { groups, friends, dialogs, userInfo } = props;
 
     const groupsJS = groups ? groups.toJS() : [];
@@ -73,6 +85,11 @@ const SideBar = (props) => {
         if(window.localStorage.getItem('token')) {
             window.localStorage.setItem('token', '');
         }
+        //setUserInfoDispatch({});
+        //setGroupListDispatch([]);
+        //setFriendListDispatch([]);
+        //setDialogListDispatch([]);
+        //changeMsgListDispatch([]);
     };
     const handleViewDialogList = () => {
         changeItemTypeDispatch('dialog');
@@ -154,6 +171,21 @@ const mapDispatchToProps = dispatch => {
         },
         changeItemTypeDispatch(type) {
             dispatch(changeItemType(type));
+        },
+         setUserInfoDispatch(info) {
+            dispatch(setUserInfo(info));
+        },
+        setGroupListDispatch(groups) {
+            dispatch(setGroupList(groups));
+        },
+        setFriendListDispatch(friends) {
+            dispatch(setFriendList(friends));
+        },
+		changeMsgListDispatch(list) {
+			dispatch(changeMsgList(list));
+		},
+        setDialogListDispatch(list) {
+            dispatch(setDialogList(list));
         }
 	}
 };

@@ -30,7 +30,7 @@ export default (state = defaultState, action) => {
             const index = state.getIn(['groups']).findIndex(group => group.get('id') === action.groupId);
             return state.updateIn(['groups', index], group => (
                 group.update('msgs', msgs => (
-                    msgs.push(action.msg)
+                    msgs.push(fromJS(action.msg))
                 ))
             ))
         }
@@ -38,43 +38,34 @@ export default (state = defaultState, action) => {
             const index = state.getIn(['friends']).findIndex(friend => friend.get('id') === action.userId);
             return state.updateIn(['friends', index], friend => (
                 friend.update('msgs', msgs => (
-                    msgs.push(action.msg)
+                    msgs.push(fromJS(action.msg))
                 ))
             ))
         }
         case actionTypes.UPDATE_DIALOG_LIST: {
-            console.log(action.msg);
-            const index = state.getIn(['dialogs']).findIndex(item => item.get('id') === action.to_id);
+            //console.log(action.msg);
+            const { msg, to } = action;
+            const index = state.getIn(['dialogs']).findIndex(item => item.get('id') === to.id);
             if(index !== -1) {
                 return state.updateIn(['dialogs', index], dialog => (
                     dialog.update('msgs', msgs => (
-                        msgs.push(fromJS(action.msg))
+                        msgs.push(fromJS(msg))
                     ))
-                    .set('latestMsg', action.msg.content)
-                    .set('sender', action.msg.nickname)
-                    .set('time', action.msg.created_at)
+                    .set('latestMsg', msg.content)
+                    .set('sender', msg.nickname)
+                    .set('time', msg.created_at)
                 )) 
             } else {
-                /*
-                let newDialog;
-                if(action.targetType === 'group') {
-                    socket.emit('getGroupInfo', {
-                        id: action.to_id
-                    }, res => {
-                        console.log(res);
-                        if(res.data) {
-                            newDialog = {
-                                ...res.data,
-                                latestMsg: action.msg.content,
-                                sender: action.msg.nickname,
-                                time: action.msg.created_at
-                            };
-                        }
-                    })
-                } else {
-
-                }
-                */
+                const newDialog = {
+                    ...to,
+                    msgs: [msg],
+                    time: msg.created_at,
+                    latestMsg: msg.content,
+                    sender: msg.nickname
+                };
+                return state.updateIn(['dialogs'], dialogs => (
+                    dialogs.unshift(fromJS(newDialog))
+                ))
             }
         }
         default:

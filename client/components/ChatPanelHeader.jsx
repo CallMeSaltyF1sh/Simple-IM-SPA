@@ -35,12 +35,12 @@ const styles = css`
 `
 
 const ChatPanelHeader = (props) => {
-    const { name } = props;
+    const { name, isLogin } = props;
 
     return (
         <div className='chat-panel-header'>
             <div className='chatter-name'>{name}</div>
-            <i className='iconfont more'>&#xe618;</i>
+            { isLogin && <i className='iconfont more'>&#xe618;</i> }
         </div>
     )
 };
