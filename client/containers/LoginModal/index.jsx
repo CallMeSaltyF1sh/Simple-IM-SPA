@@ -57,10 +57,7 @@ const LoginModal = (props) => {
                             sender
                         }
                     });
-                    list = list.filter(item => item.latestMsg).sort((a,b) => 
-                        new Date(b.time) - new Date(a.time)
-                    );
-                    console.log(list);
+                    list = list.filter(item => item.latestMsg);
 
                     setUserInfoDispatch(userInfo);
                     setGroupListDispatch(groups);

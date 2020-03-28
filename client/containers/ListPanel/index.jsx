@@ -109,7 +109,9 @@ const ListPanel = (props) => {
                 break;
             case 'dialog':
             default: 
-                setList(dialogsJS);
+                setList(dialogsJS.sort((a,b) => 
+                    new Date(b.time) - new Date(a.time)
+                ));
         }
     }, [groups, friends, dialogs, itemType]);
 
