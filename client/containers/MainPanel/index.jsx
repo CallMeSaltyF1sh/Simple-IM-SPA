@@ -20,6 +20,8 @@ import {
 } from './store/actions';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import { changeMsgList } from '../ChatPanel/store/actions';
+import { changeItemType } from '../ListPanel/store/actions';
+import { setTargetType, setTargetInfo } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
 const styles = css`
@@ -83,7 +85,8 @@ const MainPanal = (props) => {
 	const { changeLoginStateDispatch, setUserInfoDispatch, changeLoginModalDisplayDispatch } = props;
 	const { setGroupListDispatch, setFriendListDispatch, setDialogListDispatch } = props;
 	const { changeMsgListDispatch, updateDialogListDispatch } = props;
-	const { addGroupMsgDispatch, addUserMsgDispatch } = props;
+	const { addGroupMsgDispatch, addUserMsgDispatch, changeItemTypeDispatch } = props;
+	const { setTargetInfoDispatch, setTargetTypeDispatch } = props;
 
 	socket.on('connect', () => {
 		const token = window.localStorage.getItem('token');
@@ -130,6 +133,29 @@ const MainPanal = (props) => {
                     changeMsgListDispatch(defaultMsgs); 
 				}
 			});
+		} else {
+			//未登录
+			socket.emit('guest', {}, res => { 
+				console.log(res);
+				if(res.status === 0 && res.data.msgs.length) {
+					const latestMsg = res.data.msgs[0];
+					const msgs = res.data.msgs.reverse();
+					const dialog = {
+						...res.data,
+						msgs,
+						latestMsg: latestMsg.content,
+                        time: latestMsg.created_at,
+						sender: latestMsg.nickname
+					};
+
+					changeItemTypeDispatch('dialog');
+					setTargetTypeDispatch('group');
+					setTargetInfoDispatch(res.data)
+					setGroupListDispatch([dialog]);
+					setDialogListDispatch([dialog]);
+					changeMsgListDispatch(msgs);
+				}
+			})
 		}
 	});
 	socket.on('disconnect', () => {
@@ -214,7 +240,16 @@ const mapDispatchToProps = dispatch => {
 		},
 		updateDialogListDispatch(to, msg, targetType) {
 			dispatch(updateDialogList(to, msg, targetType));
-		}
+		},
+        changeItemTypeDispatch(type) {
+            dispatch(changeItemType(type));
+        },
+		setTargetTypeDispatch(type) {
+            dispatch(setTargetType(type));
+        },
+        setTargetInfoDispatch(info) {
+            dispatch(setTargetInfo(info));
+        }
 	}
 };
 

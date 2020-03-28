@@ -1,4 +1,4 @@
-const { create, getGroupById } = require('../service/group');
+const { create } = require('../service/group');
 
 module.exports = {
     createGroup: async (ctx) => {
@@ -8,11 +8,6 @@ module.exports = {
         if(response.status === 0) {
             ctx.socket.socket.join(response.data.id);
         }
-        return response;
-    },
-    getGroupInfo: async (ctx) => {
-        const { id } = ctx.data;
-        const response = await getGroupById(id);
         return response;
     }
 };

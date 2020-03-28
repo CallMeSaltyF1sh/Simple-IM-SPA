@@ -1,5 +1,6 @@
 const register = require('../service/register');
 const { login, loginWithToken } = require('../service/login');
+const { getDefaultGroupInfo } = require('../service/group');
 
 module.exports = {
     register: async (ctx) => {
@@ -35,6 +36,13 @@ module.exports = {
                 ctx.socket.socket.join(group.id);
             });
             ctx.socket.user = userInfo.id;
+        }
+        return response;
+    },
+    guest: async (ctx) => {
+        const response = await getDefaultGroupInfo();
+        if(response.status === 0) {
+            ctx.socket.socket.join(response.data.id);
         }
         return response;
     }

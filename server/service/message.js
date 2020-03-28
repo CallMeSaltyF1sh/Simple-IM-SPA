@@ -60,10 +60,6 @@ async function bindAllUserMsgs(userId, friends) {
     });
 }
 
-async function getDefaultGroupMsgs() {
-
-}
-
 module.exports = {
     createMsg,
     bindAllGroupMsgs,

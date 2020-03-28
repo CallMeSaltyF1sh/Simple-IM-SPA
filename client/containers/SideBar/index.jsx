@@ -10,7 +10,8 @@ import {
     setDialogList 
 } from '../MainPanel/store/actions';
 import { changeItemType } from '../ListPanel/store/actions';
-import { changeMsgList } from '../ChatPanel/store/actions';
+import { changeMsgList, setTargetType, setTargetInfo } from '../ChatPanel/store/actions';
+import socket from '@/socket';
 
 const sideBarBgColor = 'rgba(252,210,118,0.75)';
 const listItemOnHoverBgColor = 'rgba(208,181,166,0.5)';
@@ -70,6 +71,7 @@ const SideBar = (props) => {
     const { changeLoginModalDisplayDispatch, changeLoginStateDispatch } = props;
     const { setDialogListDispatch, setUserInfoDispatch, changeItemTypeDispatch } = props;
     const { setGroupListDispatch, setFriendListDispatch, changeMsgListDispatch } = props;
+    const { setTargetInfoDispatch, setTargetTypeDispatch } = props;
     const { groups, friends, dialogs, userInfo } = props;
 
     const groupsJS = groups ? groups.toJS() : [];
@@ -82,14 +84,18 @@ const SideBar = (props) => {
     };
     const handleLogOut = () => {
         changeLoginStateDispatch(false);
+        setUserInfoDispatch({});
+        setFriendListDispatch([]);
         if(window.localStorage.getItem('token')) {
             window.localStorage.setItem('token', '');
         }
-        //setUserInfoDispatch({});
-        //setGroupListDispatch([]);
-        //setFriendListDispatch([]);
-        //setDialogListDispatch([]);
-        //changeMsgListDispatch([]);
+        const dialog = dialogsJS.find(item => item.is_default === 1);
+        setGroupListDispatch([dialog]);
+        setDialogListDispatch([dialog]);
+        changeItemTypeDispatch('dialog');
+        setTargetInfoDispatch(dialog);
+        setTargetTypeDispatch('group');
+        changeMsgListDispatch(dialog.msgs);
     };
     const handleViewDialogList = () => {
         changeItemTypeDispatch('dialog');
@@ -186,6 +192,12 @@ const mapDispatchToProps = dispatch => {
 		},
         setDialogListDispatch(list) {
             dispatch(setDialogList(list));
+        },
+        setTargetTypeDispatch(type) {
+            dispatch(setTargetType(type));
+        },
+        setTargetInfoDispatch(info) {
+            dispatch(setTargetInfo(info));
         }
 	}
 };

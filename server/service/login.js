@@ -7,8 +7,8 @@ const { secret } = require('../config/index');
 const { getJoinedGroupsByUserId } = require('../dao/group_info');
 const { updateSocket } = require('../dao/socket');
 const { getAllFriends } = require('../dao/friend_link');
-const { getGroupMsg } = require('../dao/message');
-const { getDefaultGroup } = require('../dao/group_info');
+//const { getGroupMsg } = require('../dao/message');
+//const { getDefaultGroup } = require('../dao/group_info');
 const { bindAllGroupMsgs, bindAllUserMsgs } = require('../service/message');
 
 async function login(email, password, socket_id) {

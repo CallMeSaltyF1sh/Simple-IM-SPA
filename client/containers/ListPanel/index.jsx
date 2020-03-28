@@ -79,7 +79,7 @@ const msgList = [
 
 const ListPanel = (props) => {
     const { itemType, friends, groups, dialogs, isLogin } = props;
-    const { changeCGModalDisplayDispatch } = props;
+    const { changeCGModalDisplayDispatch, changeItemTypeDispatch } = props;
     const { setTargetInfoDispatch, setTargetTypeDispatch } = props;
     
     const friendsJS = friends ? friends.toJS() : [];
@@ -113,6 +113,8 @@ const ListPanel = (props) => {
                 setList(dialogsJS);
         }
     }, [groups, friends, dialogs, itemType]);
+
+    console.log(list)
 
     return (
         <div className='list-panel'>
