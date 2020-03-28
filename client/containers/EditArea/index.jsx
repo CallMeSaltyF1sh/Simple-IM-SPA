@@ -88,12 +88,13 @@ const styles = css`
 `
 
 const EditArea = (props) => {
-    const { targetInfo, targetType, isLogin } = props;
+    const { targetInfo, isLogin } = props;
     const { changeLoginModalDisplayDispatch } = props;
     const { addGroupMsgDispatch, addUserMsgDispatch, updateDialogListDispatch } = props;
     const [ content, setContent ] = useState('');
 
     const info = targetInfo ? targetInfo.toJS() : {};
+    const targetType = info.owner ? 'group' : 'user';
 
     const sendMsg = (content, type) => {
         socket.emit('sendMsg', {
@@ -130,6 +131,10 @@ const EditArea = (props) => {
             changeLoginModalDisplayDispatch(true);
             return;
         }
+        if(!content) {
+            alert('消息不为空嗷');
+            return;
+        }
         sendMsg(content, 'txt');
         setContent('');
     };
@@ -162,7 +167,6 @@ const EditArea = (props) => {
 };
 
 const mapStateToProps = state => ({
-    targetType: state.getIn(['chatPanel', 'targetType']),
     targetInfo: state.getIn(['chatPanel', 'targetInfo']),
     isLogin: state.getIn(['mainPanel', 'isLogin']),
     groups: state.getIn(['mainPanel', 'groups']),

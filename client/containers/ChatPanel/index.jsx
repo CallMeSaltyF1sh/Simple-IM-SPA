@@ -72,11 +72,11 @@ const msgList = [
 */
 
 const ChatPanel = (props) => {
-    const { targetInfo, userInfo, friends, groups, isLogin, targetType } = props;
+    const { targetInfo, userInfo, friends, groups, isLogin } = props;
 
     const target = targetInfo ? targetInfo.toJS() : {};
     const user = userInfo ? userInfo.toJS() : {};
-    //const list = target.msgs ? target.msgs : [];
+    const targetType = target.owner ? 'group' : 'user';
 
     const targetId = target.id;
     const userId = user.id;
@@ -120,7 +120,6 @@ const ChatPanel = (props) => {
 const mapStateToProps = state => ({
     targetInfo: state.getIn(['chatPanel', 'targetInfo']),
     userInfo: state.getIn(['mainPanel', 'userInfo']),
-    targetType: state.getIn(['chatPanel', 'targetType']),
     isLogin: state.getIn(['mainPanel', 'isLogin']),
     groups: state.getIn(['mainPanel', 'groups']),
     friends: state.getIn(['mainPanel', 'friends'])

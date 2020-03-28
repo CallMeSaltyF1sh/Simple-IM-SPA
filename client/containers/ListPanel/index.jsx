@@ -80,7 +80,7 @@ const msgList = [
 const ListPanel = (props) => {
     const { itemType, friends, groups, dialogs, isLogin } = props;
     const { changeCGModalDisplayDispatch, changeItemTypeDispatch } = props;
-    const { setTargetInfoDispatch, setTargetTypeDispatch } = props;
+    const { setTargetInfoDispatch } = props;
     
     const friendsJS = friends ? friends.toJS() : [];
     const groupsJS = groups ? groups.toJS() : [];
@@ -96,7 +96,6 @@ const ListPanel = (props) => {
 
     const handleClick = (item,e) => {
         console.log(item);
-        setTargetTypeDispatch(item.owner ? 'group' : 'user');
         setTargetInfoDispatch(item);
     }
 
@@ -151,9 +150,6 @@ const mapDispatchToProps = dispatch => {
 	return {
         changeCGModalDisplayDispatch(bool) {
             dispatch(changeCGModalDisplay(bool));
-        },
-        setTargetTypeDispatch(type) {
-            dispatch(setTargetType(type));
         },
         setTargetInfoDispatch(info) {
             dispatch(setTargetInfo(info));

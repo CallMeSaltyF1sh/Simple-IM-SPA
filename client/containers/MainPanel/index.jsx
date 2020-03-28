@@ -21,7 +21,7 @@ import {
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import { changeMsgList } from '../ChatPanel/store/actions';
 import { changeItemType } from '../ListPanel/store/actions';
-import { setTargetType, setTargetInfo } from '../ChatPanel/store/actions';
+import { setTargetInfo } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
 const styles = css`
@@ -86,7 +86,7 @@ const MainPanal = (props) => {
 	const { setGroupListDispatch, setFriendListDispatch, setDialogListDispatch } = props;
 	const { changeMsgListDispatch, updateDialogListDispatch } = props;
 	const { addGroupMsgDispatch, addUserMsgDispatch, changeItemTypeDispatch } = props;
-	const { setTargetInfoDispatch, setTargetTypeDispatch } = props;
+	const { setTargetInfoDispatch } = props;
 
 	socket.on('connect', () => {
 		const token = window.localStorage.getItem('token');
@@ -102,7 +102,7 @@ const MainPanal = (props) => {
 					window.localStorage.setItem('token', '');
 				} else {
 					const { userInfo, groups, friends, defaultMsgs } = res.data;
-					
+
 					changeLoginStateDispatch(true);
 					let list = [...groups, ...friends];
                     list = list.map(item => {
@@ -149,7 +149,6 @@ const MainPanal = (props) => {
 					};
 
 					changeItemTypeDispatch('dialog');
-					setTargetTypeDispatch('group');
 					setTargetInfoDispatch(res.data)
 					setGroupListDispatch([dialog]);
 					setDialogListDispatch([dialog]);
@@ -243,9 +242,6 @@ const mapDispatchToProps = dispatch => {
 		},
         changeItemTypeDispatch(type) {
             dispatch(changeItemType(type));
-        },
-		setTargetTypeDispatch(type) {
-            dispatch(setTargetType(type));
         },
         setTargetInfoDispatch(info) {
             dispatch(setTargetInfo(info));

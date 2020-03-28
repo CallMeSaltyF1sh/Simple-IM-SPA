@@ -10,7 +10,7 @@ import {
     setDialogList 
 } from '../MainPanel/store/actions';
 import { changeItemType } from '../ListPanel/store/actions';
-import { changeMsgList, setTargetType, setTargetInfo } from '../ChatPanel/store/actions';
+import { changeMsgList, setTargetInfo } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
 const sideBarBgColor = 'rgba(252,210,118,0.75)';
@@ -67,15 +67,12 @@ const styles = css`
 `;
 
 const SideBar = (props) => {
-    const { isLogin } = props;
+    const { isLogin, dialogs, userInfo } = props;
     const { changeLoginModalDisplayDispatch, changeLoginStateDispatch } = props;
     const { setDialogListDispatch, setUserInfoDispatch, changeItemTypeDispatch } = props;
     const { setGroupListDispatch, setFriendListDispatch, changeMsgListDispatch } = props;
-    const { setTargetInfoDispatch, setTargetTypeDispatch } = props;
-    const { groups, friends, dialogs, userInfo } = props;
+    const { setTargetInfoDispatch } = props;
 
-    const groupsJS = groups ? groups.toJS() : [];
-    const friendsJS = friends ? friends.toJS() : [];
     const dialogsJS = dialogs ? dialogs.toJS() : [];
     const userInfoJS = userInfo ? userInfo.toJS() : {};
 
@@ -94,7 +91,6 @@ const SideBar = (props) => {
         setDialogListDispatch([dialog]);
         changeItemTypeDispatch('dialog');
         setTargetInfoDispatch(dialog);
-        setTargetTypeDispatch('group');
         changeMsgListDispatch(dialog.msgs);
     };
     const handleViewDialogList = () => {
@@ -161,8 +157,6 @@ const SideBar = (props) => {
 
 const mapStateToProps = state => ({
     isLogin: state.getIn(['mainPanel', 'isLogin']),
-    groups: state.getIn(['mainPanel', 'groups']),
-    friends: state.getIn(['mainPanel', 'friends']),
     dialogs: state.getIn(['mainPanel', 'dialogs']),
     userInfo: state.getIn(['mainPanel', 'userInfo'])
 });
@@ -192,9 +186,6 @@ const mapDispatchToProps = dispatch => {
 		},
         setDialogListDispatch(list) {
             dispatch(setDialogList(list));
-        },
-        setTargetTypeDispatch(type) {
-            dispatch(setTargetType(type));
         },
         setTargetInfoDispatch(info) {
             dispatch(setTargetInfo(info));
