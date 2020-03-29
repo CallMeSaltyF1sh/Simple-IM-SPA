@@ -52,7 +52,7 @@ export default (state = defaultState, action) => {
                         msgs.push(fromJS(msg))
                     ))
                     .set('latestMsg', msg.content)
-                    .set('sender', msg.nickname)
+                    .set('sender', to.owner ? msg.nickname : '')
                     .set('time', msg.created_at)
                 )) 
             } else {
@@ -61,7 +61,7 @@ export default (state = defaultState, action) => {
                     msgs: [msg],
                     time: msg.created_at,
                     latestMsg: msg.content,
-                    sender: msg.nickname
+                    sender: to.owner ? msg.nickname : ''
                 };
                 return state.updateIn(['dialogs'], dialogs => (
                     dialogs.unshift(fromJS(newDialog))

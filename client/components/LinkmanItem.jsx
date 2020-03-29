@@ -21,7 +21,7 @@ const styles = css`
             height: 44px;
             margin: 12px 10px 0 0;
             border-radius: 50%;
-            background-image: url('../assets/images/avators/a.jpg');
+            background-image: url('../assets/images/avatars/a.jpg');
             background-size: 100% 100%;
         }
         .info {

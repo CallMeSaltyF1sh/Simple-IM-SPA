@@ -21,7 +21,7 @@ const styles = css`
             height: 36px;
             border-radius: 50%;
             margin: 10px;
-            background-image: url('../assets/images/avators/1.png');
+            background-image: url('../assets/images/avatars/1.png');
             background-size: 100% 100%;
         }
         .txt-wrapper {

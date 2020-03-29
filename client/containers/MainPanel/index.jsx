@@ -84,82 +84,92 @@ const MainPanal = (props) => {
 	const { loginModalDisplay, registerModalDisplay, cgModalDisplay } = props;
 	const { changeLoginStateDispatch, setUserInfoDispatch, changeLoginModalDisplayDispatch } = props;
 	const { setGroupListDispatch, setFriendListDispatch, setDialogListDispatch } = props;
-	const { changeMsgListDispatch, updateDialogListDispatch } = props;
+	const { changeMsgListDispatch, updateDialogListDispatch, setTargetInfoDispatch } = props;
 	const { addGroupMsgDispatch, addUserMsgDispatch, changeItemTypeDispatch } = props;
-	const { setTargetInfoDispatch } = props;
 
-	socket.on('connect', () => {
-		const token = window.localStorage.getItem('token');
-		console.log(token);
-		if(token) {
-			socket.emit('checkToken', {
-				token: token
-			}, res => {
-				console.log(res)
-				if(res.status !== 0) {
-					alert('登录已过期，请重新登录w(ﾟДﾟ)w');
-					changeLoginModalDisplayDispatch(true);
-					window.localStorage.setItem('token', '');
-				} else {
-					const { userInfo, groups, friends, defaultMsgs } = res.data;
+	useEffect(() => {
+		socket.on('connect', () => {
+			const token = window.localStorage.getItem('token');
+			console.log(token);
+			if(token) {
+				socket.emit('checkToken', {
+					token: token
+				}, res => {
+					console.log(res)
+					if(res.status !== 0) {
+						alert('登录已过期，请重新登录w(ﾟДﾟ)w');
+						changeLoginModalDisplayDispatch(true);
+						window.localStorage.setItem('token', '');
+					} else {
+						const { userInfo, groups, friends, defaultMsgs } = res.data;
 
-					changeLoginStateDispatch(true);
-					let list = [...groups, ...friends];
-                    list = list.map(item => {
-                        let latestMsg, time, sender,
-                            msgs = item.msgs;
-                        if(msgs && msgs.length) {
-                            latestMsg = msgs[msgs.length-1].content;
-                            time = msgs[msgs.length-1].created_at;
-							if(item.owner) sender = msgs[msgs.length-1].nickname;
-                        }
-                        
-                        return {
-                            ...item,
-                            latestMsg,
-                            time,
-							sender
-                        }
-                    });
-                    list = list.filter(item => item.latestMsg);
-                    //console.log(list);
+						changeLoginStateDispatch(true);
+						let list = [...groups, ...friends];
+						list = list.map(item => {
+							let latestMsg, time, sender,
+								msgs = item.msgs;
+							if(msgs && msgs.length) {
+								latestMsg = msgs[msgs.length-1].content;
+								time = msgs[msgs.length-1].created_at;
+								if(item.owner) sender = msgs[msgs.length-1].nickname;
+							}
+							
+							return {
+								...item,
+								latestMsg,
+								time,
+								sender
+							}
+						});
+						list = list.filter(item => item.latestMsg);
+						//console.log(list);
 
-                    setUserInfoDispatch(userInfo);
-                    setGroupListDispatch(groups);
-                    setFriendListDispatch(friends);
-                    setDialogListDispatch(list);
-                    changeMsgListDispatch(defaultMsgs); 
-				}
-			});
-		} else {
-			//未登录
-			socket.emit('guest', {}, res => { 
-				console.log(res);
-				if(res.status === 0 && res.data.msgs.length) {
-					const latestMsg = res.data.msgs[0];
-					const msgs = res.data.msgs.reverse();
-					const dialog = {
-						...res.data,
-						msgs,
-						latestMsg: latestMsg.content,
-                        time: latestMsg.created_at,
-						sender: latestMsg.nickname
-					};
+						setUserInfoDispatch(userInfo);
+						setGroupListDispatch(groups);
+						setFriendListDispatch(friends);
+						setDialogListDispatch(list);
+					}
+				});
+			} else {
+				//未登录
+				socket.emit('guest', {}, res => { 
+					console.log(res);
+					if(res.status === 0 && res.data.msgs.length) {
+						const latestMsg = res.data.msgs[0];
+						const msgs = res.data.msgs.reverse();
+						const dialog = {
+							...res.data,
+							msgs,
+							latestMsg: latestMsg.content,
+							time: latestMsg.created_at,
+							sender: latestMsg.nickname
+						};
 
-					changeItemTypeDispatch('dialog');
-					setTargetInfoDispatch(res.data)
-					setGroupListDispatch([dialog]);
-					setDialogListDispatch([dialog]);
-					changeMsgListDispatch(msgs);
-				}
-			})
+						changeItemTypeDispatch('dialog');
+						setTargetInfoDispatch(res.data)
+						setGroupListDispatch([dialog]);
+						setDialogListDispatch([dialog]);
+						changeMsgListDispatch(msgs);
+					}
+				})
+			}
+		});
+	
+		socket.on('disconnect', () => {
+			alert('连接中断，请检查网络状态w(ﾟДﾟ)w');
+			changeLoginStateDispatch(false);
+			setUserInfoDispatch({});	
+			setGroupListDispatch([]);
+			setDialogListDispatch([]);
+			setTargetInfoDispatch({});
+			changeMsgListDispatch([]);
+		});
+
+		return () => {
+			socket.close();
 		}
-	});
-	socket.on('disconnect', () => {
-		changeLoginStateDispatch(false);
-		setUserInfoDispatch({});
-		alert('连接中断，请检查网络状态w(ﾟДﾟ)w');
-	});
+	}, []);
+
 	socket.on('message', res => {
 		console.log('get msg', res);
 		if(res.content) {
@@ -178,7 +188,8 @@ const MainPanal = (props) => {
             } else if (targetType === 'user') {
                 addUserMsgDispatch(to.id, msg);
             }
-			updateDialogListDispatch(to, msg, targetType);
+			const newTo = to.owner ? to : from;
+			updateDialogListDispatch(newTo, msg, targetType);
         }
 	});
 	

@@ -3,6 +3,13 @@ import { css } from 'astroturf';
 import { PropTypes } from 'prop-types';
 import { timeFormat } from '@/utils';
 
+const itemOnHoverBgColor = 'rgb(225,225,225,0.55)';
+const nameColor = '#888';
+const msgColor = '#aaa';
+const timeColor = '#bbb';
+const unreadBgColor = 'rgba(201, 58, 58, .35)';
+const unreadTxtColor = '#fff';
+
 const styles = css`
     .chat-list-item {
         display: flex;
@@ -14,18 +21,18 @@ const styles = css`
         padding: 0 15px;
         transition: all .3s;
         &:hover {
-            background-color: rgb(225,225,225,0.55);
+            background-color: ${itemOnHoverBgColor};
             cursor: pointer;
         }
         &.focus {
-            background-color: rgb(225,225,225,0.55);
+            background-color: ${itemOnHoverBgColor};
         }
         .avatar {
             width: 44px;
             height: 44px;
             margin: 12px 10px 0 0;
             border-radius: 50%;
-            background-image: url('../assets/images/avators/a.jpg');
+            background-image: url('../assets/images/avatars/a.jpg');
             background-size: 100% 100%;
         }
         .info {
@@ -35,7 +42,7 @@ const styles = css`
                 position: absolute;
                 top: 15px;
                 left: 0;
-                color: #888;
+                color: ${nameColor};
                 font-size: 14px;
             }
             .msg {
@@ -47,14 +54,14 @@ const styles = css`
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
-                color: #aaa;
+                color: ${msgColor};
             }
             .time {
                 position: absolute;
                 right: 0;
                 top: 18px;
                 font-size: 11px;
-                color: #bbb;
+                color: ${timeColor};
             }
             .unread {
                 position: absolute;
@@ -65,9 +72,9 @@ const styles = css`
                 height: 17px;
                 line-height: 18px;
                 border-radius: 50%;
-                background-color: rgba(201, 58, 58, .35);
+                background-color: ${unreadBgColor};
                 text-align: center;
-                color: #fff;
+                color: ${unreadTxtColor};
                 font-size: 10px;
                 font-family: "Times New Roman";
                 &.longer {
@@ -79,7 +86,7 @@ const styles = css`
 `
 
 const ListItem = (props) => {
-    const { name, time, avatar, latestMsg, unreadCnt, focus, sender, onClick=function(){} } = props;
+    const { name, time, avatar, latestMsg, unreadCnt, focus, sender, onClick } = props;
     
     return (
         <div className={`chat-list-item ${ focus ? 'focus' : ''}`} onClick={onClick}>

@@ -63,7 +63,6 @@ const LoginModal = (props) => {
                     setGroupListDispatch(groups);
                     setFriendListDispatch(friends);
                     setDialogListDispatch(list);
-                    changeMsgListDispatch(defaultMsgs);   
                 }
             }
         });

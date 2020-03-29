@@ -2,11 +2,15 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { css } from 'astroturf';
 
+const chatPanelHeaderBgColor = 'rgba(252,210,118,0.65)';
+const chatPanelHeaderTxtColor = '#aa8f7c';
+const chatPanelHeaderIconColor = '#b59682';
+
 const styles = css`
     .chat-panel-header {
         position: relative;
         height: 50px;
-        background-color: rgba(252,210,118,0.65);
+        background-color: ${chatPanelHeaderBgColor};
         border-top-right-radius: 30px;
         box-shadow: 0 6px 12px -10px #888;
         .chatter-name {
@@ -16,14 +20,14 @@ const styles = css`
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 17px;
-            color: #aa8f7c;
+            color: ${chatPanelHeaderTxtColor};
             letter-spacing: 2px;
         }
         .more {
             position: absolute;
             top: 16px;
             right: 20px;
-            color: #b59682;
+            color: ${chatPanelHeaderIconColor};
             cursor: pointer;
             font-size: 20px;
             transition: all .3s;

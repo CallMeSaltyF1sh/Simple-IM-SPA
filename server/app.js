@@ -52,7 +52,7 @@ io.use(handle401());
 app.use(jwt({
     secret
 }).unless({
-    path: [/\/login/, /\/register/, "/", /\checkToken/, /\guest/]
+    path: [/\/login/, /\/register/, /\checkToken/, /\guest/]
 }));
 
 io.use(bindRoute(

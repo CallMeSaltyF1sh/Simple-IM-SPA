@@ -31,11 +31,11 @@ const styles = css`
         border-top-left-radius: 30px;
         border-bottom-left-radius: 30px;
         box-shadow: 5px 0px 10px -5px #888;
-        .avator {
+        .avatar {
             width: 64%;
             padding-top: 64%;
             margin: 30px 0 0 18%;
-            background-image: url('../../assets/images/avators/1.png');
+            background-image: url('../../assets/images/avatars/1.png');
             background-size: 100% 100%;
             box-sizing: border-box;
             border-radius: 50%;
@@ -138,7 +138,7 @@ const SideBar = (props) => {
 
     return (
         <div className='side-bar'>
-            <div className='avator'></div>
+            <div className='avatar'></div>
             <div className='icon-list'>
                 {
                     isLogin ? 

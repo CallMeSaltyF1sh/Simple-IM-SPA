@@ -31,6 +31,7 @@ async function login(email, password, socket_id) {
                 console.log('friends', friends);
 
                 groups = await bindAllGroupMsgs(groups);
+                console.log(groups);
                 friends = await bindAllUserMsgs(user.id, friends);
 
                 /*
@@ -49,7 +50,7 @@ async function login(email, password, socket_id) {
                         token: generateJWT(user.id, email),
                         groups: groups,
                         friends: friends,
-                        defaultMsgs: []
+                        //defaultMsgs: []
                     }
                 };
             } else {
@@ -108,7 +109,7 @@ async function loginWithToken(token, socket_id) {
                         userInfo: info[0],
                         groups: groups,
                         friends: friends,
-                        defaultMsgs: []
+                        //defaultMsgs: []
                     }
                 };
             }

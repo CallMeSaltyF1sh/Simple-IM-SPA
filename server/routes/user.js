@@ -16,10 +16,16 @@ module.exports = {
         const { email, password } = ctx.data;
         const response = await login(email, password, ctx.socket.id);
         if(response.data) {
-            const { groups = [], userInfo = {} } = response.data;
+            const { groups = [], userInfo = {}, friends = [] } = response.data;
             groups.forEach(group => {
                 ctx.socket.socket.join(group.id);
             });
+            /*
+            friends.forEach(friend => {
+                ctx.socket.socket.join(friend.id);
+            });
+            */
+            ctx.socket.socket.join(userInfo.id);
             ctx.socket.user = userInfo.id;
         }
         console.log('login：')
@@ -31,10 +37,18 @@ module.exports = {
         const { token } = ctx.data;
         const response = await loginWithToken(token, ctx.socket.id);
         if(response.data) {
-            const { groups = [], userInfo = {} } = response.data;
+            const { groups = [], userInfo = {}, friends = [] } = response.data;
             groups.forEach(group => {
                 ctx.socket.socket.join(group.id);
             });
+            /*
+            friends.forEach(friend => {
+                ctx.socket.socket.join(friend.id);
+            });
+            */
+            console.log('socket.socket')
+            console.log(ctx.socket.socket)
+            ctx.socket.socket.join(userInfo.id);
             ctx.socket.user = userInfo.id;
         }
         return response;
