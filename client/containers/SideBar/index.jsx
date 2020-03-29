@@ -92,6 +92,8 @@ const SideBar = (props) => {
         changeItemTypeDispatch('dialog');
         setTargetInfoDispatch(dialog);
         changeMsgListDispatch(dialog.msgs);
+
+        socket.close();
     };
     const handleViewDialogList = () => {
         changeItemTypeDispatch('dialog');

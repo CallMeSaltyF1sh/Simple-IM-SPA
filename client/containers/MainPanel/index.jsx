@@ -156,7 +156,7 @@ const MainPanal = (props) => {
 		});
 	
 		socket.on('disconnect', () => {
-			alert('连接中断，请检查网络状态w(ﾟДﾟ)w');
+			alert('连接已中断，请刷新页面w(ﾟДﾟ)w');
 			changeLoginStateDispatch(false);
 			setUserInfoDispatch({});	
 			setGroupListDispatch([]);
@@ -186,7 +186,7 @@ const MainPanal = (props) => {
             if(targetType === 'group') {
                 addGroupMsgDispatch(to.id, msg);
             } else if (targetType === 'user') {
-                addUserMsgDispatch(to.id, msg);
+                addUserMsgDispatch(from.id, msg);
             }
 			const newTo = to.owner ? to : from;
 			updateDialogListDispatch(newTo, msg, targetType);

@@ -131,6 +131,10 @@ const EditArea = (props) => {
             changeLoginModalDisplayDispatch(true);
             return;
         }
+        if(!info.id) {
+            alert('先选择一个聊天对象嗷');
+            return;
+        }
         if(!content) {
             alert('消息不为空嗷');
             return;
