@@ -8,7 +8,7 @@ import { changeCGModalDisplay } from './store/actions';
 import { addGroup } from '../MainPanel/store/actions';
 
 const CreateGroupModal = (props) => {
-    const { changeCGModalDisplayDispatch, addGroupDispatch } = props;
+    const { changeCGModalDisplay, addGroup } = props;
     const { userInfo, groups } = props;
     const nameEl = useRef(null);
 
@@ -36,15 +36,15 @@ const CreateGroupModal = (props) => {
             if(res.status !== 0) alert(res.message);
             else {
                 alert('创建成功！');
-                changeCGModalDisplayDispatch(false);
+                changeCGModalDisplay(false);
                 //const newGroupInfo = res.data;
                 //groupList.unshift(newGroupInfo);
-                //setGroupListDispatch(groupList);
+                //setGroupList(groupList);
                 const newGroup = {
                     ...res.data,
                     msgs: []
                 };
-                addGroupDispatch(newGroup);
+                addGroup(newGroup);
             }
         });
     }, []);
@@ -53,7 +53,7 @@ const CreateGroupModal = (props) => {
         <ModalFrame 
             btnTxt='创建' 
             title='CREATE GROUP' 
-            onClose={changeCGModalDisplayDispatch}
+            onClose={changeCGModalDisplay}
             onSubmit={handleSubmit}
         >
             <InputArea 
@@ -73,20 +73,6 @@ const mapStateToProps = state => ({
     groups: state.getIn(['mainPanel', 'groups'])
 });
 
-const mapDispatchToProps = dispatch => {
-	return {
-		changeCGModalDisplayDispatch(bool) {
-			dispatch(changeCGModalDisplay(bool));
-		},
-        /*
-        setGroupListDispatch(groups) {
-            dispatch(setGroupList(groups));
-        },
-        */
-        addGroupDispatch(newGroup) {
-            dispatch(addGroup(newGroup));
-        }
-	}
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(memo(CreateGroupModal));
+export default connect(mapStateToProps, {
+    changeCGModalDisplay, addGroup
+})(memo(CreateGroupModal));

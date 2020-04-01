@@ -125,8 +125,4 @@ const mapStateToProps = state => ({
     friends: state.getIn(['mainPanel', 'friends'])
 });
 
-const mapDispatchToProps = dispatch => {
-	return { }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(memo(ChatPanel));
+export default connect(mapStateToProps, null)(memo(ChatPanel));

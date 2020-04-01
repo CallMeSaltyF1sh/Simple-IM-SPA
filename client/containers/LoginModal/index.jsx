@@ -16,9 +16,9 @@ import { changeMsgList } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
 const LoginModal = (props) => {
-    const { changeLoginModalDisplayDispatch, changeRegisterModalDisplayDispatch, changeLoginStateDispatch } = props;
-    const { setUserInfoDispatch, setGroupListDispatch, setFriendListDispatch, setDialogListDispatch } = props;
-    const { changeMsgListDispatch } = props;
+    const { changeLoginModalDisplay, changeRegisterModalDisplay, changeLoginState } = props;
+    const { setUserInfo, setGroupList, setFriendList, setDialogList } = props;
+    const { changeMsgList } = props;
     const emailEl = useRef(null);
     const pswdEl = useRef(null);
 
@@ -34,8 +34,8 @@ const LoginModal = (props) => {
             if(res.status !== 0) alert(res.message);
             else {
                 alert('登录成功！');
-                changeLoginModalDisplayDispatch(false);
-                changeLoginStateDispatch(true);
+                changeLoginModalDisplay(false);
+                changeLoginState(true);
                 if(res.data) {
                     const { userInfo, token, groups, friends, defaultMsgs } = res.data;
                     window.localStorage.setItem('token', token);
@@ -59,10 +59,10 @@ const LoginModal = (props) => {
                     });
                     list = list.filter(item => item.latestMsg);
 
-                    setUserInfoDispatch(userInfo);
-                    setGroupListDispatch(groups);
-                    setFriendListDispatch(friends);
-                    setDialogListDispatch(list);
+                    setUserInfo(userInfo);
+                    setGroupList(groups);
+                    setFriendList(friends);
+                    setDialogList(list);
                 }
             }
         });
@@ -73,8 +73,8 @@ const LoginModal = (props) => {
             btnTxt='登录' 
             title='LOGIN' 
             switchTxt='注册' 
-            onClose={changeLoginModalDisplayDispatch}
-            onSwitch={changeRegisterModalDisplayDispatch}
+            onClose={changeLoginModalDisplay}
+            onSwitch={changeRegisterModalDisplay}
             onSubmit={handleSubmit}
         >
             <InputArea 
@@ -97,33 +97,13 @@ const LoginModal = (props) => {
     )
 };
 
-const mapDispatchToProps = dispatch => {
-	return {
-		changeLoginModalDisplayDispatch(bool) {
-			dispatch(changeLoginModalDisplay(bool));
-		},
-        changeRegisterModalDisplayDispatch(bool) {
-            dispatch(changeRegisterModalDisplay(bool));
-        },
-        changeLoginStateDispatch(bool) {
-            dispatch(changeLoginState(bool));
-        },
-        setUserInfoDispatch(info) {
-            dispatch(setUserInfo(info));
-        },
-        setGroupListDispatch(groups) {
-            dispatch(setGroupList(groups));
-        },
-        setFriendListDispatch(friends) {
-            dispatch(setFriendList(friends));
-        },
-		changeMsgListDispatch(list) {
-			dispatch(changeMsgList(list));
-		},
-        setDialogListDispatch(list) {
-            dispatch(setDialogList(list));
-        }
-	}
-};
-
-export default connect(null, mapDispatchToProps)(memo(LoginModal));
+export default connect(null, {
+    changeLoginModalDisplay,
+    changeRegisterModalDisplay,
+    changeLoginState,
+    setUserInfo,
+    setGroupList,
+    setFriendList,
+    setDialogList,
+    changeMsgList
+})(memo(LoginModal));

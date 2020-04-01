@@ -68,41 +68,41 @@ const styles = css`
 
 const SideBar = (props) => {
     const { isLogin, dialogs, userInfo } = props;
-    const { changeLoginModalDisplayDispatch, changeLoginStateDispatch } = props;
-    const { setDialogListDispatch, setUserInfoDispatch, changeItemTypeDispatch } = props;
-    const { setGroupListDispatch, setFriendListDispatch, changeMsgListDispatch } = props;
-    const { setTargetInfoDispatch } = props;
+    const { changeLoginModalDisplay, changeLoginState } = props;
+    const { setDialogList, setUserInfo, changeItemType } = props;
+    const { setGroupList, setFriendList, changeMsgList } = props;
+    const { setTargetInfo } = props;
 
     const dialogsJS = dialogs ? dialogs.toJS() : [];
     const userInfoJS = userInfo ? userInfo.toJS() : {};
 
     const handleLogin = () => {
-        changeLoginModalDisplayDispatch(true);
+        changeLoginModalDisplay(true);
     };
     const handleLogOut = () => {
-        changeLoginStateDispatch(false);
-        setUserInfoDispatch({});
-        setFriendListDispatch([]);
+        changeLoginState(false);
+        setUserInfo({});
+        setFriendList([]);
         if(window.localStorage.getItem('token')) {
             window.localStorage.setItem('token', '');
         }
         const dialog = dialogsJS.find(item => item.is_default === 1);
-        setGroupListDispatch([dialog]);
-        setDialogListDispatch([dialog]);
-        changeItemTypeDispatch('dialog');
-        setTargetInfoDispatch(dialog);
-        changeMsgListDispatch(dialog.msgs);
+        setGroupList([dialog]);
+        setDialogList([dialog]);
+        changeItemType('dialog');
+        setTargetInfo(dialog);
+        changeMsgList(dialog.msgs);
 
         socket.close();
     };
     const handleViewDialogList = () => {
-        changeItemTypeDispatch('dialog');
+        changeItemType('dialog');
     };
     const handleViewFriendList = () => {
-        changeItemTypeDispatch('friend');
+        changeItemType('friend');
     };
     const handleViewGroupList = () => {
-        changeItemTypeDispatch('group');
+        changeItemType('group');
     };
 
     const iconList = [
@@ -163,36 +163,14 @@ const mapStateToProps = state => ({
     userInfo: state.getIn(['mainPanel', 'userInfo'])
 });
 
-const mapDispatchToProps = dispatch => {
-	return {
-		changeLoginModalDisplayDispatch(bool) {
-			dispatch(changeLoginModalDisplay(bool));
-		},
-        changeLoginStateDispatch(bool) {
-            dispatch(changeLoginState(bool));
-        },
-        changeItemTypeDispatch(type) {
-            dispatch(changeItemType(type));
-        },
-         setUserInfoDispatch(info) {
-            dispatch(setUserInfo(info));
-        },
-        setGroupListDispatch(groups) {
-            dispatch(setGroupList(groups));
-        },
-        setFriendListDispatch(friends) {
-            dispatch(setFriendList(friends));
-        },
-		changeMsgListDispatch(list) {
-			dispatch(changeMsgList(list));
-		},
-        setDialogListDispatch(list) {
-            dispatch(setDialogList(list));
-        },
-        setTargetInfoDispatch(info) {
-            dispatch(setTargetInfo(info));
-        }
-	}
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(memo(SideBar));
+export default connect(mapStateToProps, {
+    changeLoginModalDisplay,
+    changeLoginState,
+    changeItemType,
+    setUserInfo,
+    setGroupList,
+    setFriendList,
+    changeMsgList,
+    setDialogList,
+    setTargetInfo
+})(memo(SideBar));

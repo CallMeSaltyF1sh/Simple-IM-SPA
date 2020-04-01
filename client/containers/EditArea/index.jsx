@@ -89,8 +89,8 @@ const styles = css`
 
 const EditArea = (props) => {
     const { targetInfo, isLogin } = props;
-    const { changeLoginModalDisplayDispatch } = props;
-    const { addGroupMsgDispatch, addUserMsgDispatch, updateDialogListDispatch } = props;
+    const { changeLoginModalDisplay } = props;
+    const { addGroupMsg, addUserMsg, updateDialogList } = props;
     const [ content, setContent ] = useState('');
 
     const info = targetInfo ? targetInfo.toJS() : {};
@@ -116,11 +116,11 @@ const EditArea = (props) => {
                     msg_type: type
                 };
                 if(targetType === 'group') {
-                    addGroupMsgDispatch(to.id, msg);
+                    addGroupMsg(to.id, msg);
                 } else if (targetType === 'user') {
-                    addUserMsgDispatch(to.id, msg);
+                    addUserMsg(to.id, msg);
                 }
-                updateDialogListDispatch(to, msg, targetType);
+                updateDialogList(to, msg, targetType);
             }
         });
     };
@@ -128,7 +128,7 @@ const EditArea = (props) => {
     const sendTxtMsg = () => {
         if(!isLogin) {
             alert('登录后才能发消息嗷');
-            changeLoginModalDisplayDispatch(true);
+            changeLoginModalDisplay(true);
             return;
         }
         if(!info.id) {
@@ -177,21 +177,9 @@ const mapStateToProps = state => ({
     friends: state.getIn(['mainPanel', 'friends'])
 });
 
-const mapDispatchToProps = dispatch => {
-	return {
-        changeLoginModalDisplayDispatch(bool) {
-            dispatch(changeLoginModalDisplay(bool));
-        },
-        addGroupMsgDispatch(id ,msg) {
-            dispatch(addGroupMsg(id, msg));
-        },
-        addUserMsgDispatch(id, msg) {
-            dispatch(addUserMsg(id, msg));
-        },
-        updateDialogListDispatch(id, msg, targetType) {
-            dispatch(updateDialogList(id, msg, targetType));
-        }
-    }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(memo(EditArea));
+export default connect(mapStateToProps, {
+    changeLoginModalDisplay,
+    addGroupMsg,
+    addUserMsg,
+    updateDialogList
+})(memo(EditArea));

@@ -79,8 +79,8 @@ const msgList = [
 
 const ListPanel = (props) => {
     const { itemType, friends, groups, dialogs, isLogin } = props;
-    const { changeCGModalDisplayDispatch, changeItemTypeDispatch } = props;
-    const { setTargetInfoDispatch } = props;
+    const { changeCGModalDisplay, changeItemType } = props;
+    const { setTargetInfo } = props;
     
     const friendsJS = friends ? friends.toJS() : [];
     const groupsJS = groups ? groups.toJS() : [];
@@ -91,12 +91,12 @@ const ListPanel = (props) => {
     const Item = itemType === 'dialog' ? DialogItem : LinkmanItem;
 
     const handleAdd = () => {
-        changeCGModalDisplayDispatch(true);
+        changeCGModalDisplay(true);
     };
 
     const handleClick = (item,e) => {
         console.log(item);
-        setTargetInfoDispatch(item);
+        setTargetInfo(item);
     }
 
     useEffect(() => {
@@ -148,15 +148,7 @@ const mapStateToProps = state => ({
     isLogin: state.getIn(['mainPanel', 'isLogin'])
 });
 
-const mapDispatchToProps = dispatch => {
-	return {
-        changeCGModalDisplayDispatch(bool) {
-            dispatch(changeCGModalDisplay(bool));
-        },
-        setTargetInfoDispatch(info) {
-            dispatch(setTargetInfo(info));
-        }
-     }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(memo(ListPanel));
+export default connect(mapStateToProps, {
+    changeCGModalDisplay,
+    setTargetInfo
+})(memo(ListPanel));

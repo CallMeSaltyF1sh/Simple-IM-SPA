@@ -82,10 +82,10 @@ const styles = css`
 
 const MainPanal = (props) => {
 	const { loginModalDisplay, registerModalDisplay, cgModalDisplay } = props;
-	const { changeLoginStateDispatch, setUserInfoDispatch, changeLoginModalDisplayDispatch } = props;
-	const { setGroupListDispatch, setFriendListDispatch, setDialogListDispatch } = props;
-	const { changeMsgListDispatch, updateDialogListDispatch, setTargetInfoDispatch } = props;
-	const { addGroupMsgDispatch, addUserMsgDispatch, changeItemTypeDispatch } = props;
+	const { changeLoginState, setUserInfo, changeLoginModalDisplay } = props;
+	const { setGroupList, setFriendList, setDialogList } = props;
+	const { changeMsgList, updateDialogList, setTargetInfo } = props;
+	const { addGroupMsg, addUserMsg, changeItemType } = props;
 
 	useEffect(() => {
 		socket.on('connect', () => {
@@ -98,12 +98,12 @@ const MainPanal = (props) => {
 					console.log(res)
 					if(res.status !== 0) {
 						alert('登录已过期，请重新登录w(ﾟДﾟ)w');
-						changeLoginModalDisplayDispatch(true);
+						changeLoginModalDisplay(true);
 						window.localStorage.setItem('token', '');
 					} else {
 						const { userInfo, groups, friends, defaultMsgs } = res.data;
 
-						changeLoginStateDispatch(true);
+						changeLoginState(true);
 						let list = [...groups, ...friends];
 						list = list.map(item => {
 							let latestMsg, time, sender,
@@ -124,10 +124,10 @@ const MainPanal = (props) => {
 						list = list.filter(item => item.latestMsg);
 						//console.log(list);
 
-						setUserInfoDispatch(userInfo);
-						setGroupListDispatch(groups);
-						setFriendListDispatch(friends);
-						setDialogListDispatch(list);
+						setUserInfo(userInfo);
+						setGroupList(groups);
+						setFriendList(friends);
+						setDialogList(list);
 					}
 				});
 			} else {
@@ -145,11 +145,11 @@ const MainPanal = (props) => {
 							sender: latestMsg.nickname
 						};
 
-						changeItemTypeDispatch('dialog');
-						setTargetInfoDispatch(res.data)
-						setGroupListDispatch([dialog]);
-						setDialogListDispatch([dialog]);
-						changeMsgListDispatch(msgs);
+						changeItemType('dialog');
+						setTargetInfo(res.data)
+						setGroupList([dialog]);
+						setDialogList([dialog]);
+						changeMsgList(msgs);
 					}
 				})
 			}
@@ -157,41 +157,41 @@ const MainPanal = (props) => {
 	
 		socket.on('disconnect', () => {
 			alert('连接已中断，请刷新页面w(ﾟДﾟ)w');
-			changeLoginStateDispatch(false);
-			setUserInfoDispatch({});	
-			setGroupListDispatch([]);
-			setDialogListDispatch([]);
-			setTargetInfoDispatch({});
-			changeMsgListDispatch([]);
+			changeLoginState(false);
+			setUserInfo({});	
+			setGroupList([]);
+			setDialogList([]);
+			setTargetInfo({});
+			changeMsgList([]);
+		});
+
+		socket.on('message', res => {
+			console.log('get msg', res);
+			if(res.content) {
+				const { content, to, from, type, targetType } = res;
+				const msg = {
+					created_at: new Date(),
+					content,
+					id: from.id,
+					avatar: from.avatar,
+					nickname: from.nickname,
+					description: from.description,
+					msg_type: type
+				};
+				if(targetType === 'group') {
+					addGroupMsg(to.id, msg);
+				} else if (targetType === 'user') {
+					addUserMsg(from.id, msg);
+				}
+				const newTo = to.owner ? to : from;
+				updateDialogList(newTo, msg, targetType);
+			}
 		});
 
 		return () => {
 			socket.close();
 		}
 	}, []);
-
-	socket.on('message', res => {
-		console.log('get msg', res);
-		if(res.content) {
-            const { content, to, from, type, targetType } = res;
-            const msg = {
-                created_at: new Date(),
-                content,
-                id: from.id,
-                avatar: from.avatar,
-                nickname: from.nickname,
-                description: from.description,
-                msg_type: type
-            };
-            if(targetType === 'group') {
-                addGroupMsgDispatch(to.id, msg);
-            } else if (targetType === 'user') {
-                addUserMsgDispatch(from.id, msg);
-            }
-			const newTo = to.owner ? to : from;
-			updateDialogListDispatch(newTo, msg, targetType);
-        }
-	});
 	
 	return (
 		<div className='app'>
@@ -214,48 +214,17 @@ const mapStateToProps = state => ({
 	cgModalDisplay: state.getIn(['createGroupModal', 'display'])
 });
 
-const mapDispatchToProps = dispatch => {
-	return {
-		changeLoginStateDispatch(bool) {
-            dispatch(changeLoginState(bool));
-        },
-		setUserInfoDispatch(info) {
-			dispatch(setUserInfo(info));
-		},
-		changeLoginModalDisplayDispatch(bool) {
-			dispatch(changeLoginModalDisplay(bool));
-		},
-		setGroupListDispatch(groups) {
-			dispatch(setGroupList(groups));
-		},
-		setFriendListDispatch(friends) {
-			dispatch(setFriendList(friends));
-		},
-		changeLinkmanListDispatch(list) {
-			dispatch(changeLinkmanList(list));
-		},
-		changeMsgListDispatch(list) {
-			dispatch(changeMsgList(list));
-		},
-		setDialogListDispatch(list) {
-			dispatch(setDialogList(list));
-		},
-		addGroupMsgDispatch(id, msg) {
-			dispatch(addGroupMsg(id, msg));
-		},
-		addUserMsgDispatch(id, msg) {
-			dispatch(addUserMsg(id, msg));
-		},
-		updateDialogListDispatch(to, msg, targetType) {
-			dispatch(updateDialogList(to, msg, targetType));
-		},
-        changeItemTypeDispatch(type) {
-            dispatch(changeItemType(type));
-        },
-        setTargetInfoDispatch(info) {
-            dispatch(setTargetInfo(info));
-        }
-	}
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(memo(MainPanal));
+export default connect(mapStateToProps, {
+	changeLoginModalDisplay,
+	changeLoginState,
+	setUserInfo,
+	setGroupList,
+	setFriendList,
+	setDialogList,
+	addGroupMsg,
+	addUserMsg,
+	updateDialogList,
+	changeItemType,
+	setTargetInfo,
+	changeMsgList
+})(memo(MainPanal));

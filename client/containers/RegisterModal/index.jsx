@@ -8,7 +8,7 @@ import { changeRegisterModalDisplay } from './store/actions';
 import socket from '@/socket';
 
 const RegisterModal = (props) => {
-    const { changeLoginModalDisplayDispatch, changeRegisterModalDisplayDispatch } = props;
+    const { changeLoginModalDisplay, changeRegisterModalDisplay } = props;
     const emailEl = useRef(null);
     const nicknameEl = useRef(null);
     const pswdEl = useRef(null);
@@ -34,8 +34,8 @@ const RegisterModal = (props) => {
                 if(res.status !== 0) alert(res.message);
                 else {
                     alert('注册成功');
-                    changeRegisterModalDisplayDispatch(false);
-                    changeLoginModalDisplayDispatch(true);
+                    changeRegisterModalDisplay(false);
+                    changeLoginModalDisplay(true);
                 }
             });
         }
@@ -56,8 +56,8 @@ const RegisterModal = (props) => {
             btnTxt='注册' 
             title='REGISTER' 
             switchTxt='登录'
-            onClose={changeRegisterModalDisplayDispatch}
-            onSwitch={changeLoginModalDisplayDispatch}
+            onClose={changeRegisterModalDisplay}
+            onSwitch={changeLoginModalDisplay}
             onSubmit={handleSubmit}
         >
             <InputArea 
@@ -96,15 +96,7 @@ const RegisterModal = (props) => {
     )
 }
 
-const mapDispatchToProps = dispatch => {
-	return {
-		changeLoginModalDisplayDispatch(bool) {
-			dispatch(changeLoginModalDisplay(bool));
-		},
-        changeRegisterModalDisplayDispatch(bool) {
-            dispatch(changeRegisterModalDisplay(bool));
-        }
-	}
-};
-
-export default connect(null, mapDispatchToProps)(memo(RegisterModal));
+export default connect(null, {
+    changeLoginModalDisplay,
+    changeRegisterModalDisplay
+})(memo(RegisterModal));
