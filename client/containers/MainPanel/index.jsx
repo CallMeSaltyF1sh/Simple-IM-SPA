@@ -101,7 +101,7 @@ const MainPanal = (props) => {
 						changeLoginModalDisplay(true);
 						window.localStorage.setItem('token', '');
 					} else {
-						const { userInfo, groups, friends, defaultMsgs } = res.data;
+						const { userInfo, groups, friends } = res.data;
 
 						changeLoginState(true);
 						let list = [...groups, ...friends];
@@ -135,8 +135,8 @@ const MainPanal = (props) => {
 				socket.emit('guest', {}, res => { 
 					console.log(res);
 					if(res.status === 0 && res.data.msgs.length) {
-						const latestMsg = res.data.msgs[0];
-						const msgs = res.data.msgs.reverse();
+						const msgs = res.data.msgs;
+						const latestMsg = msgs[msgs.length - 1];
 						const dialog = {
 							...res.data,
 							msgs,

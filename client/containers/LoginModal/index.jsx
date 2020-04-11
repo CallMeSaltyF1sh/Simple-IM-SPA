@@ -37,7 +37,7 @@ const LoginModal = (props) => {
                 changeLoginModalDisplay(false);
                 changeLoginState(true);
                 if(res.data) {
-                    const { userInfo, token, groups, friends, defaultMsgs } = res.data;
+                    const { userInfo, token, groups, friends } = res.data;
                     window.localStorage.setItem('token', token);
 
                     let list = [...groups, ...friends];

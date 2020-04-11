@@ -115,7 +115,7 @@ const ListPanel = (props) => {
         }
     }, [groups, friends, dialogs, itemType]);
 
-    console.log(list)
+    //console.log(list)
 
     return (
         <div className='list-panel'>

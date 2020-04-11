@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { createMsg } = require('../service/message');
+const { createMsg, getHistoryMsgs } = require('../service/message');
 
 module.exports = {
     sendMsg: async (ctx) => {
@@ -13,6 +13,11 @@ module.exports = {
         console.log('get msg:', msg);
         return msg;
     },
+    getMoreMsg: async (ctx) => {
+        const res = await getHistoryMsgs(ctx.data);
+        console.log(res);
+        return res;
+    }
     
     /*
     getMsg: async (ctx) => {

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef, useCallback, useState } from 'react';
 import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import ChatPanelHeader from '@/components/ChatPanelHeader';
@@ -31,6 +31,19 @@ const styles = css`
             &::-webkit-scrollbar-track {
                 border-radius: 10px;
                 background: transparent;
+            }
+            #fetch-history {
+                width: 100%;
+                height: 25px;
+                line-height: 25px;
+                text-align: center;
+                font-size: 13px;
+                color: #aa8f7c;
+                transition: all 0.3s;
+                cursor: pointer;
+                &:hover {
+                    color: #8c6851;
+                }
             }
         }
     }
@@ -82,26 +95,51 @@ const ChatPanel = (props) => {
     const userId = user.id;
     const name = target.name ? target.name : target.nickname;
 
-    const groupsJS = groups ? groups.toJS() : [];
-    const friendsJS = friends ? friends.toJS() : [];
-
-    let list, res;
-    if(targetType === 'group') {
-        res = groupsJS.find(curr => curr.id === targetId);
-    } else {
-        res = friendsJS.find(curr => curr.id === targetId);
-    }
-    list = (res && res.msgs) ? res.msgs : [];
+    const [list, setList] = useState([]);
+    const [splitTime, setSplitTime] = useState(null);
 
     useEffect(() => {
         document.querySelector('#msglist_bottom').scrollIntoView();   
-    });
+    }, [targetInfo]);
+
+    useEffect(() => {
+        let res;
+        if(targetType === 'group') {
+            const groupsJS = groups ? groups.toJS() : [];
+            res = groupsJS.find(curr => curr.id === targetId);
+        } else {
+            const friendsJS = friends ? friends.toJS() : [];
+            res = friendsJS.find(curr => curr.id === targetId);
+        }
+        setList((res && res.msgs) ? res.msgs : []);
+        setSplitTime((res && res.msgs && res.msgs.length) ? res.msgs[0].created_at : null);
+    }, [targetId, targetType, groups, friends]);
+
+    const getMoreMsg = useCallback(() => {
+        let data = targetType === 'group' ? { id_group: targetId } : { id_usr: userId, id_friend: targetId };
+        socket.emit('getMoreMsg', {
+            ...data,
+            time: splitTime
+        }, res => {
+            console.log(res);
+            if(res.status === 0) {
+                if(res.data.length) {
+                    setList(res.data.concat(list));
+                    setSplitTime(res.data[0].created_at);
+                    document.querySelector('#fetch-history').scrollIntoView(); 
+                } else {
+                    setSplitTime(null);
+                }
+            }
+        });
+    }, [splitTime, targetType, targetId, userId]);
 
     console.log(list)
     return (
         <div className='chat-panel'>
             <ChatPanelHeader name={name} isLogin={isLogin} />
             <div className='scroll-area'>
+                { splitTime && <div id='fetch-history' onClick={getMoreMsg}>-- 点此加载更多历史消息 --</div> }
                 {
                     list.map((item,index) => {
                         let isMine = item.id === userId;

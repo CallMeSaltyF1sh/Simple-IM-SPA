@@ -59,7 +59,7 @@ async function getDefaultGroupInfo() {
                 message: 'SUCCESS',
                 data: {
                     ...group[0],
-                    msgs
+                    msgs: msgs.reverse()
                 }
             }
         }

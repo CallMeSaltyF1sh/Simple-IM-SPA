@@ -24,13 +24,13 @@ const sql = {
     getGroupMsgByTime: `
         SELECT * FROM message INNER JOIN user ON message.from_id=user.id
         WHERE to_group=? AND created_at<?
-        ORDER BY created_at DESC
+        ORDER BY created_at
         LIMIT 0,20
     `,
     getUserMsgByTime: `
         SELECT * FROM message INNER JOIN user ON message.from_id=user.id
         WHERE ((from_id=? AND to_user=?) OR (from_id=? AND to_user=?)) AND created_at<?
-        ORDER BY created_at DESC
+        ORDER BY created_at
         LIMIT 0,20
     `
 };

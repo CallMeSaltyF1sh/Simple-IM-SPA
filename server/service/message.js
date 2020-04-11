@@ -1,10 +1,17 @@
 const assert = require('assert');
-const { sendGroupMsg, sendUserMsg, getGroupMsgAsync, getUserMsgAsync } = require('../dao/message');
+const { 
+    sendGroupMsg, 
+    sendUserMsg, 
+    getGroupMsgAsync, 
+    getUserMsgAsync,
+    getGroupMsgByTime,
+    getUserMsgByTime
+} = require('../dao/message');
 const { getById } = require('../dao/user');
 const { getGroupInfo } = require('../dao/group_info');
 
 async function createMsg(to, content, type, targetType, userId) {
-    let msg = {
+    let response = {
         status: -3,
         message: '数据库错误'
     };
@@ -29,11 +36,11 @@ async function createMsg(to, content, type, targetType, userId) {
         }
         const from = await getById(userId);
         console.log(to_info)
-        msg = { from: from[0], to: to_info[0], content, type, targetType };
+        response = { from: from[0], to: to_info[0], content, type, targetType };
     } catch(e) {
         console.log(e);
     }
-    return msg;
+    return response;
 }
 
 async function bindAllGroupMsgs(groups) {
@@ -60,8 +67,35 @@ async function bindAllUserMsgs(userId, friends) {
     });
 }
 
+async function getHistoryMsgs(data) {
+    const { id_group, id_usr, id_friend, time } = data;
+    assert(time, '消息时间不为空');
+    let response = {
+        status: -3,
+        message: '数据库错误'
+    };
+    try {
+        let msgList = [];
+        if(id_group) {
+            msgList = await getGroupMsgByTime(id_group, time);
+        } else {
+            assert(id_usr&&id_friend, '用户和好友id不为空');
+            msgList = await getUserMsgByTime(id_usr, id_friend, time);
+        }
+        response = {
+            status: 0,
+            message: 'SUCCESS',
+            data: msgList
+        };
+    } catch(e) {
+        console.log(e);
+    }
+    return response;
+}
+
 module.exports = {
     createMsg,
     bindAllGroupMsgs,
-    bindAllUserMsgs
+    bindAllUserMsgs,
+    getHistoryMsgs
 };
