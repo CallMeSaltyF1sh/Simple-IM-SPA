@@ -5,6 +5,7 @@ import { css } from 'astroturf';
 import socket from '@/socket';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import { addGroupMsg, addUserMsg, updateDialogList } from '../MainPanel/store/actions';
+import { addMsgItem } from '../ChatPanel/store/actions';
 
 const styles = css`
     .edit-area {
@@ -89,7 +90,7 @@ const styles = css`
 
 const EditArea = (props) => {
     const { targetInfo, isLogin } = props;
-    const { changeLoginModalDisplay } = props;
+    const { changeLoginModalDisplay, addMsgItem } = props;
     const { addGroupMsg, addUserMsg, updateDialogList } = props;
     const [ content, setContent ] = useState('');
 
@@ -120,6 +121,8 @@ const EditArea = (props) => {
                 } else if (targetType === 'user') {
                     addUserMsg(to.id, msg);
                 }
+                addMsgItem(to.id, msg);
+                document.querySelector('#msglist_bottom').scrollIntoView(); 
                 updateDialogList(to, msg, targetType);
             }
         });
@@ -181,5 +184,6 @@ export default connect(mapStateToProps, {
     changeLoginModalDisplay,
     addGroupMsg,
     addUserMsg,
-    updateDialogList
+    updateDialogList,
+    addMsgItem
 })(memo(EditArea));

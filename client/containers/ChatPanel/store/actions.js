@@ -10,3 +10,9 @@ export const setTargetInfo = data => dispatch => {dispatch({
     type: actionTypes.SET_TARGET_INFO,
     data: fromJS(data)
 })};
+
+export const addMsgItem = (id, msg) => dispatch => {dispatch({
+    type: actionTypes.ADD_MSG_ITEM,
+    msg: fromJS(msg),
+    id
+})};

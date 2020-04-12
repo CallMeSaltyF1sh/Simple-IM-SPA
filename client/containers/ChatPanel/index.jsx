@@ -6,6 +6,8 @@ import ScrollArea from '@/components/ScrollArea';
 import MsgItem from '@/components/MsgItem';
 import EditArea from '../EditArea/index';
 import socket from '@/socket';
+import { changeMsgList } from './store/actions';
+import usePrevious from '@/hooks/usePrevious';
 
 const styles = css`
     .chat-panel {
@@ -19,7 +21,7 @@ const styles = css`
             position: relative;
             flex: 1;
             overflow-y: auto;
-            padding: 12px 8px 18px 8px;
+            padding: 0 8px 18px 8px;
             &::-webkit-scrollbar {
                 width: 8px;
             }
@@ -32,9 +34,10 @@ const styles = css`
                 border-radius: 10px;
                 background: transparent;
             }
-            #fetch-history {
+            .split-time {
                 width: 100%;
                 height: 25px;
+                padding-top: 12px;
                 line-height: 25px;
                 text-align: center;
                 font-size: 13px;
@@ -85,37 +88,37 @@ const msgList = [
 */
 
 const ChatPanel = (props) => {
-    const { targetInfo, userInfo, friends, groups, isLogin } = props;
+    const { targetInfo, userInfo, isLogin, msgList } = props;
+    const { changeMsgList } = props;
 
     const target = targetInfo ? targetInfo.toJS() : {};
     const user = userInfo ? userInfo.toJS() : {};
     const targetType = target.owner ? 'group' : 'user';
+    const list = msgList ? msgList.toJS() : [];
 
     const targetId = target.id;
     const userId = user.id;
     const name = target.name ? target.name : target.nickname;
 
-    const [list, setList] = useState([]);
-    const [splitTime, setSplitTime] = useState(null);
-
+    //const prevList = usePrevious(list);
+    //const prevTargetId = usePrevious(target.id);
+    const [ splitTime, setSplitTime ] = useState(null);
+    
     useEffect(() => {
         document.querySelector('#msglist_bottom').scrollIntoView();   
     }, [targetInfo]);
 
     useEffect(() => {
-        let res;
-        if(targetType === 'group') {
-            const groupsJS = groups ? groups.toJS() : [];
-            res = groupsJS.find(curr => curr.id === targetId);
-        } else {
-            const friendsJS = friends ? friends.toJS() : [];
-            res = friendsJS.find(curr => curr.id === targetId);
-        }
-        setList((res && res.msgs) ? res.msgs : []);
-        setSplitTime((res && res.msgs && res.msgs.length) ? res.msgs[0].created_at : null);
-    }, [targetId, targetType, groups, friends]);
+        const time = list.length >= 20 ? list[0].created_at : null;
+        setSplitTime(time);
+    }, [list.length]);
 
-    const getMoreMsg = useCallback(() => {
+    useEffect(() => {
+        const time = list.length >= 20 ? list[0].created_at : null;
+        setSplitTime(time);
+    }, [targetInfo]);
+
+    const getMoreMsg = () => {
         let data = targetType === 'group' ? { id_group: targetId } : { id_usr: userId, id_friend: targetId };
         socket.emit('getMoreMsg', {
             ...data,
@@ -124,22 +127,30 @@ const ChatPanel = (props) => {
             console.log(res);
             if(res.status === 0) {
                 if(res.data.length) {
-                    setList(res.data.concat(list));
-                    setSplitTime(res.data[0].created_at);
+                    let temp = res.data.reverse();
+                    changeMsgList(temp.concat(list));
+                    if(temp.length >= 20) {
+                        setSplitTime(temp[0].created_at);
+                    } else {
+                        setSplitTime(null);
+                    } 
                     document.querySelector('#fetch-history').scrollIntoView(); 
                 } else {
                     setSplitTime(null);
                 }
             }
         });
-    }, [splitTime, targetType, targetId, userId]);
+    };
 
-    console.log(list)
     return (
         <div className='chat-panel'>
             <ChatPanelHeader name={name} isLogin={isLogin} />
             <div className='scroll-area'>
-                { splitTime && <div id='fetch-history' onClick={getMoreMsg}>-- 点此加载更多历史消息 --</div> }
+                {   targetId && (
+                        splitTime ? <div id='fetch-history' className='split-time' onClick={getMoreMsg}>-- 点此加载更多历史消息 --</div> :
+                        <div className='split-time'>-- 已加载全部记录 --</div>
+                    )
+                }
                 {
                     list.map((item,index) => {
                         let isMine = item.id === userId;
@@ -159,8 +170,9 @@ const mapStateToProps = state => ({
     targetInfo: state.getIn(['chatPanel', 'targetInfo']),
     userInfo: state.getIn(['mainPanel', 'userInfo']),
     isLogin: state.getIn(['mainPanel', 'isLogin']),
-    groups: state.getIn(['mainPanel', 'groups']),
-    friends: state.getIn(['mainPanel', 'friends'])
+    msgList: state.getIn(['chatPanel', 'list'])
 });
 
-export default connect(mapStateToProps, null)(memo(ChatPanel));
+export default connect(mapStateToProps, {
+    changeMsgList
+})(memo(ChatPanel));

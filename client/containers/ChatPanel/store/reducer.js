@@ -12,6 +12,17 @@ export default (state = defaultState, action) => {
             return state.set('list', action.data);
         case actionTypes.SET_TARGET_INFO:
             return state.set('targetInfo', action.data);
+        case actionTypes.ADD_MSG_ITEM: {
+            const targetId = state.getIn(['targetInfo', 'id'])
+            console.log(targetId);
+            if(action.id === targetId) {
+                return state.update('list', list => (
+                    list.push(action.msg)
+                ))
+            } else {
+                return state
+            }
+        }
         default:
             return state;
     }

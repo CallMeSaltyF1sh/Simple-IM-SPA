@@ -7,7 +7,7 @@ const timeFormat = time => {
         year = time.getFullYear(),
         hour = time.getHours(),
         minute = time.getMinutes(),
-        second = time.getSeconds(),
+        //second = time.getSeconds(),
         timeStamp = time.getTime(),
         currTime = +new Date();
     if(currTime - timeStamp < 86400000) {

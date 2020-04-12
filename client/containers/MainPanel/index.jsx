@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { css } from 'astroturf';
 import 'normalize.css';
@@ -19,7 +19,7 @@ import {
 	updateDialogList 
 } from './store/actions';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
-import { changeMsgList } from '../ChatPanel/store/actions';
+import { changeMsgList, addMsgItem } from '../ChatPanel/store/actions';
 import { changeItemType } from '../ListPanel/store/actions';
 import { setTargetInfo } from '../ChatPanel/store/actions';
 import socket from '@/socket';
@@ -83,9 +83,9 @@ const styles = css`
 const MainPanal = (props) => {
 	const { loginModalDisplay, registerModalDisplay, cgModalDisplay } = props;
 	const { changeLoginState, setUserInfo, changeLoginModalDisplay } = props;
-	const { setGroupList, setFriendList, setDialogList } = props;
+	const { setGroupList, setFriendList, setDialogList, changeItemType } = props;
 	const { changeMsgList, updateDialogList, setTargetInfo } = props;
-	const { addGroupMsg, addUserMsg, changeItemType } = props;
+	const { addGroupMsg, addUserMsg, addMsgItem } = props;
 
 	useEffect(() => {
 		socket.on('connect', () => {
@@ -135,7 +135,7 @@ const MainPanal = (props) => {
 				socket.emit('guest', {}, res => { 
 					console.log(res);
 					if(res.status === 0 && res.data.msgs.length) {
-						const msgs = res.data.msgs;
+						const msgs = res.data.msgs.reverse();
 						const latestMsg = msgs[msgs.length - 1];
 						const dialog = {
 							...res.data,
@@ -146,8 +146,8 @@ const MainPanal = (props) => {
 						};
 
 						changeItemType('dialog');
-						setTargetInfo(res.data)
-						setGroupList([dialog]);
+						setTargetInfo(res.data);
+						//setGroupList([dialog]);
 						setDialogList([dialog]);
 						changeMsgList(msgs);
 					}
@@ -180,8 +180,10 @@ const MainPanal = (props) => {
 				};
 				if(targetType === 'group') {
 					addGroupMsg(to.id, msg);
+					addMsgItem(to.id, msg);
 				} else if (targetType === 'user') {
 					addUserMsg(from.id, msg);
+					addMsgItem(from.id, msg);
 				}
 				const newTo = to.owner ? to : from;
 				updateDialogList(newTo, msg, targetType);
@@ -226,5 +228,6 @@ export default connect(mapStateToProps, {
 	updateDialogList,
 	changeItemType,
 	setTargetInfo,
-	changeMsgList
+	changeMsgList,
+	addMsgItem
 })(memo(MainPanal));

@@ -6,6 +6,7 @@ import DialogItem from '@/components/DialogItem';
 import LinkmanItem from '@/components/LinkmanItem';
 import { changeCGModalDisplay } from '../CreateGroupModal/store/actions';
 import { setTargetType, setTargetInfo } from '../ChatPanel/store/actions';
+import { changeMsgList } from '../ChatPanel/store/actions';
 
 const styles = css`
     .list-panel {
@@ -80,7 +81,7 @@ const msgList = [
 const ListPanel = (props) => {
     const { itemType, friends, groups, dialogs, isLogin } = props;
     const { changeCGModalDisplay, changeItemType } = props;
-    const { setTargetInfo } = props;
+    const { setTargetInfo, changeMsgList } = props;
     
     const friendsJS = friends ? friends.toJS() : [];
     const groupsJS = groups ? groups.toJS() : [];
@@ -97,6 +98,7 @@ const ListPanel = (props) => {
     const handleClick = (item,e) => {
         console.log(item);
         setTargetInfo(item);
+        changeMsgList(item.msgs);
     }
 
     useEffect(() => {
@@ -150,5 +152,6 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
     changeCGModalDisplay,
-    setTargetInfo
+    setTargetInfo,
+    changeMsgList
 })(memo(ListPanel));
