@@ -1,21 +1,27 @@
-const timeFormat = time => {
+const timeFormat = (time, type) => {
     time = typeof time === 'object' ? time : new Date(time);
-    //const offset = 8 * 60 * 60 * 1000;
-    //const time = new Date(new Date(date).getTime() - offset);
     let month = time.getMonth() + 1,
         day = time.getDate(),
         year = time.getFullYear(),
         hour = time.getHours(),
         minute = time.getMinutes(),
-        //second = time.getSeconds(),
+        second = time.getSeconds(),
         timeStamp = time.getTime(),
-        currTime = +new Date();
-    if(currTime - timeStamp < 86400000) {
-        hour = hour >= 10 ? hour : '0' + hour;
-        minute = minute >= 10 ? minute : '0' + minute;
+        date = time.toDateString(),
+        currTime = new Date(),
+        currDate = currTime.toDateString();
+
+    hour = hour >= 10 ? hour : '0' + hour;
+    minute = minute >= 10 ? minute : '0' + minute;
+    if(date === currDate) {
         return `${hour}:${minute}`;
     } else {
-        return `${year}/${month}/${day}`;
+        const offset = ((hour * 60 * 60 + minute * 60 + second) + (24 * 60 * 60)) * 1000;
+        if(timeStamp + offset > +currTime) {
+            return type === 'short' ? `昨天` : `昨天${hour}:${minute}`;
+        } else {
+            return type === 'short' ? `${year}/${month}/${day}` : `${year}/${month}/${day} ${hour}:${minute}`;
+        }
     }
 };
 

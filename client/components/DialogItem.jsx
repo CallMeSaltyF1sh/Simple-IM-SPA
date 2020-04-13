@@ -94,7 +94,7 @@ const ListItem = (props) => {
             <div className='info'>
                 <div className='name'>{name}</div>
                 <div className='msg'>{`${sender ? sender+': ' : ''}${latestMsg}`}</div>
-                <div className='time'>{timeFormat(time)}</div>
+                <div className='time'>{timeFormat(time, 'short')}</div>
                 {
                     unreadCnt > 0 ? 
                         <div className={`unread ${unreadCnt > 99 ? 'longer' : ''}`}>

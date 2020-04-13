@@ -105,18 +105,15 @@ const ChatPanel = (props) => {
     const [ splitTime, setSplitTime ] = useState(null);
     
     useEffect(() => {
-        document.querySelector('#msglist_bottom').scrollIntoView();   
+        document.querySelector('#msglist_bottom').scrollIntoView();
+        const time = list.length >= 20 ? list[0].created_at : null;
+        setSplitTime(time);
     }, [targetInfo]);
 
     useEffect(() => {
         const time = list.length >= 20 ? list[0].created_at : null;
         setSplitTime(time);
     }, [list.length]);
-
-    useEffect(() => {
-        const time = list.length >= 20 ? list[0].created_at : null;
-        setSplitTime(time);
-    }, [targetInfo]);
 
     const getMoreMsg = () => {
         let data = targetType === 'group' ? { id_group: targetId } : { id_usr: userId, id_friend: targetId };

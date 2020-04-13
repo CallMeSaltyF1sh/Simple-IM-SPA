@@ -79,7 +79,7 @@ const MsgItem = (props) => {
                 <div className='txt-wrapper'>
                     <p className='name'>{nickname}</p>
                     <p className='msg'>{content}</p>
-                    <p className='time'>{timeFormat(created_at)}</p>
+                    <p className='time'>{timeFormat(created_at, 'long')}</p>
                 </div>
             </div>
         </div>
