@@ -103,17 +103,17 @@ const ChatPanel = (props) => {
     //const prevList = usePrevious(list);
     //const prevTargetId = usePrevious(target.id);
     const [ splitTime, setSplitTime ] = useState(null);
+    const [ loadAll, setLoadAll ] = useState(false);
     
     useEffect(() => {
         document.querySelector('#msglist_bottom').scrollIntoView();
-        const time = list.length >= 20 ? list[0].created_at : null;
-        setSplitTime(time);
+        setLoadAll(false);
     }, [targetInfo]);
 
     useEffect(() => {
         const time = list.length ? list[0].created_at : null;
         setSplitTime(time);
-    }, [list.length]);
+    }, [list]);
 
     const getMoreMsg = () => {
         let data = targetType === 'group' ? { id_group: targetId } : { id_friend: targetId };
@@ -130,10 +130,12 @@ const ChatPanel = (props) => {
                         setSplitTime(temp[0].created_at);
                     } else {
                         setSplitTime(null);
+                        setLoadAll(true);
                     } 
                     document.querySelector('#fetch-history').scrollIntoView(); 
                 } else {
                     setSplitTime(null);
+                    setLoadAll(true);
                 }
             }
         });
@@ -144,8 +146,8 @@ const ChatPanel = (props) => {
             <ChatPanelHeader name={name} isLogin={isLogin} />
             <div className='scroll-area'>
                 {   targetId && (
-                        splitTime ? <div id='fetch-history' className='split-time' onClick={getMoreMsg}>-- 点此加载更多历史消息 --</div> :
-                        <div className='split-time'>-- 已加载全部记录 --</div>
+                        loadAll ? <div className='split-time'>-- 已加载全部记录 --</div> :
+                        <div id='fetch-history' className='split-time' onClick={getMoreMsg}>-- 点此加载更多历史消息 --</div>
                     )
                 }
                 {
