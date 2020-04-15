@@ -6,7 +6,7 @@ import ScrollArea from '@/components/ScrollArea';
 import MsgItem from '@/components/MsgItem';
 import EditArea from '../EditArea/index';
 import socket from '@/socket';
-import { changeMsgList } from './store/actions';
+import { changeMsgList } from '../MainPanel/store/actions';
 import usePrevious from '@/hooks/usePrevious';
 
 const styles = css`
@@ -111,12 +111,12 @@ const ChatPanel = (props) => {
     }, [targetInfo]);
 
     useEffect(() => {
-        const time = list.length >= 20 ? list[0].created_at : null;
+        const time = list.length ? list[0].created_at : null;
         setSplitTime(time);
     }, [list.length]);
 
     const getMoreMsg = () => {
-        let data = targetType === 'group' ? { id_group: targetId } : { id_usr: userId, id_friend: targetId };
+        let data = targetType === 'group' ? { id_group: targetId } : { id_friend: targetId };
         socket.emit('getMoreMsg', {
             ...data,
             time: splitTime
@@ -164,10 +164,10 @@ const ChatPanel = (props) => {
 }
 
 const mapStateToProps = state => ({
-    targetInfo: state.getIn(['chatPanel', 'targetInfo']),
+    targetInfo: state.getIn(['mainPanel', 'targetInfo']),
     userInfo: state.getIn(['mainPanel', 'userInfo']),
     isLogin: state.getIn(['mainPanel', 'isLogin']),
-    msgList: state.getIn(['chatPanel', 'list'])
+    msgList: state.getIn(['mainPanel', 'msgList'])
 });
 
 export default connect(mapStateToProps, {

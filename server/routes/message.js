@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { createMsg, getHistoryMsgs } = require('../service/message');
+const { createMsg, getHistoryMsgs, clearUnreadCnt } = require('../service/message');
 
 module.exports = {
     sendMsg: async (ctx) => {
@@ -10,39 +10,16 @@ module.exports = {
         if(msg.content) {
             ctx.socket.socket.to(to).emit('message', msg);
         }
-        console.log('get msg:', msg);
         return msg;
     },
     getMoreMsg: async (ctx) => {
-        const res = await getHistoryMsgs(ctx.data);
-        console.log(res);
+        const { id_group, id_friend, time } = ctx.data;
+        const res = await getHistoryMsgs(id_group, ctx.socket.user, id_friend, time);
+        return res;
+    },
+    clearUnread: async (ctx) => {
+        const { targetType, targetId } = ctx.data;
+        const res = await clearUnreadCnt(targetType, targetId, ctx.socket.user);
         return res;
     }
-    
-    /*
-    getMsg: async (ctx) => {
-        const { userIds, groupIds } = ctx.data;
-        const uPromises = userIds.map(id => {
-            getUserMsg(ctx.socket.user, id);
-        });
-        const gPromises = groupIds.map(id => {
-            getGroupMsg(id);
-        });
-    },
-    */
-   /*
-    getMsgById: async (ctx) => {
-        const { id, targetType } = ctx.data;
-        assert(id, 'id不为空');
-        let result;
-        if(targetType === 'group') {
-            result = await getGroupMsg(id);
-        } else {
-            result = await getUserMsg(ctx.socket.id, id);
-        }
-        console.log('msgRes:');
-        console.log(result);
-        return result;
-    }
-    */
 };

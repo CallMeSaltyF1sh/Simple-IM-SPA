@@ -4,8 +4,7 @@ import { PropTypes } from 'prop-types';
 import { css } from 'astroturf';
 import socket from '@/socket';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
-import { addGroupMsg, addUserMsg, updateDialogList } from '../MainPanel/store/actions';
-import { addMsgItem } from '../ChatPanel/store/actions';
+import { addGroupMsg, addUserMsg, updateDialogList, addMsgItem } from '../MainPanel/store/actions';
 
 const styles = css`
     .edit-area {
@@ -174,7 +173,7 @@ const EditArea = (props) => {
 };
 
 const mapStateToProps = state => ({
-    targetInfo: state.getIn(['chatPanel', 'targetInfo']),
+    targetInfo: state.getIn(['mainPanel', 'targetInfo']),
     isLogin: state.getIn(['mainPanel', 'isLogin']),
     groups: state.getIn(['mainPanel', 'groups']),
     friends: state.getIn(['mainPanel', 'friends'])

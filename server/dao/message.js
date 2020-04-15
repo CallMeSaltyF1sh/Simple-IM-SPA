@@ -32,6 +32,18 @@ const sql = {
         WHERE ((from_id=? AND to_user=?) OR (from_id=? AND to_user=?)) AND created_at<?
         ORDER BY created_at DESC
         LIMIT 0,20
+    `,
+    getUnreadUserMsg: `
+        SELECT * FROM message INNER JOIN user ON message.from_id=user.id
+        WHERE from_id=? AND to_user=?
+        ORDER BY created_at DESC
+        LIMIT 0,?
+    `,
+    getUnreadGroupMsg: `
+        SELECT * FROM message INNER JOIN user ON message.from_id=user.id
+        WHERE to_group=? 
+        ORDER BY created_at DESC
+        LIMIT 0,?
     `
 };
 
@@ -67,6 +79,14 @@ function getUserMsgAsync(id, id_usr) {
     return query(sql.getMsgByUserId, [id, id_usr, id_usr, id]);
 }
 
+function getUnreadGroupMsgAsync(id_group, unread) {
+    return query(sql.getUnreadGroupMsg, [id_group, unread]);
+}
+
+function getUnreadUserMsgAsync(id_self, id_friend, unread) {
+    return query(sql.getUnreadUserMsg, [id_friend, id_self, unread]);
+}
+
 module.exports = {
     sendGroupMsg, 
     sendUserMsg,
@@ -75,5 +95,7 @@ module.exports = {
     getGroupMsgByTime,
     getUserMsgByTime,
     getGroupMsgAsync,
-    getUserMsgAsync
+    getUserMsgAsync,
+    getUnreadGroupMsgAsync,
+    getUnreadUserMsgAsync
 };

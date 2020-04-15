@@ -12,13 +12,11 @@ import {
     setFriendList, 
     setDialogList 
 } from '../MainPanel/store/actions';
-//import { changeMsgList } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
 const LoginModal = (props) => {
     const { changeLoginModalDisplay, changeRegisterModalDisplay, changeLoginState } = props;
     const { setUserInfo, setGroupList, setFriendList, setDialogList } = props;
-    //const { changeMsgList } = props;
     const emailEl = useRef(null);
     const pswdEl = useRef(null);
 
@@ -105,5 +103,4 @@ export default connect(null, {
     setGroupList,
     setFriendList,
     setDialogList,
-    //changeMsgList
 })(memo(LoginModal));

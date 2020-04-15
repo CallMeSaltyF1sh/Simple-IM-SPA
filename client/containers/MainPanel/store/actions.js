@@ -49,3 +49,24 @@ export const updateDialogList = (to, msg, targetType) => dispatch => {dispatch({
     to,
     targetType
 })};
+
+export const changeMsgList = data => dispatch => {dispatch({
+    type: actionTypes.CHANGE_MSG_LIST,
+    data: fromJS(data)
+})};
+
+export const setTargetInfo = data => dispatch => {dispatch({
+    type: actionTypes.SET_TARGET_INFO,
+    data: fromJS(data)
+})};
+
+export const addMsgItem = (id, msg) => dispatch => {dispatch({
+    type: actionTypes.ADD_MSG_ITEM,
+    msg: fromJS(msg),
+    id
+})};
+
+export const clearUnread = (id) => dispatch => { dispatch({
+    type: actionTypes.CLEAR_UNREAD,
+    id
+})};

@@ -5,8 +5,8 @@ import SearchBox from '@/components/SearchBox';
 import DialogItem from '@/components/DialogItem';
 import LinkmanItem from '@/components/LinkmanItem';
 import { changeCGModalDisplay } from '../CreateGroupModal/store/actions';
-import { setTargetType, setTargetInfo } from '../ChatPanel/store/actions';
-import { changeMsgList } from '../ChatPanel/store/actions';
+import { changeMsgList, setTargetInfo, clearUnread } from '../MainPanel/store/actions';
+import socket from '@/socket';
 
 const styles = css`
     .list-panel {
@@ -81,13 +81,15 @@ const msgList = [
 const ListPanel = (props) => {
     const { itemType, friends, groups, dialogs, isLogin } = props;
     const { changeCGModalDisplay, changeItemType } = props;
-    const { setTargetInfo, changeMsgList } = props;
+    const { setTargetInfo, changeMsgList, clearUnread } = props;
     
     const friendsJS = friends ? friends.toJS() : [];
     const groupsJS = groups ? groups.toJS() : [];
     const dialogsJS = dialogs ? dialogs.toJS() : [];
 
     const [list, setList] = useState([]);
+    const [searchFocus, setSearchFocus] = useState(false);
+    const searchEl = useRef(null);
     
     const Item = itemType === 'dialog' ? DialogItem : LinkmanItem;
 
@@ -99,7 +101,21 @@ const ListPanel = (props) => {
         console.log(item);
         setTargetInfo(item);
         changeMsgList(item.msgs);
-    }
+        if(item.unread) {
+            clearUnread(item.id);
+        }
+    };
+
+    /*
+    const handleSearch = () => {
+        const search = searchEl.current.value;
+        socket.emit('search', {
+            input: search
+        }, res => {
+
+        })
+    };
+    */
 
     useEffect(() => {
         switch(itemType) {
@@ -122,13 +138,14 @@ const ListPanel = (props) => {
     return (
         <div className='list-panel'>
             <div className='list-panel-top'>
-                { isLogin && <SearchBox /> }
+                { isLogin && <SearchBox ref={searchEl}/> }
                 { isLogin && <i className='iconfont add' onClick={handleAdd}>&#xe60b;</i> }
                 { !isLogin && <div className='placeholder'>Dialog List</div> }
             </div>
             <div className='chat-list-wrapper'>
-                {
-                    list.map(item => {
+                { searchFocus ? 
+                    <div></div>
+                    : list.map(item => {
                         let name = item.name ? item.name : item.nickname;
                         return (
                             <div key={item.type + item.id} onClick={handleClick.bind(this, item)}>
@@ -153,5 +170,6 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {
     changeCGModalDisplay,
     setTargetInfo,
-    changeMsgList
+    changeMsgList,
+    clearUnread
 })(memo(ListPanel));

@@ -7,10 +7,11 @@ import {
     setUserInfo, 
     setGroupList, 
     setFriendList, 
-    setDialogList 
+    setDialogList,
+    changeMsgList, 
+    setTargetInfo 
 } from '../MainPanel/store/actions';
 import { changeItemType } from '../ListPanel/store/actions';
-import { changeMsgList, setTargetInfo } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
 const sideBarBgColor = 'rgba(252,210,118,0.75)';

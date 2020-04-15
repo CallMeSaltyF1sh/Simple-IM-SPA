@@ -27,6 +27,7 @@ async function register(email, nickname, password) {
                     const admin = await getAdmin();
                     if(admin.length) {
                         await becomeFriend(id, admin[0].id);
+                        await becomeFriend(admin[0].id, id);
                     } 
                     const defaultGroup = await getDefaultGroup();
                     if(defaultGroup.length) {

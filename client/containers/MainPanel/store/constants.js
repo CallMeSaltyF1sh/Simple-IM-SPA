@@ -7,3 +7,7 @@ export const ADD_GROUP = 'ADD_GROUP';
 export const ADD_GROUP_MSG = 'ADD_GROUP_MSG';
 export const ADD_USER_MSG = 'ADD_USER_MSG';
 export const UPDATE_DIALOG_LIST = 'UPDATE_DIALOG_LIST';
+export const CHANGE_MSG_LIST = 'CHANGE_MSG_LIST';
+export const SET_TARGET_INFO = 'SET_TARGET_INFO';
+export const ADD_MSG_ITEM = 'ADD_MSG_ITEM';
+export const CLEAR_UNREAD = 'CLEAR_UNREAD';

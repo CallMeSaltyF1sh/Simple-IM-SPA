@@ -13,6 +13,14 @@ const sql = {
     `,
     quitGroup: `
         DELETE FROM group_link WHERE id_self=? AND id_group=?
+    `,
+    incrementUnreadCnt: `
+        UPDATE group_link SET unread=unread+1
+        where id_self<>? and id_group=?
+    `,
+    clearUnreadCnt: `
+        UPDATE group_link SET unread=0
+        where id_self=? and id_group=?
     `
 };
 
@@ -32,9 +40,19 @@ async function quitGroup(id, id_group) {
     return await query(sql.quitGroup, [id, id_group]);
 }
 
+async function clearGroupMsgUnreadCnt(id_self, id_group) {
+    return await query(sql.clearUnreadCnt, [id_self, id_group]);
+}
+
+async function addGroupMsgUnreadCnt(id_self, id_group) {
+    return await query(sql.incrementUnreadCnt, [id_self, id_group]);
+}
+
 module.exports = {
     joinInGroup,
     getAllJoinedGroups,
     getAllGroupMembers,
-    quitGroup
+    quitGroup,
+    clearGroupMsgUnreadCnt,
+    addGroupMsgUnreadCnt
 };

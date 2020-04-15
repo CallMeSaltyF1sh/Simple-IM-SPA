@@ -40,8 +40,8 @@ module.exports = {
             ctx.socket.socket.join(userInfo.id);
             ctx.socket.user = userInfo.id;
             
-            console.log('输出socket:');
-            console.log(ctx.socket.socket)
+            //console.log('输出socket:');
+            //console.log(ctx.socket.socket)
         }
         return response;
     },

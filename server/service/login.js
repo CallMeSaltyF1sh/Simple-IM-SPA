@@ -34,13 +34,6 @@ async function login(email, password, socket_id) {
                 console.log(groups);
                 friends = await bindAllUserMsgs(user.id, friends);
 
-                /*
-                const defaultGroup = await getDefaultGroup();
-                let msgs = [];
-                if(defaultGroup.length) {
-                    msgs = await getGroupMsg(defaultGroup[0].id);
-                }
-                */
                 await updateSocket(socket_id, user.id);
                 response = {
                     status: 0,
@@ -50,7 +43,6 @@ async function login(email, password, socket_id) {
                         token: generateJWT(user.id, email),
                         groups: groups,
                         friends: friends,
-                        //defaultMsgs: []
                     }
                 };
             } else {
@@ -94,13 +86,6 @@ async function loginWithToken(token, socket_id) {
                 groups = await bindAllGroupMsgs(groups);
                 friends = await bindAllUserMsgs(userId, friends);
 
-                /*
-                const defaultGroup = await getDefaultGroup();
-                let msgs = [];
-                if(defaultGroup.length) {
-                    msgs = await getGroupMsg(defaultGroup[0].id);
-                }
-                */
                 await updateSocket(socket_id, userId);
                 response = {
                     status: 0,
@@ -109,7 +94,6 @@ async function loginWithToken(token, socket_id) {
                         userInfo: info[0],
                         groups: groups,
                         friends: friends,
-                        //defaultMsgs: []
                     }
                 };
             }

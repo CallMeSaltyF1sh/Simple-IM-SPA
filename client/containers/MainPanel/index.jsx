@@ -16,12 +16,14 @@ import {
 	setDialogList, 
 	addGroupMsg, 
 	addUserMsg, 
-	updateDialogList 
+	updateDialogList,
+	setTargetInfo,
+	changeMsgList,
+	addMsgItem,
+	clearUnread
 } from './store/actions';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
-import { changeMsgList, addMsgItem } from '../ChatPanel/store/actions';
 import { changeItemType } from '../ListPanel/store/actions';
-import { setTargetInfo } from '../ChatPanel/store/actions';
 import socket from '@/socket';
 
 const styles = css`
@@ -85,7 +87,7 @@ const MainPanal = (props) => {
 	const { changeLoginState, setUserInfo, changeLoginModalDisplay } = props;
 	const { setGroupList, setFriendList, setDialogList, changeItemType } = props;
 	const { changeMsgList, updateDialogList, setTargetInfo } = props;
-	const { addGroupMsg, addUserMsg, addMsgItem } = props;
+	const { addGroupMsg, addUserMsg, addMsgItem, clearUnread } = props;
 
 	useEffect(() => {
 		socket.on('connect', () => {
@@ -178,15 +180,22 @@ const MainPanal = (props) => {
 					description: from.description,
 					msg_type: type
 				};
+				const newTo = to.owner ? to : from;
+				addGroupMsg(newTo.id, msg);
+				addMsgItem(newTo.id, msg);
+				/*
 				if(targetType === 'group') {
 					addGroupMsg(to.id, msg);
 					addMsgItem(to.id, msg);
+
 				} else if (targetType === 'user') {
 					addUserMsg(from.id, msg);
 					addMsgItem(from.id, msg);
+					
 				}
-				const newTo = to.owner ? to : from;
+				*/
 				updateDialogList(newTo, msg, targetType);
+				clearUnread(newTo.id);
 			}
 		});
 
@@ -229,5 +238,6 @@ export default connect(mapStateToProps, {
 	changeItemType,
 	setTargetInfo,
 	changeMsgList,
-	addMsgItem
+	addMsgItem,
+	clearUnread
 })(memo(MainPanal));

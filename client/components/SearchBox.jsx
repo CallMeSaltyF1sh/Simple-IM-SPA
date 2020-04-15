@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, forwardRef } from 'react';
 import { css } from 'astroturf';
 
 const styles = css `
@@ -55,7 +55,7 @@ const styles = css `
     }
 `
 
-const SearchBox = () => {
+const SearchBox = forwardRef((props, ref) => {
     const [ searchTxt, setSearchTxt ] = useState('');
     const [ deleteDisplay, setDeleteDisplay ] = useState('none');
 
@@ -85,6 +85,7 @@ const SearchBox = () => {
                 onChange={handleChange}
                 onInput={handleInput}
                 onBlur={handleBlur}
+                ref={ref}
                 placeholder='搜索联系人或群组'
             />
             <i 
@@ -96,6 +97,6 @@ const SearchBox = () => {
             </i>
         </div>
     )
-};
+});
 
 export default SearchBox;

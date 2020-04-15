@@ -1,3 +1,0 @@
-export const CHANGE_MSG_LIST = 'CHANGE_MSG_LIST';
-export const SET_TARGET_INFO = 'SET_TARGET_INFO';
-export const ADD_MSG_ITEM = 'ADD_MSG_ITEM';

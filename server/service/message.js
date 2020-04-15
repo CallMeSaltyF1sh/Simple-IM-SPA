@@ -5,10 +5,14 @@ const {
     getGroupMsgAsync, 
     getUserMsgAsync,
     getGroupMsgByTime,
-    getUserMsgByTime
+    getUserMsgByTime,
+    getUnreadGroupMsgAsync,
+    getUnreadUserMsgAsync
 } = require('../dao/message');
 const { getById } = require('../dao/user');
 const { getGroupInfo } = require('../dao/group_info');
+const { addUserMsgUnreadCnt, clearUserMsgUnreadCnt } = require('../dao/friend_link');
+const { addGroupMsgUnreadCnt, clearGroupMsgUnreadCnt } = require('../dao/group_link');
 
 async function createMsg(to, content, type, targetType, userId) {
     let response = {
@@ -22,6 +26,7 @@ async function createMsg(to, content, type, targetType, userId) {
             assert(to_info, '群组不存在');
             try {
                 await sendGroupMsg(userId, to, content, type);
+                await addGroupMsgUnreadCnt(userId, to);
             } catch(e) {
                 console.log(e);
             }
@@ -30,6 +35,7 @@ async function createMsg(to, content, type, targetType, userId) {
             assert(to_info, '用户不存在');
             try {
                 await sendUserMsg(userId, to, content, type);
+                await addUserMsgUnreadCnt(to, userId);
             } catch(e) {
                 console.log(e);
             }
@@ -44,7 +50,13 @@ async function createMsg(to, content, type, targetType, userId) {
 }
 
 async function bindAllGroupMsgs(groups) {
-    const promises = groups.map(group => getGroupMsgAsync(group.id));
+    const promises = groups.map(group => {
+        if(group.unread) {
+            return getUnreadGroupMsgAsync(group.id, group.unread);
+        } else {
+            return getGroupMsgAsync(group.id);
+        }
+    });
     const res = await Promise.all(promises);
     return groups.map((item, index) => {
         let msgs = res[index] ? res[index].reverse() : [];
@@ -56,7 +68,13 @@ async function bindAllGroupMsgs(groups) {
 }
 
 async function bindAllUserMsgs(userId, friends) {
-    const promises = friends.map(friend => getUserMsgAsync(userId, friend.id));
+    const promises = friends.map(friend => {
+        if(friend.unread) {
+            return getUnreadUserMsgAsync(userId, friend.id, friend.unread);
+        } else {
+            return getUserMsgAsync(userId, friend.id);
+        }
+    });
     const res = await Promise.all(promises);
     return friends.map((item, index) => {
         let msgs = res[index] ? res[index].reverse() : [];
@@ -67,8 +85,7 @@ async function bindAllUserMsgs(userId, friends) {
     });
 }
 
-async function getHistoryMsgs(data) {
-    const { id_group, id_usr, id_friend, time } = data;
+async function getHistoryMsgs(id_group, id_usr, id_friend, time) {
     assert(time, '消息时间不为空');
     let response = {
         status: -3,
@@ -93,9 +110,32 @@ async function getHistoryMsgs(data) {
     return response;
 }
 
+async function clearUnreadCnt(targetType, targetId, userId) {
+    assert(targetId&&targetType, 'targetId和targetType不为空');
+    let response = {
+        status: -3,
+        message: '数据库错误'
+    };
+    try {
+        if(targetType === 'group') {
+            await clearGroupMsgUnreadCnt(userId, targetId);
+        } else {
+            await clearUserMsgUnreadCnt(userId, targetId);
+        }
+        response = {
+            status: 0,
+            message: 'SUCCESS'
+        };
+    } catch(e) {
+        console.log(e);
+    }
+    return response;
+}
+
 module.exports = {
     createMsg,
     bindAllGroupMsgs,
     bindAllUserMsgs,
-    getHistoryMsgs
+    getHistoryMsgs,
+    clearUnreadCnt
 };

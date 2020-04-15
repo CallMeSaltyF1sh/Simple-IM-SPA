@@ -86,7 +86,7 @@ const styles = css`
 `
 
 const ListItem = (props) => {
-    const { name, time, avatar, latestMsg, unreadCnt, focus, sender, onClick } = props;
+    const { name, time, avatar, latestMsg, unread, focus, sender, onClick } = props;
     
     return (
         <div className={`chat-list-item ${ focus ? 'focus' : ''}`} onClick={onClick}>
@@ -96,9 +96,9 @@ const ListItem = (props) => {
                 <div className='msg'>{`${sender ? sender+': ' : ''}${latestMsg}`}</div>
                 <div className='time'>{timeFormat(time, 'short')}</div>
                 {
-                    unreadCnt > 0 ? 
-                        <div className={`unread ${unreadCnt > 99 ? 'longer' : ''}`}>
-                            {unreadCnt > 99 ? '99+' : unreadCnt}
+                    unread > 0 ? 
+                        <div className={`unread ${unread > 99 ? 'longer' : ''}`}>
+                            {unread > 99 ? '99+' : unread}
                         </div> 
                     : null
                 }
@@ -112,7 +112,7 @@ ListItem.propTypes = {
     msgTime: PropTypes.object,
     avatarUrl: PropTypes.string,
     latestMsg: PropTypes.string,
-    unreadCnt: PropTypes.number,
+    unread: PropTypes.number,
     focus: PropTypes.bool,
     onClick: PropTypes.func
 };
