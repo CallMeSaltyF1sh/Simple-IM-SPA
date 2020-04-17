@@ -26,13 +26,13 @@ const timeFormat = (time, type) => {
 };
 
 const checkNickname = input => {
-    return /^(\w){1,25}$/.test(input);
+    return /^([\w_-]|[\u4e00-\u9fa5]){1,25}$/.test(input);
 };
 const checkEmail = input => {
     return /^([A-Za-z0-9_\-\.])+@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(input);
 };
 const checkPwd = input => {
-    return /^(\w){6,25}$/.test(input);
+    return input.length >= 6 && input.length <= 25;
 };
 
 export {

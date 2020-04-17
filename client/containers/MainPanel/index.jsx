@@ -124,7 +124,6 @@ const MainPanal = (props) => {
 							}
 						});
 						list = list.filter(item => item.latestMsg);
-						//console.log(list);
 
 						setUserInfo(userInfo);
 						setGroupList(groups);
@@ -149,7 +148,6 @@ const MainPanal = (props) => {
 
 						changeItemType('dialog');
 						setTargetInfo(res.data);
-						//setGroupList([dialog]);
 						setDialogList([dialog]);
 						changeMsgList(msgs);
 					}
@@ -183,17 +181,6 @@ const MainPanal = (props) => {
 				const newTo = to.owner ? to : from;
 				addGroupMsg(newTo.id, msg);
 				addMsgItem(newTo.id, msg);
-				/*
-				if(targetType === 'group') {
-					addGroupMsg(to.id, msg);
-					addMsgItem(to.id, msg);
-
-				} else if (targetType === 'user') {
-					addUserMsg(from.id, msg);
-					addMsgItem(from.id, msg);
-					
-				}
-				*/
 				updateDialogList(newTo, msg, targetType);
 				clearUnread(newTo.id);
 			}

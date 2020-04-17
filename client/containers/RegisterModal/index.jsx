@@ -6,6 +6,7 @@ import ModalFrame from '@/components/ModalFrame';
 import { changeLoginModalDisplay } from '../LoginModal/store/actions';
 import { changeRegisterModalDisplay } from './store/actions';
 import socket from '@/socket';
+import { checkEmail, checkPwd, checkNickname } from '@/utils';
 
 const RegisterModal = (props) => {
     const { changeLoginModalDisplay, changeRegisterModalDisplay } = props;
@@ -19,7 +20,7 @@ const RegisterModal = (props) => {
         const nickname = nicknameEl.current.value;
         const pswd = pswdEl.current.value;
         const repeatPswd = repeatPswdEl.current.value;
-        if(!checkEmail(email) || !checkNickname(nickname) || !checkPassword(pswd)) {
+        if(!checkEmail(email) || !checkNickname(nickname) || !checkPwd(pswd)) {
             alert('请再次检查输入emm...');
             return;
         }
@@ -39,16 +40,6 @@ const RegisterModal = (props) => {
                 }
             });
         }
-    }, []);
-
-    const checkNickname = useCallback(val => {
-        return val.length > 0 && val.length <= 25;
-    }, []);
-    const checkPassword = useCallback(val => {
-        return val.length >= 6 && val.length <= 25;
-    }, []);
-    const checkEmail = useCallback(val => {
-        return /^([A-Za-z0-9_\-\.])+@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(val);
     }, []);
 
     return (
@@ -73,7 +64,7 @@ const RegisterModal = (props) => {
                 unicode='&#xe651;' 
                 type='text' 
                 ref={nicknameEl} 
-                passedTips='昵称不为空且不得超过25位'
+                passedTips='昵称合法长度为1~25(可包括中英文,数字,下划线,短横线)'
                 checkValidity={checkNickname}
             />
             <InputArea 
@@ -81,8 +72,8 @@ const RegisterModal = (props) => {
                 unicode='&#xe623;' 
                 type='password' 
                 ref={pswdEl} 
-                passedTips='密码合法位数为6~25'
-                checkValidity={checkPassword}
+                passedTips='密码合法长度为6~25'
+                checkValidity={checkPwd}
             />
             <InputArea 
                 placeholder='请确认密码' 

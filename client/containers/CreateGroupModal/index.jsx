@@ -9,37 +9,29 @@ import { addGroup } from '../MainPanel/store/actions';
 
 const CreateGroupModal = (props) => {
     const { changeCGModalDisplay, addGroup } = props;
-    const { userInfo, groups } = props;
+    const { userId } = props;
     const nameEl = useRef(null);
-
-    const info = userInfo ? userInfo.toJS() : {};
-    const groupList = groups ? groups.toJS() : [];
 
     const checkName = useCallback(val => {
         return val.length > 0 && val.length <= 25;
     }, []);
 
     const handleSubmit = useCallback(() => {
-        console.log('click')
         const name = nameEl.current.value;
         if(!checkName(name)) {
             alert('请再次检查输入emm...');
             return;
         }
 
-        const { id } = info;
         socket.emit('createGroup', {
             name: name,
-            userId: id
+            userId
         }, res => {
             console.log(res)
             if(res.status !== 0) alert(res.message);
             else {
                 alert('创建成功！');
                 changeCGModalDisplay(false);
-                //const newGroupInfo = res.data;
-                //groupList.unshift(newGroupInfo);
-                //setGroupList(groupList);
                 const newGroup = {
                     ...res.data,
                     msgs: []
@@ -69,8 +61,7 @@ const CreateGroupModal = (props) => {
 };
 
 const mapStateToProps = state => ({
-    userInfo: state.getIn(['mainPanel', 'userInfo']),
-    groups: state.getIn(['mainPanel', 'groups'])
+    userId: state.getIn(['mainPanel', 'userInfo', 'id'])
 });
 
 export default connect(mapStateToProps, {

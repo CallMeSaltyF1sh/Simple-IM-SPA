@@ -91,14 +91,16 @@ const EditArea = (props) => {
     const { targetInfo, isLogin } = props;
     const { changeLoginModalDisplay, addMsgItem } = props;
     const { addGroupMsg, addUserMsg, updateDialogList } = props;
+
     const [ content, setContent ] = useState('');
 
     const info = targetInfo ? targetInfo.toJS() : {};
     const targetType = info.owner ? 'group' : 'user';
+    const targetId = info.id;
 
     const sendMsg = (content, type) => {
         socket.emit('sendMsg', {
-            to: info.id,
+            to: targetId,
             content,
             type,
             targetType
@@ -133,7 +135,7 @@ const EditArea = (props) => {
             changeLoginModalDisplay(true);
             return;
         }
-        if(!info.id) {
+        if(!targetId) {
             alert('先选择一个聊天对象嗷');
             return;
         }
@@ -174,9 +176,7 @@ const EditArea = (props) => {
 
 const mapStateToProps = state => ({
     targetInfo: state.getIn(['mainPanel', 'targetInfo']),
-    isLogin: state.getIn(['mainPanel', 'isLogin']),
-    groups: state.getIn(['mainPanel', 'groups']),
-    friends: state.getIn(['mainPanel', 'friends'])
+    isLogin: state.getIn(['mainPanel', 'isLogin'])
 });
 
 export default connect(mapStateToProps, {

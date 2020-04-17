@@ -88,16 +88,14 @@ const msgList = [
 */
 
 const ChatPanel = (props) => {
-    const { targetInfo, userInfo, isLogin, msgList } = props;
+    const { targetInfo, userId, isLogin, msgList } = props;
     const { changeMsgList } = props;
 
     const target = targetInfo ? targetInfo.toJS() : {};
-    const user = userInfo ? userInfo.toJS() : {};
     const targetType = target.owner ? 'group' : 'user';
     const list = msgList ? msgList.toJS() : [];
 
     const targetId = target.id;
-    const userId = user.id;
     const name = target.name ? target.name : target.nickname;
 
     //const prevList = usePrevious(list);
@@ -167,7 +165,7 @@ const ChatPanel = (props) => {
 
 const mapStateToProps = state => ({
     targetInfo: state.getIn(['mainPanel', 'targetInfo']),
-    userInfo: state.getIn(['mainPanel', 'userInfo']),
+    userId: state.getIn(['mainPanel', 'userInfo', 'id']),
     isLogin: state.getIn(['mainPanel', 'isLogin']),
     msgList: state.getIn(['mainPanel', 'msgList'])
 });
