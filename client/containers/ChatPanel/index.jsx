@@ -98,10 +98,10 @@ const ChatPanel = (props) => {
     const targetId = target.id;
     const name = target.name ? target.name : target.nickname;
 
-    //const prevList = usePrevious(list);
-    //const prevTargetId = usePrevious(target.id);
     const [ splitTime, setSplitTime ] = useState(null);
     const [ loadAll, setLoadAll ] = useState(false);
+
+    const prevSplitTime = usePrevious(splitTime);
     
     useEffect(() => {
         document.querySelector('#msglist_bottom').scrollIntoView();
@@ -111,6 +111,9 @@ const ChatPanel = (props) => {
     useEffect(() => {
         const time = list.length ? list[0].created_at : null;
         setSplitTime(time);
+        if(splitTime === prevSplitTime) {
+            document.querySelector('#msglist_bottom').scrollIntoView();
+        }
     }, [list]);
 
     const getMoreMsg = () => {
