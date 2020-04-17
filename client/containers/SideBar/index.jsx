@@ -83,7 +83,6 @@ const SideBar = (props) => {
         changeLoginState(false);
         setUserInfo({});
         setFriendList([]);
-        setGroupList([]);
         if(window.localStorage.getItem('token')) {
             window.localStorage.setItem('token', '');
         }
@@ -101,9 +100,10 @@ const SideBar = (props) => {
 				};
 
 				changeItemType('dialog');
-				setTargetInfo(res.data);
+                setGroupList([res.data]);
 				setDialogList([dialog]);
 				changeMsgList(msgs);
+                setTargetInfo(res.data);
 			}
 		});
         /*

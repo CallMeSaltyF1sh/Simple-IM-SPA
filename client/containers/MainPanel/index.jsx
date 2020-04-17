@@ -147,9 +147,10 @@ const MainPanal = (props) => {
 						};
 
 						changeItemType('dialog');
-						setTargetInfo(res.data);
+						setGroupList([res.data]);
 						setDialogList([dialog]);
 						changeMsgList(msgs);
+						setTargetInfo(res.data);
 					}
 				})
 			}
