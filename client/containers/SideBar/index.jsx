@@ -68,13 +68,12 @@ const styles = css`
 `;
 
 const SideBar = (props) => {
-    const { isLogin, dialogs, userInfo } = props;
+    const { isLogin, userInfo } = props;
     const { changeLoginModalDisplay, changeLoginState } = props;
     const { setDialogList, setUserInfo, changeItemType } = props;
     const { setGroupList, setFriendList, changeMsgList } = props;
     const { setTargetInfo } = props;
 
-    const dialogsJS = dialogs ? dialogs.toJS() : [];
     const userInfoJS = userInfo ? userInfo.toJS() : {};
 
     const handleLogin = () => {
@@ -84,17 +83,37 @@ const SideBar = (props) => {
         changeLoginState(false);
         setUserInfo({});
         setFriendList([]);
+        setGroupList([]);
         if(window.localStorage.getItem('token')) {
             window.localStorage.setItem('token', '');
         }
+        socket.emit('guest', {}, res => { 
+			console.log(res);
+			if(res.status === 0 && res.data.msgs.length) {
+				const msgs = res.data.msgs.reverse();
+				const latestMsg = msgs[msgs.length - 1];
+				const dialog = {
+					...res.data,
+					msgs,
+					latestMsg: latestMsg.content,
+					time: latestMsg.created_at,
+					sender: latestMsg.nickname
+				};
+
+				changeItemType('dialog');
+				setTargetInfo(res.data);
+				setDialogList([dialog]);
+				changeMsgList(msgs);
+			}
+		});
+        /*
         const dialog = dialogsJS.find(item => item.is_default === 1);
         setGroupList([dialog]);
         setDialogList([dialog]);
         changeItemType('dialog');
         setTargetInfo(dialog);
         changeMsgList(dialog.msgs);
-
-        socket.close();
+        */
     };
     const handleViewDialogList = () => {
         changeItemType('dialog');
@@ -160,7 +179,6 @@ const SideBar = (props) => {
 
 const mapStateToProps = state => ({
     isLogin: state.getIn(['mainPanel', 'isLogin']),
-    dialogs: state.getIn(['mainPanel', 'dialogs']),
     userInfo: state.getIn(['mainPanel', 'userInfo'])
 });
 

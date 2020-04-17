@@ -17,25 +17,25 @@ const sql = {
     `
 };
 
-async function createSocket(id) {
+async function create(id) {
     return await query(sql.insert, [id]);
 }
 
-async function getSocket(id) {
+async function get(id) {
     return await query(sql.get, [id]);
 }
 
-async function deleteSocket(id) {
+async function del(id) {
     return await query(sql.delete, [id]);
 }
 
-async function updateSocket(id, user) {
+async function update(id, user) {
     return await query(sql.update, [user, id]);
 }
 
 module.exports = {
-    createSocket,
-    getSocket,
-    deleteSocket,
-    updateSocket
+    create,
+    get,
+    del,
+    update
 };

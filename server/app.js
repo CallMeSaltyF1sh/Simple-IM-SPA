@@ -22,7 +22,7 @@ const enhance = require('./middlewares/enhance');
 const bindRoute = require('./middlewares/bindRoute');
 const handle401 = require('./middlewares/401handler');
 const errCatcher = require('./middlewares/errCatcher');
-const { createSocket, deleteSocket } = require('./dao/socket');
+const { createSocket, deleteSocket } = require('./service/socket');
 const { server_port, secret } = require('./config/index');
 
 const app = new Koa();
