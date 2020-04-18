@@ -23,7 +23,7 @@ async function createMsg(to, content, type, targetType, userId) {
         let to_info;
         if(targetType === 'group') {
             to_info = await getGroupInfo(to);
-            assert(to_info, '群组不存在');
+            assert(to_info.length, '群组不存在');
             try {
                 await sendGroupMsg(userId, to, content, type);
                 await addGroupMsgUnreadCnt(userId, to);
@@ -32,7 +32,7 @@ async function createMsg(to, content, type, targetType, userId) {
             }
         } else if (targetType === 'user') {
             to_info = await getById(to);
-            assert(to_info, '用户不存在');
+            assert(to_info.length, '用户不存在');
             try {
                 await sendUserMsg(userId, to, content, type);
                 await addUserMsgUnreadCnt(to, userId);
@@ -41,8 +41,7 @@ async function createMsg(to, content, type, targetType, userId) {
             }
         }
         const from = await getById(userId);
-        console.log(to_info)
-        response = { from: from[0], to: to_info[0], content, type, targetType };
+        response = { from: from[0], to: to_info[0], content, type };
     } catch(e) {
         console.log(e);
     }

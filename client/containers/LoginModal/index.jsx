@@ -10,7 +10,8 @@ import {
     setUserInfo, 
     setGroupList, 
     setFriendList, 
-    setDialogList 
+    setDialogList,
+    setTargetInfo 
 } from '../MainPanel/store/actions';
 import socket from '@/socket';
 
@@ -57,6 +58,7 @@ const LoginModal = (props) => {
                     });
                     list = list.filter(item => item.latestMsg);
 
+                    setTargetInfo({});
                     setUserInfo(userInfo);
                     setGroupList(groups);
                     setFriendList(friends);
@@ -103,4 +105,5 @@ export default connect(null, {
     setGroupList,
     setFriendList,
     setDialogList,
+    setTargetInfo
 })(memo(LoginModal));

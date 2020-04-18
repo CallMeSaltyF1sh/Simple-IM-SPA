@@ -43,11 +43,10 @@ export const addUserMsg = (userId, msg) => dispatch => {dispatch({
     userId
 })};
 
-export const updateDialogList = (to, msg, targetType) => dispatch => {dispatch({
+export const updateDialogList = (to, msg) => dispatch => {dispatch({
     type: actionTypes.UPDATE_DIALOG_LIST,
     msg,
-    to,
-    targetType
+    to
 })};
 
 export const changeMsgList = data => dispatch => {dispatch({

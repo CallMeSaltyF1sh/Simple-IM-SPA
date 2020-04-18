@@ -125,6 +125,7 @@ const MainPanal = (props) => {
 						});
 						list = list.filter(item => item.latestMsg);
 
+						setTargetInfo({});
 						setUserInfo(userInfo);
 						setGroupList(groups);
 						setFriendList(friends);
@@ -169,7 +170,7 @@ const MainPanal = (props) => {
 		socket.on('message', res => {
 			console.log('get msg', res);
 			if(res.content) {
-				const { content, to, from, type, targetType } = res;
+				const { content, to, from, type } = res;
 				const msg = {
 					created_at: new Date(),
 					content,
@@ -180,9 +181,13 @@ const MainPanal = (props) => {
 					msg_type: type
 				};
 				const newTo = to.owner ? to : from;
-				addGroupMsg(newTo.id, msg);
+				if(to.owner) {
+					addGroupMsg(newTo.id, msg);
+				} else {
+					addUserMsg(newTo.id, msg);
+				}
 				addMsgItem(newTo.id, msg);
-				updateDialogList(newTo, msg, targetType);
+				updateDialogList(newTo, msg);
 				clearUnread(newTo.id);
 			}
 		});

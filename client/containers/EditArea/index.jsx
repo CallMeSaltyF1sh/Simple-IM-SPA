@@ -123,8 +123,7 @@ const EditArea = (props) => {
                     addUserMsg(to.id, msg);
                 }
                 addMsgItem(to.id, msg);
-                document.querySelector('#msglist_bottom').scrollIntoView(); 
-                updateDialogList(to, msg, targetType);
+                updateDialogList(to, msg);
             }
         });
     };

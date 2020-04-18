@@ -114,6 +114,9 @@ const ChatPanel = (props) => {
         if(splitTime === prevSplitTime) {
             document.querySelector('#msglist_bottom').scrollIntoView();
         }
+        if(!list.length) {
+            setLoadAll(true);
+        }
     }, [list]);
 
     const getMoreMsg = () => {
